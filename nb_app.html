@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NB Asesoría Financiera — Sistema Operativo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0D3D6B;--blue:#185FA5;--blueL:#E6F1FB;
+  --green:#27500A;--greenL:#EAF3DE;--greenB:#C0DD97;
+  --amber:#854F0B;--amberL:#FAEEDA;--amberB:#FAC775;
+  --red:#791F1F;--redL:#FCEBEB;
+  --ink:#1A1A2E;--gray1:#F4F6F9;--gray2:#E8ECF2;--gray3:#9BA8BB;
+  --white:#fff;--sidebar:240px;
+}
+body{font-family:'DM Mono',monospace;background:var(--gray1);color:var(--ink);font-size:13px;display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--navy);color:#fff;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;overflow-y:auto}
+.sb-logo{padding:1.25rem 1.25rem .75rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:-.3px}
+.sb-sub{font-size:10px;opacity:.5;margin-top:2px}
+.sb-section{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:.9rem 1.25rem .4rem;font-weight:500}
+.sb-item{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;font-size:12px;font-weight:500;cursor:pointer;color:rgba(255,255,255,.7);border-left:3px solid transparent;transition:all .15s}
+.sb-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.sb-item.on{background:rgba(255,255,255,.1);color:#fff;border-left-color:#fff}
+.sb-item .icon{width:16px;text-align:center;font-size:14px;flex-shrink:0}
+.sb-badge{font-size:9px;padding:1px 6px;border-radius:99px;background:rgba(255,255,255,.15);margin-left:auto}
+.sb-footer{margin-top:auto;padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,.1);font-size:10px;opacity:.4;line-height:1.6}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;padding:1.5rem;min-height:100vh}
+.view{display:none}.view.on{display:block}
+.page-title{font-family:'Fraunces',serif;font-size:24px;font-weight:600;letter-spacing:-.5px;margin-bottom:4px}
+.page-sub{font-size:12px;color:var(--gray3);margin-bottom:1.5rem}
+
+/* CARDS */
+.card{background:var(--white);border:.5px solid var(--gray2);border-radius:10px;overflow:hidden;margin-bottom:.85rem}
+.card-hdr{padding:.65rem 1.1rem;border-bottom:.5px solid var(--gray2);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gray3);font-weight:500;display:flex;justify-content:space-between;align-items:center}
+.card-body{padding:.9rem 1.1rem}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:.85rem}
+.stat{background:var(--white);border:.5px solid var(--gray2);border-radius:8px;padding:.65rem .85rem;text-align:center}
+.sv{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+.sl{font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--gray3);margin-top:2px}
+
+/* SCREENER */
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.65rem;align-items:center}
+.chip{padding:4px 10px;font-size:10px;font-weight:500;border-radius:99px;border:.5px solid var(--gray2);background:var(--gray1);color:var(--gray3);cursor:pointer;white-space:nowrap;transition:all .15s}
+.chip:hover{color:var(--ink)}
+.chip.on{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.chip.comprar{border-color:var(--greenB);color:var(--green)}
+.chip.comprar.on{background:var(--green);color:#fff;border-color:var(--green)}
+.search-box{background:var(--white);border:.5px solid var(--gray2);border-radius:7px;padding:6px 12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);outline:none;width:200px;margin-left:auto}
+.search-box:focus{border-color:var(--blue)}
+.sort-sel{padding:5px 10px;font-family:'DM Mono',monospace;font-size:10px;border-radius:6px;border:.5px solid var(--gray2);background:var(--gray1);color:var(--gray3);outline:none;cursor:pointer}
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.tbl th{text-align:left;padding:5px 8px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2);cursor:pointer;user-select:none;white-space:nowrap}
+.tbl th:hover{color:var(--ink)}
+.tbl td{padding:7px 8px;border-bottom:.5px solid var(--gray2);vertical-align:middle;white-space:nowrap}
+.tbl tr{cursor:pointer;transition:background .1s}
+.tbl tr:hover td{background:var(--gray1)}
+.sc-circle{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#fff}
+.vbadge{font-size:9px;padding:2px 7px;border-radius:99px;font-weight:500;display:inline-block}
+.vc{background:var(--greenL);color:var(--green);border:.5px solid var(--greenB)}
+.vw{background:var(--amberL);color:var(--amber);border:.5px solid var(--amberB)}
+.vr{background:var(--blueL);color:var(--blue);border:.5px solid #B5D4F4}
+.vd{background:var(--redL);color:var(--red);border:.5px solid #F7C1C1}
+.type-badge{font-size:9px;padding:1px 5px;border-radius:3px;font-weight:500;color:#fff}
+.new-badge{font-size:8px;padding:1px 5px;border-radius:3px;background:var(--greenL);color:var(--green);font-weight:500;margin-left:3px}
+
+/* DETAIL PANEL */
+.det-panel{background:var(--white);border:.5px solid var(--gray2);border-radius:10px;overflow:hidden;margin-bottom:.85rem;animation:fadeUp .2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.det-h{padding:.85rem 1.1rem;border-bottom:.5px solid var(--gray2);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.det-ticker{font-family:'Fraunces',serif;font-size:22px;font-weight:600}
+.det-close{background:none;border:.5px solid var(--gray2);border-radius:6px;font-size:13px;cursor:pointer;color:var(--gray3);padding:3px 8px}
+.det-close:hover{background:var(--gray1)}
+.det-metrics{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:.5px solid var(--gray2)}
+.dm{padding:.65rem .9rem;border-right:.5px solid var(--gray2)}
+.dm:last-child{border-right:none}
+.dml{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gray3);margin-bottom:3px}
+.dmv{font-size:13px;font-weight:500;font-family:'Fraunces',serif}
+.dms{font-size:9px;color:var(--gray3);margin-top:1px}
+.det-criteria{display:grid;grid-template-columns:1fr 1fr;border-bottom:.5px solid var(--gray2)}
+.dc-col{border-right:.5px solid var(--gray2)}
+.dc-col:last-child{border-right:none}
+.dc-hdr{font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--gray3);padding:5px 10px;background:var(--gray1);border-bottom:.5px solid var(--gray2)}
+.dc-row{display:flex;justify-content:space-between;align-items:center;padding:5px 10px;border-bottom:.5px solid var(--gray2);font-size:10px}
+.dc-row:last-child{border-bottom:none}
+.dc-label{color:var(--gray3)}
+.dc-val{font-weight:500}
+.det-tesis{padding:.85rem 1.1rem;font-size:12px;line-height:1.65;border-bottom:.5px solid var(--gray2)}
+.det-fiscal{padding:.65rem 1.1rem;background:var(--gray1);font-size:11px;color:var(--gray3)}
+.det-actions{display:flex;gap:6px;padding:.75rem 1.1rem}
+.det-btn{flex:1;padding:7px;font-family:'DM Mono',monospace;font-size:10px;border-radius:6px;border:.5px solid var(--gray2);background:var(--gray1);color:var(--gray3);cursor:pointer;text-align:center;transition:all .15s}
+.det-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* CARTERAS */
+.perfil-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.ptab{padding:7px 14px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;border-radius:8px;border:.5px solid var(--gray2);background:var(--gray1);color:var(--gray3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.ptab.on{color:#fff;border-color:transparent}
+.cap-row{display:flex;gap:8px;align-items:center;padding:.75rem 1rem;background:var(--white);border:.5px solid var(--gray2);border-radius:10px;margin-bottom:.85rem}
+.cap-row label{font-size:11px;color:var(--gray3);white-space:nowrap}
+.cap-input{flex:1;background:var(--gray1);border:.5px solid var(--gray2);border-radius:7px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--ink);outline:none}
+.cap-input:focus{border-color:var(--blue)}
+.cap-total{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--green);white-space:nowrap}
+.saa-bar{height:24px;border-radius:6px;overflow:hidden;display:flex;margin:.5rem 0}
+.saa-seg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;overflow:hidden;white-space:nowrap}
+.pos-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:.5px solid var(--gray2)}
+.pos-row:last-child{border-bottom:none}
+.pos-ticker{font-family:'Fraunces',serif;font-weight:600;font-size:13px;min-width:64px}
+.pos-bar-wrap{flex:1;height:4px;background:var(--gray1);border-radius:2px;overflow:hidden}
+.pos-bar{height:100%;border-radius:2px}
+.pos-pct{font-weight:500;min-width:36px;text-align:right;font-size:12px}
+.pos-monto{font-size:10px;color:var(--gray3);min-width:80px;text-align:right}
+
+/* FEES */
+.fee-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fee-card{border-radius:10px;padding:1rem 1.1rem;border:.5px solid}
+.fee-a{background:var(--blueL);border-color:#B5D4F4}
+.fee-b{background:var(--greenL);border-color:var(--greenB)}
+.fee-title{font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:500;margin-bottom:8px}
+.fee-a .fee-title{color:var(--navy)}
+.fee-b .fee-title{color:var(--green)}
+.fee-result{font-family:'Fraunces',serif;font-size:26px;font-weight:600;margin-bottom:2px}
+.fee-a .fee-result{color:var(--blue)}
+.fee-b .fee-result{color:var(--green)}
+.fee-sub{font-size:10px;color:var(--gray3)}
+.fee-detail{margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.08);font-size:11px;line-height:1.6}
+.warn-box{font-size:11px;padding:8px 12px;border-radius:6px;margin-top:8px;line-height:1.6}
+.warn-y{background:var(--amberL);color:#633806;border:.5px solid var(--amberB)}
+.warn-g{background:var(--greenL);color:var(--green);border:.5px solid var(--greenB)}
+
+/* CAMINO DE VALOR */
+.cv-config{background:var(--white);border:.5px solid var(--gray2);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:.85rem}
+.cv-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:.5rem}
+.cv-item label{font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;letter-spacing:.5px;text-transform:uppercase}
+.cv-item input,.cv-item select{width:100%;background:var(--gray1);border:.5px solid var(--gray2);border-radius:7px;padding:7px 10px;font-family:'DM Mono',monospace;font-size:13px;color:var(--ink);outline:none}
+
+/* CLIENTES */
+.client-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.85rem}
+.client-card{background:var(--white);border:.5px solid var(--gray2);border-radius:10px;padding:.85rem 1rem;cursor:pointer;transition:all .15s}
+.client-card:hover{border-color:var(--blue)}
+.cc-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;margin-bottom:3px}
+.prog-track{height:3px;background:var(--gray1);border-radius:2px;overflow:hidden;margin-top:6px}
+.prog-fill{height:100%;border-radius:2px}
+.cbadge{font-size:9px;padding:2px 7px;border-radius:3px;font-weight:500}
+.leg-tab{padding:6px 14px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;border:none;background:none;cursor:pointer;color:#9BA8BB;border-bottom:2px solid transparent;margin-bottom:-.5px;white-space:nowrap}
+.leg-tab:hover{color:#1A1A2E}
+.leg-tab.on{color:#1A1A2E;border-bottom-color:#1A1A2E}
+
+/* EARNINGS */
+.earn-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid var(--gray2);font-size:12px}
+.earn-row:last-child{border-bottom:none}
+.earn-tick{font-family:'Fraunces',serif;font-weight:600;font-size:13px;min-width:60px}
+.earn-badge{font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500}
+.soon{background:var(--amberL);color:var(--amber)}
+.upcoming{background:var(--blueL);color:var(--blue)}
+.done{background:var(--greenL);color:var(--green)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{width:60px;overflow:hidden}
+  .sb-item span,.sb-section,.sb-logo .sb-sub,.sb-title,.sb-footer,.sb-badge{display:none}
+  .sb-item{padding:.6rem;justify-content:center}
+  .main{margin-left:60px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .fee-cards{grid-template-columns:1fr}
+  .client-grid{grid-template-columns:1fr}
+  .det-metrics{grid-template-columns:1fr 1fr 1fr}
+  .cv-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-title">NB Hub</div>
+    <div class="sb-sub">Asesoría Financiera · v3.1</div>
+  </div>
+
+  <div class="sb-section">Principal</div>
+  <div class="sb-item on" onclick="goView('dashboard',this)">
+    <span class="icon">📊</span><span>Dashboard</span>
+  </div>
+  <div class="sb-item" onclick="goView('clientes',this)">
+    <span class="icon">👤</span><span>Clientes</span>
+    <span class="sb-badge" id="badge-clientes">6</span>
+  </div>
+
+  <div class="sb-section">Análisis</div>
+  <div class="sb-item" onclick="goView('screener',this)">
+    <span class="icon">🔬</span><span>Screener acciones</span>
+    <span class="sb-badge">60</span>
+  </div>
+  <div class="sb-item" onclick="goView('screener_rf',this)">
+    <span class="icon">🏦</span><span>Screener renta fija</span>
+    <span class="sb-badge">40</span>
+  </div>
+  <div class="sb-item" onclick="goView('carteras',this)">
+    <span class="icon">🗂️</span><span>Carteras modelo</span>
+  </div>
+  <div class="sb-item" onclick="goView('honorarios',this)">
+    <span class="icon">💰</span><span>Honorarios</span>
+  </div>
+
+  <div class="sb-section">Motor / Onboarding</div>
+  <div class="sb-item" onclick="goView('motor',this)">
+    <span class="icon">⚙️</span><span>Motor de análisis</span>
+  </div>
+  <div class="sb-section">Seguimiento</div>
+  <div class="sb-item" onclick="goView('camino',this)">
+    <span class="icon">📈</span><span>Camino de Valor</span>
+  </div>
+  <div class="sb-item" onclick="goView('earnings',this)">
+    <span class="icon">📅</span><span>Calendario earnings</span>
+  </div>
+  <div class="sb-item" onclick="goView('ips',this)">
+    <span class="icon">📄</span><span>Revisión IPS</span>
+    <span class="sb-badge" id="badge-ips" style="background:rgba(249,180,108,.3);color:#FAC775">2</span>
+  </div>
+
+  <div class="sb-section">Referencia</div>
+  <div class="sb-item" onclick="goView('normativa',this)">
+    <span class="icon">⚖️</span><span>Normativa fiscal</span>
+  </div>
+
+  <div class="sb-footer">
+    NB Asesoría Financiera<br>
+    Nicolás Brunetti, CP · CNV<br>
+    v3.1 · Jun-2026
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- ═══════════════ DASHBOARD ═══════════════ -->
+<div class="view on" id="v-dashboard">
+  <div class="page-title">Dashboard</div>
+  <div class="page-sub">NB Asesoría Financiera · Jun-2026</div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="sv">6</div><div class="sl">Clientes activos</div></div>
+    <div class="stat"><div class="sv" style="color:var(--green)">60</div><div class="sl">Empresas universo</div></div>
+    <div class="stat"><div class="sv" style="color:var(--amber)">2</div><div class="sl">IPS vencidos</div></div>
+    <div class="stat"><div class="sv" style="color:var(--blue)">MU</div><div class="sl">Próximo earnings</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem">
+
+    <div class="card">
+      <div class="card-hdr">Alertas activas</div>
+      <div class="card-body">
+        ${[
+          {c:'var(--red)',t:'IPS vencido — Giuli Raviolo','d':'Vencido hace 4 meses · Renovar urgente'},
+          {c:'var(--red)',t:'IPS vencido — Salome Agustina','d':'Vencido hace 5 meses · Renovar urgente'},
+          {c:'var(--amber)',t:'MU reporta ~24/06/2026','d':'Actualizar score post-earnings'},
+          {c:'var(--blue)',t:'DNC9O vence 07/08/2026','d':'Preparar rotación a YMCXO+acciones'},
+        ].map(a=>`<div style="display:flex;gap:10px;padding:6px 0;border-bottom:.5px solid var(--gray2);font-size:12px">
+          <div style="width:8px;height:8px;border-radius:50%;background:${a.c};margin-top:4px;flex-shrink:0"></div>
+          <div><div style="font-weight:500">${a.t}</div><div style="color:var(--gray3);font-size:11px">${a.d}</div></div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">Clientes — estado de legajos</div>
+      <div class="card-body" id="dash-clientes"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">Top 5 — Screener v3.1</div>
+      <div class="card-body" id="dash-top5"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">Próximos earnings Q3 2026</div>
+      <div class="card-body">
+        ${[
+          {t:'MU',  n:'Micron',       f:'~24/06/2026', s:'soon'},
+          {t:'JPM', n:'JPMorgan',     f:'~14/07/2026', s:'soon'},
+          {t:'GOOGL',n:'Alphabet',    f:'~23/07/2026', s:'upcoming'},
+          {t:'MSFT',n:'Microsoft',    f:'~29/07/2026', s:'upcoming'},
+          {t:'META',n:'Meta',         f:'~29/07/2026', s:'upcoming'},
+          {t:'NVDA',n:'NVIDIA',       f:'~27/08/2026', s:'upcoming'},
+        ].map(e=>`<div class="earn-row">
+          <div class="earn-tick">${e.t}</div>
+          <div style="flex:1;color:var(--gray3)">${e.n}</div>
+          <span class="earn-badge ${e.s}">${e.f}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CLIENTES ═══════════════ -->
+<div class="view" id="v-clientes">
+  <div class="page-title">Legajos de clientes</div>
+  <div class="page-sub" id="clientes-sub">Storage local del browser</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem;gap:8px;flex-wrap:wrap">
+    <div style="display:flex;gap:6px;align-items:center">
+      <button onclick="syncClientesFromSheet()" id="sync-btn" style="padding:8px 16px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;border-radius:8px;border:.5px solid var(--gray2);background:var(--gray1);color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:6px">
+        <span id="sync-icon">↻</span> Sincronizar desde Sheet
+      </button>
+      <span id="sync-status" style="font-size:10px;color:var(--gray3)"></span>
+    </div>
+    <button onclick="openModal()" style="padding:8px 16px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;border-radius:8px;border:none;background:var(--ink);color:#fff;cursor:pointer">+ Nuevo cliente</button>
+  </div>
+  <div class="client-grid" id="client-grid"></div>
+</div>
+
+<!-- ═══════════════ LEGAJO DETALLE ═══════════════ -->
+<div class="view" id="v-legajo">
+  <button onclick="goView('clientes',document.querySelectorAll('.sb-item')[1])" style="display:flex;align-items:center;gap:6px;background:none;border:none;font-family:'DM Mono',monospace;font-size:11px;color:#9BA8BB;cursor:pointer;padding:0;margin-bottom:.75rem">← Volver a clientes</button>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem">
+    <div>
+      <div id="leg-name" style="font-family:'Fraunces',serif;font-size:24px;font-weight:600;letter-spacing:-.5px;margin-bottom:4px"></div>
+      <div id="leg-meta" style="font-size:11px;color:#9BA8BB"></div>
+    </div>
+    <div id="leg-ips-badge"></div>
+  </div>
+
+  <div style="display:flex;gap:6px;margin-bottom:1rem;border-bottom:.5px solid #E8ECF2;padding-bottom:.5rem" id="leg-tabs">
+    <button class="leg-tab on" onclick="setLegTab('resumen',this)">Resumen</button>
+    <button class="leg-tab" onclick="setLegTab('camino',this)">Camino de Valor</button>
+    <button class="leg-tab" onclick="setLegTab('cartera',this)">Cartera objetivo</button>
+    <button class="leg-tab" onclick="setLegTab('modulos',this)">Módulos</button>
+  </div>
+
+  <div id="leg-content"></div>
+</div>
+
+
+<!-- ═══════════════ SCREENER ═══════════════ -->
+<div class="view" id="v-screener">
+  <div class="page-title">Screener NB v3.1</div>
+  <div class="page-sub">60 empresas · CEDEARs + Merval · Datos al 14/06/2026 · Clic en fila para detalle</div>
+
+  <div class="filter-bar">
+    <div class="chip on" onclick="setChip('all',this)">Todas</div>
+    <div class="chip" onclick="setChip('Tech',this)">Tech</div>
+    <div class="chip" onclick="setChip('Consumo',this)">Consumo</div>
+    <div class="chip" onclick="setChip('Financiero',this)">Financiero</div>
+    <div class="chip" onclick="setChip('Salud',this)">Salud</div>
+    <div class="chip" onclick="setChip('Energía',this)">Energía</div>
+    <div class="chip" onclick="setChip('Industrial',this)">Industrial</div>
+    <div class="chip" onclick="setChip('Inmob.',this)">Inmob.</div>
+    <div class="chip" onclick="setChip('Emergente',this)">Emergente</div>
+    <div class="chip comprar" onclick="setChip('comprar',this)">✓ COMPRAR</div>
+    <div class="chip" onclick="setChip('nuevo',this)" style="border-color:#C0DD97;color:var(--green)">✦ Nuevas</div>
+    <select class="sort-sel" onchange="setSortS(this.value)">
+      <option value="score">↓ Score</option>
+      <option value="up">↓ Upside</option>
+      <option value="peg">↑ PEG</option>
+      <option value="pe">↑ P/E</option>
+      <option value="beta">↑ Beta</option>
+    </select>
+    <input class="search-box" id="scr-q" type="text" placeholder="Buscar ticker o empresa..." oninput="renderScr()">
+  </div>
+
+  <div class="stats-row" id="scr-stats"></div>
+  <div id="scr-det"></div>
+
+  <div class="card">
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>#</th>
+          <th onclick="setSortS('t')">Ticker</th>
+          <th>Empresa</th>
+          <th>Sector</th>
+          <th onclick="setSortS('score')">Score ▾</th>
+          <th>Veredicto</th>
+          <th onclick="setSortS('pe')">P/E</th>
+          <th onclick="setSortS('up')">Upside</th>
+          <th onclick="setSortS('peg')">PEG</th>
+          <th onclick="setSortS('beta')">Beta</th>
+          <th>Tipo</th>
+        </tr></thead>
+        <tbody id="scr-tb"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CARTERAS ═══════════════ -->
+<div class="view" id="v-carteras">
+  <div class="page-title">Carteras modelo v3</div>
+  <div class="page-sub">5 perfiles · Screener v3.1 integrado · Montos por capital exacto</div>
+
+  <div class="perfil-tabs" id="cart-tabs"></div>
+
+  <div class="cap-row">
+    <label>Capital a invertir (USD)</label>
+    <input class="cap-input" id="cap-cart" type="number" value="50000" oninput="renderCart()">
+    <div class="cap-total" id="cap-total">USD 50.000</div>
+  </div>
+
+  <div id="cart-zone"></div>
+</div>
+
+<!-- ═══════════════ HONORARIOS ═══════════════ -->
+<div class="view" id="v-honorarios">
+  <div class="page-title">Calculadora de honorarios</div>
+  <div class="page-sub">Management Fee (1% anual) vs Performance Fee (20% sobre resultados)</div>
+
+  <div class="card">
+    <div class="card-hdr">Datos del cliente</div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:.5rem">
+        <div>
+          <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Capital bajo gestión (USD)</label>
+          <input type="number" id="fee-cap" value="50000" oninput="calcFees()" style="width:100%;background:var(--gray1);border:.5px solid var(--gray2);border-radius:7px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--ink);outline:none">
+        </div>
+        <div>
+          <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Ganancia anual estimada (USD)</label>
+          <input type="number" id="fee-gan" value="4500" oninput="calcFees()" style="width:100%;background:var(--gray1);border:.5px solid var(--gray2);border-radius:7px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--ink);outline:none">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fee-cards">
+    <div class="fee-card fee-a">
+      <div class="fee-title">Opción A — Management Fee</div>
+      <div style="font-size:11px;color:#0C447C;margin-bottom:10px;line-height:1.6">1% anual sobre el capital = 0,083% mensual. Independiente del rendimiento.</div>
+      <div class="fee-result" id="fa-m">USD 0</div>
+      <div class="fee-sub">por mes</div>
+      <div class="fee-detail" id="fa-anual"></div>
+    </div>
+    <div class="fee-card fee-b">
+      <div class="fee-title">Opción B — Performance Fee</div>
+      <div style="font-size:11px;color:var(--green);margin-bottom:10px;line-height:1.6">20% sobre los resultados netos. Sin ganancia = USD 0.</div>
+      <div class="fee-result" id="fb-r">USD 0</div>
+      <div class="fee-sub">anual sobre la ganancia</div>
+      <div class="fee-detail" id="fb-det"></div>
+    </div>
+  </div>
+
+  <div id="fee-comp" style="margin-top:.85rem"></div>
+
+  <div class="card" style="margin-top:.85rem">
+    <div class="card-hdr">Comparativa de modelos</div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>Modelo</th><th>Fórmula</th><th>Conviene al cliente cuando</th><th>Conviene al asesor cuando</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:500;color:var(--blue)">A · Management</td><td>1% anual / 0,083% mensual</td><td>Rendimientos bajos o negativos</td><td>Mercados laterales o bajistas</td></tr>
+          <tr style="background:var(--gray1)"><td style="font-weight:500;color:var(--green)">B · Performance</td><td>20% sobre ganancia neta</td><td>Años de pérdida — no paga nada</td><td>Años con rendimientos >5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CAMINO DE VALOR ═══════════════ -->
+<div class="view" id="v-camino">
+  <div class="page-title">Camino de Valor</div>
+  <div class="page-sub">Seguimiento mensual real vs benchmark · Datos reales desde jul-2025</div>
+
+  <div class="cv-config">
+    <div class="cv-grid">
+      <div class="cv-item">
+        <label>Capital inicial (USD)</label>
+        <input type="number" id="cv-cap" value="200" oninput="renderCV()">
+      </div>
+      <div class="cv-item">
+        <label>Benchmark anual (%)</label>
+        <input type="number" id="cv-bench" value="8.5" step="0.5" oninput="renderCV()">
+      </div>
+      <div class="cv-item">
+        <label>Cliente</label>
+        <select id="cv-cliente" onchange="renderCV()">
+          <option value="brunetti">Nicolás Brunetti (datos reales)</option>
+          <option value="custom">Personalizado</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row" id="cv-stats"></div>
+
+  <div class="card">
+    <div class="card-hdr"><span>Camino de Valor vs Capital real</span><span style="font-size:10px">Datos jul-2025 → jun-2026 + proyección</span></div>
+    <div class="card-body">
+      <canvas id="cv-chart" height="260"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">G/P mensual vs benchmark</div>
+    <div class="card-body">
+      <canvas id="cv-gp" height="160"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">Tabla mensual completa</div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>Año</th><th>Mes</th><th>Cap. aportado</th><th>Camino Valor</th><th>Cap. real</th><th>G/P</th><th>Retorno %</th></tr></thead>
+        <tbody id="cv-tbl"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ EARNINGS ═══════════════ -->
+<div class="view" id="v-earnings">
+  <div class="page-title">Calendario de earnings</div>
+  <div class="page-sub">Workflow de actualización por reporte · Screener NB v3.1</div>
+
+  <div style="background:var(--blueL);border:.5px solid #B5D4F4;border-radius:8px;padding:.85rem 1.1rem;font-size:12px;color:#0C447C;margin-bottom:.85rem;line-height:1.65">
+    <strong>Cómo funciona:</strong> Cuando una empresa reporta, ingresá a Claude y escribí <em>"Reportó [TICKER] Q[X] [AÑO]"</em>. Se actualizan los 6 fundamentales, se recalcula el score y se notifican las carteras de clientes afectadas.
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">Urgente — próximos 30 días</div>
+    <div class="card-body">
+      ${[
+        {t:'MU',  n:'Micron Technology',    f:'~24/06/2026', s:'score 84',  w:'HBM pricing, NAND recovery, guidance'},
+      ].map(e=>`<div class="earn-row">
+        <div class="earn-tick">${e.t}</div>
+        <div style="flex:1"><div style="font-weight:500">${e.n}</div><div style="color:var(--gray3);font-size:11px">Mirar: ${e.w}</div></div>
+        <span class="earn-badge soon">${e.f}</span>
+        <span class="earn-badge done">${e.s}</span>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">Q3 2026 — julio / agosto</div>
+    <div class="card-body">
+      ${[
+        {t:'JPM', n:'JPMorgan',     f:'~14/07', w:'NIM, loan growth, provisions'},
+        {t:'UNH', n:'UnitedHealth', f:'~15/07', w:'MLR, guidance, Optum'},
+        {t:'GOOGL',n:'Alphabet',    f:'~23/07', w:'Cloud growth, Search IA'},
+        {t:'MSFT',n:'Microsoft',    f:'~29/07', w:'Azure ≥37%, Copilot'},
+        {t:'META',n:'Meta',         f:'~29/07', w:'ARPU, IA Ads, Llama'},
+        {t:'AAPL',n:'Apple',        f:'~30/07', w:'iPhone, Servicios, AI'},
+        {t:'AMZN',n:'Amazon',       f:'~31/07', w:'AWS growth, margen op.'},
+        {t:'NVDA',n:'NVIDIA',       f:'~27/08', w:'Data center, Blackwell ramp'},
+        {t:'AVGO',n:'Broadcom',     f:'~05/09', w:'AI custom chips, VMware'},
+        {t:'LLY', n:'Eli Lilly',    f:'~06/08', w:'Mounjaro/Zepbound demand'},
+        {t:'GGAL',n:'Grupo Galicia', f:'~ago',  w:'Margen financiero, macro AR'},
+        {t:'VIST',n:'Vista Energy',  f:'~ago',  w:'Producción Vaca Muerta'},
+      ].map((e,i)=>`<div class="earn-row" style="${i%2?'background:var(--gray1)':''}">
+        <div class="earn-tick">${e.t}</div>
+        <div style="flex:1"><div style="font-weight:500">${e.n}</div><div style="color:var(--gray3);font-size:11px">${e.w}</div></div>
+        <span class="earn-badge upcoming">${e.f}</span>
+      </div>`).join('')}
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ REVISIÓN IPS ═══════════════ -->
+<div class="view" id="v-ips">
+  <div class="page-title">Revisión anual de IPS</div>
+  <div class="page-sub">Alertas automáticas · 60 días antes = atención · 30 días = urgente · Vencido = crítico</div>
+  <div class="stats-row" id="ips-stats"></div>
+  <div id="ips-banner"></div>
+  <div class="card">
+    <div class="card-hdr"><span>Estado por cliente</span><span id="ips-today" style="font-size:10px"></span></div>
+    <div id="ips-list"></div>
+  </div>
+  <div class="card" id="ips-cl-card" style="display:none">
+    <div class="card-hdr"><span id="ips-cl-title">Checklist</span><span id="ips-cl-prog" style="color:var(--green)"></span></div>
+    <div id="ips-cl-body" style="padding:.85rem 1.1rem"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ NORMATIVA ═══════════════ -->
+<div class="view" id="v-normativa">
+  <div class="page-title">Normativa fiscal ARCA 2026</div>
+  <div class="page-sub">Ganancias · Bienes Personales · Por instrumento · Jun-2026</div>
+  <div class="card">
+    <div class="card-hdr">Tratamiento por instrumento</div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>Instrumento</th><th>Resultado compraventa</th><th>Dividendos / Intereses</th><th>Bienes Personales</th><th>Notas</th></tr></thead>
+        <tbody>
+          ${[
+            ['CEDEARs','Exento (PH) — Ley 27.430','Gravado — escala progresiva hasta 35%','Por TC 31/12','Más frecuente en portafolios NB'],
+            ['SPY / ETFs','Exento (PH)','Gravado distribución','Por TC 31/12','Igual tratamiento que CEDEARs'],
+            ['Bonos soberanos AR','Exento','Exento','Exento','GD35, AL30, etc.'],
+            ['ONs corporativas USD','Exento resultado','Gravado 15% retención fuente','Por cotización 31/12','YMCXO, DNC9O, etc.'],
+            ['FCIs (cuotas cotizan)','Exento','Depende del fondo','Por cotización 31/12','Verificar composición'],
+            ['BOPREALes','Exento','Exento','Exento','BPOA7, BPOC7'],
+            ['Acciones locales AR','Exento (PH)','Gravado 7%','Por cotización 31/12','GGAL, BMA, PAMP, etc.'],
+            ['BONCAP / LECAPs','Exento resultado','Exento intereses','Por cotización 31/12','Instrumentos pesos'],
+          ].map((r,i)=>`<tr style="${i%2?'background:var(--gray1)':''}">
+            ${r.map((c,j)=>`<td style="${j===0?'font-weight:500':''}">${c}</td>`).join('')}
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">Bienes Personales 2025 — umbrales vigentes</div>
+    <div class="card-body">
+      ${[
+        {t:'MNI (exento)',v:'~USD 100.000 equivalentes al 31/12/2025',c:var(--green)},
+        {t:'Alícuota base',v:'0.5% sobre el excedente del MNI',c:var(--ink)},
+        {t:'Alícuota bienes exterior',v:'0.7% — aplica a CEDEARs, SPY, ETFs',c:var(--amber)},
+        {t:'Blanqueo vigente',v:'Ley 27.743 — verificar situación individual',c:var(--blue)},
+      ].map(x=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:.5px solid var(--gray2);font-size:12px">
+        <span style="color:var(--gray3)">${x.t}</span>
+        <span style="font-weight:500">${x.v}</span>
+      </div>`).join('')}
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════ SCREENER RENTA FIJA ═══════════════ -->
+<div class="view" id="v-screener_rf">
+  <div class="page-title">Screener Renta Fija v3</div>
+  <div class="page-sub">Datos exactos IOL 16/06/2026 · Soberanos · BOPREALes · ONs corporativas · LECAPs · CER</div>
+
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.65rem;align-items:center" id="rf-filters"></div>
+  <div style="display:flex;gap:6px;margin-bottom:.65rem">
+    <input id="rf-q" type="text" placeholder="Buscar ticker o emisor..." oninput="renderRF()"
+      style="flex:1;background:var(--gray1);border:.5px solid var(--gray2);border-radius:7px;padding:6px 10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);outline:none">
+    <select id="rf-sort" onchange="setRFSort(this.value)"
+      style="padding:5px 10px;font-family:'DM Mono',monospace;font-size:10px;border-radius:6px;border:.5px solid var(--gray2);background:var(--gray1);color:var(--gray3);outline:none">
+      <option value="tir">↓ TIR/TNA</option>
+      <option value="vto">↑ Vencimiento</option>
+      <option value="dur">↑ Duration</option>
+    </select>
+  </div>
+
+  <div id="rf-det"></div>
+
+  <div style="overflow-x:auto">
+  <table style="width:100%;border-collapse:collapse;font-size:11.5px" id="rf-tbl-wrap">
+    <thead><tr id="rf-thead">
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2);white-space:nowrap">#</th>
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2)">Ticker</th>
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2)">Instrumento</th>
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2)">Clase</th>
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2);cursor:pointer" onclick="setRFSort('tir')">TIR ▾</th>
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2)">Px USD</th>
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2);cursor:pointer" onclick="setRFSort('dur')">MD</th>
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2);cursor:pointer" onclick="setRFSort('vto')">Vto.</th>
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2)">Mon.</th>
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2)">Fiscal</th>
+      <th style="text-align:left;padding:5px 7px;background:var(--gray1);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--gray3);font-weight:500;border-bottom:.5px solid var(--gray2)">Perfil NB</th>
+    </tr></thead>
+    <tbody id="rf-tb"></tbody>
+  </table>
+  </div>
+  <div style="font-size:10px;color:var(--gray3);margin-top:.75rem;opacity:.7;line-height:1.6">
+    Datos exactos IOL Inversiones Informe Diario 16/06/2026. TIR exacta calculada por IOL. Precio dirty USD.
+    LECAPs/BONCAPs en TNA. Verificar precios actuales en IOL antes de operar. NB Asesoría Financiera · Nicolás Brunetti CP.
+  </div>
+</div>
+
+<!-- ═══════════════ MOTOR DE ANÁLISIS ═══════════════ -->
+<div class="view" id="v-motor">
+  <div class="page-title">Motor de análisis</div>
+  <div class="page-sub">Cuestionario · Perfil · Onboarding · Proceso completo de incorporación de clientes</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem">
+    <div class="card" style="cursor:pointer" onclick="window.open('https://script.google.com/macros/s/AKfycbzK2ig8SSubBHvaF-S04_IQEXi2T4x-cFnUak8bojLb6bAF9UI9D1hJqH-IkdjvNEYZzg/exec','_blank')">
+      <div class="card-hdr">📋 Cuestionario de perfil</div>
+      <div style="padding:.75rem 1rem;font-size:12px;color:var(--gray3);line-height:1.7">
+        Formulario web publicado en GitHub Pages. Envía respuestas automáticamente a Google Drive.<br>
+        <span style="color:var(--green);font-size:11px">↗ Abrir cuestionario</span>
+      </div>
+    </div>
+    <div class="card" onclick="window.open('https://docs.google.com/spreadsheets/d/1MBtSID210SIiet-k6fVRv1PNl-NFzv56HyDgdahPPp0','_blank')" style="cursor:pointer">
+      <div class="card-hdr">📊 Respuestas en Drive</div>
+      <div style="padding:.75rem 1rem;font-size:12px;color:var(--gray3);line-height:1.7">
+        Hoja de cálculo Google Drive con todas las respuestas del cuestionario de perfil.<br>
+        <span style="color:var(--blue);font-size:11px">↗ Abrir Drive</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">⚙️ Flujo de onboarding — 6 pasos</div>
+    <div style="padding:.75rem 1rem">
+      ${[
+        ['1','Cuestionario web','Cliente completa el formulario en GitHub Pages → va a Drive automáticamente'],
+        ['2','Perfil de riesgo','Analizar respuestas → asignar perfil (Conservador → Agresivo)'],
+        ['3','Cartera objetivo','Seleccionar cartera modelo del perfil → personalizar si corresponde'],
+        ['4','Gap analysis','Comparar cartera actual del cliente (IOL) vs cartera objetivo'],
+        ['5','IPS','Generar Política de Inversión Personalizada en Word con todos los datos'],
+        ['6','Firma y ejecución','Firmar IPS → ejecutar operaciones en IOL → programar revisión anual'],
+      ].map(([n,t,d]) => `
+        <div style="display:flex;gap:12px;padding:.65rem 0;border-bottom:.5px solid var(--gray2)">
+          <div style="min-width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">${n}</div>
+          <div>
+            <div style="font-weight:500;font-size:13px">${t}</div>
+            <div style="font-size:11px;color:var(--gray3);margin-top:2px">${d}</div>
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:.75rem">
+    <div class="card-hdr">📁 Carpeta clientes en Drive</div>
+    <div style="padding:.75rem 1rem;display:flex;gap:10px;align-items:center">
+      <a href="https://drive.google.com/drive/folders/1UvUw_OxMgKHN2X02XCkkZzHynZZY5MtB" target="_blank"
+         style="padding:8px 16px;background:var(--blue);color:#fff;border-radius:7px;font-size:12px;text-decoration:none;font-weight:500">
+        ↗ Abrir carpeta Drive
+      </a>
+      <span style="font-size:11px;color:var(--gray3)">IPS, legajos y cuentas comitentes de todos los clientes</span>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- MODAL NUEVO CLIENTE -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center">
+  <div style="background:var(--white);border-radius:12px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;border:.5px solid var(--gray2)">
+    <div style="padding:.85rem 1.1rem;border-bottom:.5px solid var(--gray2);display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:'Fraunces',serif;font-size:15px;font-weight:600">Nuevo cliente</div>
+      <button onclick="closeModal()" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--gray3)">✕</button>
+    </div>
+    <div style="padding:1rem 1.1rem;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:3px">Nombre</label><input id="m-n" style="width:100%;background:var(--gray1);border:.5px solid var(--gray2);border-radius:6px;padding:7px 10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);outline:none"></div>
+      <div><label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:3px">Edad</label><input id="m-e" type="number" style="width:100%;background:var(--gray1);border:.5px solid var(--gray2);border-radius:6px;padding:7px 10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);outline:none"></div>
+      <div><label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:3px">Perfil</label>
+        <select id="m-p" style="width:100%;background:var(--gray1);border:.5px solid var(--gray2);border-radius:6px;padding:7px 10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);outline:none">
+          <option>Conservador</option><option>Moderado Conservador</option><option selected>Moderado</option><option>Moderado Agresivo</option><option>Agresivo</option>
+        </select>
+      </div>
+      <div><label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:3px">Capital (USD)</label><input id="m-c" type="number" style="width:100%;background:var(--gray1);border:.5px solid var(--gray2);border-radius:6px;padding:7px 10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);outline:none"></div>
+      <div><label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:3px">Honorarios</label>
+        <select id="m-f" style="width:100%;background:var(--gray1);border:.5px solid var(--gray2);border-radius:6px;padding:7px 10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);outline:none">
+          <option value="pendiente">Pendiente</option><option value="management">A · Management Fee</option><option value="performance">B · Performance Fee</option>
+        </select>
+      </div>
+      <div><label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:3px">Fecha de alta</label><input id="m-d" type="date" style="width:100%;background:var(--gray1);border:.5px solid var(--gray2);border-radius:6px;padding:7px 10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);outline:none"></div>
+    </div>
+    <div style="padding:.75rem 1.1rem;border-top:.5px solid var(--gray2);display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="closeModal()" style="padding:8px 14px;font-family:'DM Mono',monospace;font-size:12px;border-radius:7px;border:.5px solid var(--gray2);background:var(--gray1);color:var(--gray3);cursor:pointer">Cancelar</button>
+      <button onclick="saveClient()" style="padding:8px 18px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;border-radius:7px;border:none;background:var(--ink);color:#fff;cursor:pointer">Crear legajo →</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+
+// ══════════════════════════════════════════
+// NAVEGACIÓN
+// ══════════════════════════════════════════
+function goView(id, btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'));
+  document.getElementById('v-'+id).classList.add('on');
+  if(btn) btn.classList.add('on');
+}
+
+// ══════════════════════════════════════════
+// DATOS UNIVERSE
+// ══════════════════════════════════════════
+const U=[
+{t:'MSFT',n:'Microsoft',s:'Tech',tp:'CEDEAR',p:246.00,pe:22.55,pf:21.46,ph:30.9,pj:28,m:39.3,cagr:15,roe:34,d:.28,fcf:1,cob:25,b:1.10,up:28.5,peg:1.38,tesis:'Azure +39% YoY. P/E 24.2x vs historial 30.9x. EPS +15.6% YoY. Copilot penetrando.',moat:'M365+Azure+Teams. Switching costs altísimos.',fiscal:'Exento Ganancias PH. BP: TC 31/12.',nuevo:false},
+{t:'GOOGL',n:'Alphabet',s:'Tech',tp:'CEDEAR',p:369.35,pe:28.1,pf:24.5,ph:24,pj:26,m:57,cagr:14,roe:31,d:-1,fcf:1,cob:40,b:1.05,up:44.2,peg:1.05,tesis:'Q1\'26 +22% YoY. Cloud +63%. P/E 16.8x vs historial 24x. Inició dividendo.',moat:'Búsqueda 90%+YouTube+Cloud.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'AMZN',n:'Amazon',s:'Tech',tp:'CEDEAR',p:246.00,pe:29.4,pf:31.1,ph:78,pj:32,m:9.5,cagr:11,roe:23,d:.7,fcf:1,cob:12,b:1.25,up:27,peg:1.38,tesis:'AWS motor de margen. P/E 32.5x vs historial 78x.',moat:'AWS+Prime+Marketplace.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'AVGO',n:'Broadcom',s:'Tech',tp:'CEDEAR',p:408.24,pe:65.4,pf:25.0,ph:42,pj:32,m:48,cagr:44,roe:37,d:.74,fcf:1,cob:18,b:1.43,up:18.2,peg:0.53,tesis:'Chips AI custom+VMware. Forward P/E 24.5x. PEG 0.53.',moat:'AI custom silicon+VMware cautivo.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'NVDA',n:'NVIDIA',s:'Tech',tp:'CEDEAR',p:207.41,pe:31.6,pf:27.8,ph:58,pj:35,m:55.5,cagr:65,roe:122,d:-2,fcf:1,cob:50,b:1.75,up:22.5,peg:0.42,tesis:'Mktcap $4.96T. Monopolio IA 85%. PEG 0.42.',moat:'CUDA ecosystem. 3+ años de ventaja.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'META',n:'Meta Platforms',s:'Tech',tp:'CEDEAR',p:567.58,pe:20.6,pf:18.2,ph:28,pj:26,m:38.5,cagr:18,roe:38,d:-1.4,fcf:1,cob:35,b:1.23,up:32,peg:1.02,tesis:'P/E 20.6x — más bajo FAANG. EPS $27.52. 3.4B usuarios.',moat:'FB+Instagram+WhatsApp.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'AAPL',n:'Apple',s:'Tech',tp:'CEDEAR',p:299.24,pe:35.2,pf:32.2,ph:29,pj:28,m:25.8,cagr:6,roe:147,d:.4,fcf:1,cob:30,b:1.15,up:14,peg:2.80,tesis:'2.2B dispositivos. Apple Intelligence upgrade cycle.',moat:'Ecosistema iOS+Servicios.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'ADBE',n:'Adobe',s:'Tech',tp:'CEDEAR',p:358,pe:22.5,pf:18.2,ph:38.2,pj:28,m:29.5,cagr:10,roe:35,d:.3,fcf:1,cob:22,b:1.30,up:33,peg:1.62,tesis:'Firefly AI. P/E 22.5x vs historial 38.2x.',moat:'Creative Cloud sin sustituto.',fiscal:'Exento Ganancias PH.',dcf:{fcf_share:17.5,g1:12,g2:8,wacc:9.5,gTerminal:3,shares:440,debt:4100,cash:7500},nuevo:false},
+{t:'NFLX',n:'Netflix',s:'Tech',tp:'CEDEAR',p:82,pe:29,pf:21.8,ph:62,pj:28,m:23,cagr:13,roe:38,d:.3,fcf:1,cob:25,b:1.05,up:40,peg:1.43,tesis:'−35% desde máximos. Target $114.82. Margen 31.5%.',moat:'300M suscriptores.',fiscal:'Exento Ganancias PH.',dcf:{fcf_share:22,g1:18,g2:10,wacc:10,gTerminal:3,shares:428,debt:14500,cash:7200},nuevo:false},
+{t:'CRM',n:'Salesforce',s:'Tech',tp:'CEDEAR',p:155.02,pe:15.82,pf:13.5,ph:48.5,pj:30,m:15.8,cagr:9,roe:11,d:.4,fcf:1,cob:20,b:1.35,up:24.5,peg:2.25,tesis:'Agentforce IA. P/E 33.8x vs historial 48.5x.',moat:'150K+ clientes.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'MELI',n:'MercadoLibre',s:'Tech',tp:'CEDEAR',p:1607,pe:42,pf:40.2,ph:61.1,pj:35,m:4.8,cagr:37,roe:14,d:2,fcf:1,cob:4.2,b:1.25,up:19,peg:1.48,tesis:'Amazon+PayPal Latam. 120M usuarios.',moat:'Red logística+fintech.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'MU',n:'Micron Technology',s:'Tech',tp:'CEDEAR',p:1043.19,pe:48.6,pf:8.8,ph:65,pj:18,m:38.5,cagr:85,roe:22,d:-2,fcf:1,cob:20,b:1.55,up:20,peg:0.35,tesis:'HBM IA vendida hasta fin 2026. PEG 0.35.',moat:'HBM3E único a escala.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'ASML',n:'ASML Holding',s:'Tech',tp:'CEDEAR',p:1705,pe:58.6,pf:40.5,ph:36.3,pj:38,m:51.6,cagr:18,roe:55,d:.8,fcf:1,cob:30,b:1.20,up:24,peg:1.85,tesis:'Monopolio EUV. Sin competencia en 10 años.',moat:'Litografía EUV irreemplazable.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'TSM',n:'TSMC',s:'Tech',tp:'CEDEAR',p:425.83,pe:35.0,pf:27.0,ph:25,pj:24,m:40.5,cagr:22,roe:28,d:1.2,fcf:1,cob:20,b:1.20,up:27.5,peg:0.85,tesis:'Único fab 3nm/2nm. Produce NVDA/AAPL/AMD.',moat:'Monopolio chips avanzados.',fiscal:'Exento Ganancias PH.',dcf:{fcf_share:11.5,g1:22,g2:12,wacc:10,gTerminal:3,shares:25900,debt:24000,cash:50000},nuevo:true},
+{t:'AMD',n:'Advanced Micro Dev.',s:'Tech',tp:'CEDEAR',p:507.29,pe:164.7,pf:45.3,ph:42,pj:35,m:22,cagr:26,roe:8,d:.5,fcf:1,cob:15,b:1.65,up:26,peg:1.75,tesis:'MI300X ganando IA mkt share. +25% YoY.',moat:'x86 duopolio+GPU IA.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'ORCL',n:'Oracle',s:'Tech',tp:'CEDEAR',p:183.53,pe:32.25,pf:26.3,ph:38,pj:30,m:22.5,cagr:20,roe:999,d:.8,fcf:1,cob:10,b:1.10,up:21.5,peg:1.52,tesis:'OCI contratos OpenAI+MSFT. Revenue +20% YoY.',moat:'150K+ empresas base instalada.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'PLTR',n:'Palantir',s:'Tech',tp:'CEDEAR',p:156.40,pe:220,pf:140,ph:361,pj:60,m:28.5,cagr:85,roe:15,d:.5,fcf:1,cob:20,b:2.00,up:28,peg:2.05,tesis:'Revenue +85% YoY. Rule of 40 = 145%.',moat:'Software misión crítica.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'PANW',n:'Palo Alto Networks',s:'Tech',tp:'CEDEAR',p:263,pe:244,pf:72,ph:220,pj:80,m:8,cagr:31,roe:4.8,d:.08,fcf:1,cob:10,b:0.94,up:17.5,peg:4.73,tesis:'Revenue +31% YoY. NGS ARR $8.1B.',moat:'Ciberseguridad plataforma integrada.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'PEP',n:'PepsiCo',s:'Consumo',tp:'CEDEAR',p:149.51,pe:26.2,pf:22.0,ph:25.4,pj:22,m:9.2,cagr:5,roe:43.9,d:2.45,fcf:1,cob:5.5,b:0.41,up:17,peg:2.48,tesis:'Dividend King 54 años. Beta 0.41.',moat:'Pepsi+Lay\'s+Gatorade.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'KO',n:'Coca-Cola',s:'Consumo',tp:'CEDEAR',p:83.59,pe:26.2,pf:22.5,ph:26.2,pj:24,m:22.5,cagr:4,roe:38.5,d:2.1,fcf:1,cob:6.5,b:0.55,up:12.5,peg:3.42,tesis:'62 años dividendo creciente. Beta 0.55.',moat:'Marca global.',fiscal:'Dividendos gravados.',dcf:{fcf_share:2.5,g1:5,g2:4,wacc:8.5,gTerminal:3,shares:4300,debt:35000,cash:12000},nuevo:false},
+{t:'MCD',n:"McDonald's",s:'Consumo',tp:'CEDEAR',p:283.82,pe:23.4,pf:20.5,ph:28.4,pj:25,m:32.8,cagr:6,roe:999,d:3.8,fcf:1,cob:5.2,b:0.72,up:19,peg:2.65,tesis:'Modelo royalty. Margen 33%. Yield 3.5%.',moat:'Marca+franquicias+real estate.',fiscal:'Dividendos gravados.',dcf:{fcf_share:11,g1:8,g2:6,wacc:9,gTerminal:3,shares:730,debt:37000,cash:3500},nuevo:false},
+{t:'PG',n:'Procter & Gamble',s:'Consumo',tp:'CEDEAR',p:142.96,pe:20.45,pf:22.9,ph:27,pj:24,m:19.5,cagr:4,roe:31,d:1.4,fcf:1,cob:12,b:0.55,up:14,peg:3.10,tesis:'68 años dividendo creciente.',moat:'65 marcas líderes.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'WMT',n:'Walmart',s:'Consumo',tp:'CEDEAR',p:121.04,pe:42.5,pf:33.5,ph:28,pj:30,m:2.6,cagr:7,roe:21.8,d:1.2,fcf:1,cob:8,b:0.60,up:8,peg:3.88,tesis:'E-commerce +22% YoY.',moat:'Escala insuperable.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'CRESY',n:'Cresud',s:'Consumo',tp:'Local AR',p:12.5,pe:3.42,pf:4.0,ph:14,pj:10,m:12.5,cagr:8,roe:15,d:1.5,fcf:1,cob:5,b:1.35,up:38,peg:0.88,tesis:'1.5M ha en 4 países + 33% IRSA.',moat:'Hectáreas+control IRSA.',fiscal:'Exento Ganancias AR.',nuevo:false},
+{t:'LVMH',n:'LVMH Moët Hennessy',s:'Consumo',tp:'CEDEAR',p:108.78,pe:21.4,pf:22.3,ph:30,pj:25,m:16.1,cagr:8,roe:20,d:2,fcf:1,cob:10,b:0.90,up:28,peg:2.05,tesis:'Lujo #1. Revenue €80.8B.',moat:'LV+Dior+Moët.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'AXP',n:'American Express',s:'Financiero',tp:'CEDEAR',p:300,pe:18.5,pf:16.7,ph:18.5,pj:20,m:15.7,cagr:10,roe:34,d:1.91,fcf:1,cob:4,b:1.13,up:24,peg:1.58,tesis:'Card fees +18%. ROE 34%. Buffett.',moat:'Closed-loop+clientes premium.',fiscal:'Dividendos gravados.',dcf:{fcf_share:18,g1:12,g2:8,wacc:10,gTerminal:3,shares:700,debt:48000,cash:40000},nuevo:false},
+{t:'V',n:'Visa',s:'Financiero',tp:'CEDEAR',p:324,pe:25.6,pf:23.0,ph:33.2,pj:30,m:52.8,cagr:11,roe:48,d:.8,fcf:1,cob:18,b:0.95,up:18,peg:2.18,tesis:'Duopolio pagos. Margen 53%.',moat:'Red 4B tarjetas.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'JPM',n:'JPMorgan Chase',s:'Financiero',tp:'CEDEAR',p:333.46,pe:15.2,pf:13.8,ph:13,pj:15,m:26.5,cagr:8,roe:17,d:1.5,fcf:1,cob:null,b:1.10,up:21,peg:1.50,tesis:'Banco más capitalizado del mundo.',moat:'Franquicia bancaria universal.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'NU',n:'Nu Holdings',s:'Financiero',tp:'CEDEAR',p:11.93,pe:18.1,pf:14.5,ph:66.8,pj:20,m:18.2,cagr:37,roe:30,d:3.83,fcf:1,cob:4,b:1.50,up:53,peg:0.35,tesis:'135M+ clientes. PEG 0.35. Recompra $1B.',moat:'Banco digital <25% efficiency.',fiscal:'Dividendos gravados.',dcf:{fcf_share:0.65,g1:35,g2:18,wacc:12,gTerminal:4,shares:4760,debt:12000,cash:8000},nuevo:false},
+{t:'GGAL',n:'Grupo Galicia',s:'Financiero',tp:'Local AR',p:75.2,pe:7.8,pf:6.2,ph:11.5,pj:10,m:28,cagr:18,roe:25,d:1.2,fcf:1,cob:null,b:1.55,up:45,peg:0.38,tesis:'Banco privado #1 AR. ROE 25%.',moat:'Naranja X+franquicia líder.',fiscal:'Exento Ganancias AR.',nuevo:false},
+{t:'BMA',n:'Banco Macro',s:'Financiero',tp:'Local AR',p:79.84,pe:21.8,pf:16.5,ph:10.5,pj:9,m:30.5,cagr:16,roe:28,d:1.1,fcf:1,cob:null,b:1.48,up:42,peg:0.35,tesis:'Banco líder interior AR. PEG 0.35.',moat:'Liderazgo provincias.',fiscal:'Exento Ganancias AR.',nuevo:false},
+{t:'GS',n:'Goldman Sachs',s:'Financiero',tp:'CEDEAR',p:1089,pe:18.85,pf:17.5,ph:13.5,pj:14,m:28,cagr:10,roe:13,d:1.4,fcf:1,cob:null,b:1.35,up:18.5,peg:1.10,tesis:'M&A recover. IB líder. P/E 12.2x.',moat:'Franquicia IB global.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'BAC',n:'Bank of America',s:'Financiero',tp:'CEDEAR',p:48,pe:11.5,pf:10.2,ph:12.8,pj:13,m:25,cagr:8,roe:11,d:1.5,fcf:1,cob:null,b:1.40,up:20,peg:1.35,tesis:'2do banco EE.UU. Buffett holder.',moat:'Retail+Merrill Lynch.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'BRK.B',n:'Berkshire Hathaway',s:'Financiero',tp:'CEDEAR',p:487,pe:22,pf:19.5,ph:24,pj:22,m:15,cagr:8,roe:12,d:.8,fcf:1,cob:null,b:0.85,up:15,peg:1.98,tesis:'$350B+ cash. Sin deuda.',moat:'Seguros+railroads+Buffett.',fiscal:'No paga dividendo.',nuevo:true},
+{t:'JNJ',n:'Johnson & Johnson',s:'Salud',tp:'CEDEAR',p:226.71,pe:23.5,pf:16.4,ph:18.4,pj:20,m:20.5,cagr:5,roe:22,d:.9,fcf:1,cob:15,b:0.60,up:22.5,peg:2.02,tesis:'62 años dividendo. Oncología+medtech.',moat:'Patentes pharma+medtech.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'UNH',n:'UnitedHealth',s:'Salud',tp:'CEDEAR',p:285,pe:14.5,pf:12.7,ph:22,pj:18,m:5.1,cagr:10,roe:22,d:.7,fcf:1,cob:9,b:0.80,up:38,peg:1.05,tesis:'−50% máximos. P/E 14.5x vs 22x.',moat:'Integración vertical. Optum.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'LLY',n:'Eli Lilly',s:'Salud',tp:'CEDEAR',p:1122.50,pe:38.8,pf:26.7,ph:48,pj:35,m:28.5,cagr:30,roe:75,d:1,fcf:1,cob:20,b:0.55,up:32,peg:1.40,tesis:'GLP-1 Mounjaro/Zepbound. Mercado $150B.',moat:'GLP-1 liderazgo.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'ABBV',n:'AbbVie',s:'Salud',tp:'CEDEAR',p:221.23,pe:23.5,pf:19.8,ph:22,pj:20,m:35,cagr:12,roe:999,d:3.5,fcf:1,cob:8,b:0.70,up:22,peg:0.40,tesis:'PEG 0.40. Yield 3.5%. Pipeline 90 comp.',moat:'Humira+pipeline oncología.',fiscal:'Dividendos gravados.',dcf:{fcf_share:12,g1:12,g2:8,wacc:9,gTerminal:3,shares:1770,debt:60000,cash:10000},nuevo:true},
+{t:'NVO',n:'Novo Nordisk',s:'Salud',tp:'CEDEAR',p:43.88,pe:10.3,pf:12.8,ph:42,pj:30,m:35,cagr:22,roe:85,d:2.5,fcf:1,cob:25,b:0.55,up:48,peg:0.62,tesis:'−65% aranceles. PEG 0.62. Contrarian.',moat:'Ozempic+Wegovy GLP-1.',fiscal:'Dividendos gravados.',dcf:{fcf_share:3.8,g1:22,g2:12,wacc:9,gTerminal:3,shares:4450,debt:9000,cash:8000},nuevo:true},
+{t:'XOM',n:'Exxon Mobil',s:'Energía',tp:'CEDEAR',p:149.81,pe:25.2,pf:11.7,ph:18.5,pj:15,m:7.8,cagr:8,roe:12.5,d:.5,fcf:1,cob:12,b:0.85,up:16.5,peg:1.55,tesis:'Dividend Aristocrat. Hedge inflación.',moat:'Reservas masivas.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'VIST',n:'Vista Energy',s:'Energía',tp:'CEDEAR AR',p:73.96,pe:7.2,pf:5.8,ph:15,pj:10,m:35,cagr:28,roe:35,d:1.2,fcf:1,cob:8,b:1.65,up:55.5,peg:0.22,tesis:'BofA target $115. PEG 0.22.',moat:'Pura-play Vaca Muerta.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'FSLR',n:'First Solar',s:'Energía',tp:'CEDEAR',p:267,pe:14.2,pf:10.8,ph:28,pj:16,m:24.5,cagr:22,roe:18,d:.1,fcf:1,cob:18,b:1.55,up:36,peg:0.38,tesis:'Solar US único. Backlog 20GW.',moat:'CdTe patentada.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'PBR',n:'Petrobras',s:'Energía',tp:'CEDEAR',p:14.8,pe:5.8,pf:5.2,ph:9.5,pj:8,m:21.5,cagr:6,roe:22,d:1.1,fcf:1,cob:8,b:1.40,up:38,peg:0.65,tesis:'P/E 5.8x. Yield 9-11%.',moat:'Pre-sal offshore.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'YPF',n:'YPF',s:'Energía',tp:'Local AR',p:45.0,pe:8.5,pf:7.0,ph:15,pj:12,m:8.5,cagr:22,roe:14,d:1.8,fcf:1,cob:5.5,b:1.65,up:52,peg:0.38,tesis:'Vaca Muerta +30% YoY.',moat:'2do mayor shale.',fiscal:'Exento Ganancias AR.',nuevo:false},
+{t:'PAMP',n:'Pampa Energía',s:'Energía',tp:'Local AR',p:82.4,pe:9.2,pf:7.5,ph:14,pj:11,m:25,cagr:15,roe:18,d:.9,fcf:1,cob:7,b:1.50,up:38.5,peg:0.52,tesis:'Energética integrada AR.',moat:'Generación+gas+O&G.',fiscal:'Exento Ganancias AR.',dcf:{fcf_share:12,g1:15,g2:8,wacc:11,gTerminal:3,shares:110,debt:1500,cash:400},nuevo:false},
+{t:'TGS',n:'Transp. Gas Sur',s:'Energía',tp:'Local AR',p:28.5,pe:15.73,pf:12.0,ph:12,pj:11,m:42,cagr:18,roe:28,d:.6,fcf:1,cob:12,b:1.45,up:48,peg:0.32,tesis:'Margen 42%. GNL+desregulación.',moat:'Concesión gasoductos 30 años.',fiscal:'Exento Ganancias AR.',nuevo:false},
+{t:'PM',n:'Philip Morris',s:'Energía',tp:'CEDEAR',p:184.06,pe:24.42,pf:18.5,ph:22,pj:22,m:38,cagr:8,roe:999,d:5,fcf:1,cob:8,b:0.75,up:12,peg:2.10,tesis:'+40% revenue smoke-free. Yield 5%.',moat:'IQOS irreversible.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'CAT',n:'Caterpillar',s:'Industrial',tp:'CEDEAR',p:945,pe:42.5,pf:34.8,ph:18.2,pj:18,m:15.2,cagr:9,roe:52,d:1.8,fcf:1,cob:14,b:1.20,up:19,peg:1.58,tesis:'Superciclo infraestructura. ROE 52%.',moat:'Marca #1 maquinaria.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'TM',n:'Toyota Motor',s:'Industrial',tp:'CEDEAR',p:180,pe:9.96,pf:10.57,ph:10.5,pj:11,m:8.2,cagr:6,roe:14,d:.8,fcf:1,cob:15,b:0.68,up:26,peg:1.20,tesis:'Mayor automotriz. Híbridos vs EV.',moat:'TPS+Lexus.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'UBER',n:'Uber',s:'Industrial',tp:'CEDEAR',p:73.77,pe:17.95,pf:19.1,ph:null,pj:40,m:2,cagr:16,roe:12,d:1.2,fcf:1,cob:4.5,b:1.30,up:49,peg:1.85,tesis:'EPS +44% YoY. Target $104.',moat:'Red 2 lados 70 países.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'UNP',n:'Union Pacific',s:'Industrial',tp:'CEDEAR',p:256.88,pe:21.85,pf:21.07,ph:23,pj:22,m:41.5,cagr:6,roe:45,d:2.2,fcf:1,cob:10,b:0.85,up:21,peg:2.25,tesis:'Ferrocarril #1 EE.UU. Reshoring.',moat:'Infraestructura duopolio.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'HMY',n:'Harmony Gold',s:'Industrial',tp:'CEDEAR',p:15.70,pe:9.40,pf:8.0,ph:18,pj:12,m:18.5,cagr:12,roe:18,d:.4,fcf:1,cob:8,b:1.80,up:44,peg:0.58,tesis:'Hedge geopolítico. Producción +12%.',moat:'Reservas oro vida larga.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'DE',n:'Deere & Company',s:'Industrial',tp:'CEDEAR',p:589,pe:33.14,pf:30.78,ph:24,pj:26,m:18.5,cagr:8,roe:42,d:1.8,fcf:1,cob:12,b:0.95,up:21,peg:1.60,tesis:'IA en maquinaria agrícola. ROE 42%.',moat:'John Deere #1 ag.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'O',n:'Realty Income',s:'Inmob.',tp:'CEDEAR',p:62.72,pe:50.37,pf:45.0,ph:45,pj:40,m:21.5,cagr:3,roe:3.2,d:5.8,fcf:1,cob:3.1,b:0.85,up:20,peg:8.48,tesis:'Dividendo mensual 6% yield.',moat:'15K+ propiedades triple net.',fiscal:'REIT.',nuevo:false},
+{t:'IRS',n:'IRSA',s:'Inmob.',tp:'Local AR',p:15.21,pe:6.42,pf:5.5,ph:12.5,pj:10,m:18,cagr:10,roe:12,d:2.8,fcf:1,cob:4,b:1.42,up:42.5,peg:0.68,tesis:'Shoppings premium AR.',moat:'Shoppings AMBA únicos.',fiscal:'Exento Ganancias AR.',nuevo:false},
+{t:'SPGI',n:'S&P Global',s:'Inmob.',tp:'CEDEAR',p:403.15,pe:26.5,pf:21.4,ph:35,pj:32,m:35,cagr:10,roe:55,d:.9,fcf:1,cob:15,b:1.05,up:19.5,peg:2.15,tesis:'Duopolio ratings. ROE 55%.',moat:'Mandato regulatorio.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'BIDU',n:'Baidu',s:'Emergente',tp:'CEDEAR',p:121.66,pe:73.7,pf:12.5,ph:22,pj:16,m:15.2,cagr:5,roe:10,d:-.8,fcf:1,cob:15,b:1.50,up:41,peg:1.22,tesis:'Ernie Bot IA. P/E 11.8x vs 22x.',moat:'70% búsqueda China.',fiscal:'Riesgo ADR.',nuevo:false},
+{t:'BABA',n:'Alibaba',s:'Emergente',tp:'CEDEAR',p:110.97,pe:16.0,pf:9.5,ph:35,pj:18,m:4.8,cagr:5,roe:9,d:-.5,fcf:0,cob:8,b:1.45,up:35.5,peg:1.82,tesis:'Cloud AI +38% YoY. Forward P/E 10x.',moat:'Alibaba+Taobao+Alipay.',fiscal:'Riesgo geopolítico.',nuevo:false},
+{t:'JD',n:'JD.com',s:'Emergente',tp:'CEDEAR',p:27.91,pe:14.82,pf:8.61,ph:28,pj:14,m:3.2,cagr:8,roe:8,d:.2,fcf:1,cob:12,b:1.35,up:29,peg:1.32,tesis:'E-commerce #2 China.',moat:'Logística propia China.',fiscal:'Riesgo ADR.',nuevo:false},
+];
+const TC_COL={'CEDEAR':'#185FA5','Local AR':'#27500A','CEDEAR AR':'#854F0B'};
+
+function calcScore(x){
+  const esR=x.s==='Inmob.',esF=x.s==='Financiero',esRetail=['WMT','JD'].includes(x.t);
+  const fund=[x.m>=10||(esRetail&&x.m>=2),x.cagr>=5,x.pf<x.pe||esR,x.pe<=x.pj*1.2,
+    esF?x.d<=2:esR?x.d<=8:x.d<=3,x.roe>=12||x.roe===999,x.fcf===1,(x.cob||10)>=3||esF];
+  const p=fund.filter(Boolean).length,fs=Math.round(p/8*40);
+  const cs=['Tech','Financiero'].includes(x.s)?13:8;
+  const bs=x.b<=.8?15:x.b<=1.2?10:x.b<=1.5?6:3;
+  const ps=!x.peg?5:x.peg<1?10:x.peg<=1.5?8:x.peg<=2?5:x.peg<=3?2:0;
+  const cas=x.up>=35&&x.cagr>=15?10:x.up>=25?7:x.up>=15?4:2;
+  const phb=x.ph&&x.pe<x.ph*.75?3:0;
+  return Math.min(100,fs+cs+bs+ps+7+cas+phb);
+}
+function verdict(s,u){
+  if(s>=78&&u>=20)return{l:'COMPRAR',cls:'vc'};
+  if(s>=60&&u>=10)return{l:'WATCHLIST',cls:'vw'};
+  if(s>=45)return{l:'REVISAR',cls:'vr'};
+  return{l:'DESCARTAR',cls:'vd'};
+}
+function scColor(s){return s>=75?'#27500A':s>=55?'#185FA5':s>=40?'#854F0B':'#791F1F';}
+U.forEach(x=>{x.score=calcScore(x);x.v=verdict(x.score,x.up);});
+
+// ═══ SCREENER ═══
+let scrFilter='all', scrSort='score';
+
+function calcDCF(p,x){
+  if(!p)return null;
+  const w=p.wacc/100,gt=p.gTerminal/100;
+  let fcf=p.fcf_share,pvF=0;
+  for(let i=1;i<=5;i++){const g=i<=3?p.g1/100:p.g2/100;fcf*=(1+g);pvF+=fcf/Math.pow(1+w,i);}
+  const tv=fcf*(1+gt)/(w-gt);
+  const tvPV=tv/Math.pow(1+w,5);
+  const ev=(pvF+tvPV)*p.shares;
+  const eq=ev+p.cash-p.debt;
+  const intr=eq/p.shares;
+  return{intrinsic:intr,upside:(intr-x.p)/x.p*100,pvFlows:pvF,terminalPV:tvPV};
+}
+
+function getScrData(){
+  const q=(document.getElementById('scr-q')||{value:''}).value.toLowerCase();
+  let d=[...U];
+  if(scrFilter==='comprar') d=d.filter(x=>x.v.l==='COMPRAR');
+  else if(scrFilter==='nuevo') d=d.filter(x=>x.nuevo);
+  else if(scrFilter!=='all') d=d.filter(x=>x.s===scrFilter);
+  if(q) d=d.filter(x=>x.t.toLowerCase().includes(q)||x.n.toLowerCase().includes(q));
+  const ord={score:(a,b)=>b.score-a.score,up:(a,b)=>b.up-a.up,peg:(a,b)=>(a.peg||99)-(b.peg||99),pe:(a,b)=>a.pe-b.pe,beta:(a,b)=>a.b-b.b,t:(a,b)=>a.t.localeCompare(b.t)};
+  return d.sort(ord[scrSort]||ord.score);
+}
+
+function setChip(f,btn){
+  scrFilter=f;
+  document.querySelectorAll('#v-screener .chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  renderScr();
+}
+function setSortS(s){
+  scrSort=s;
+  const sel=document.getElementById('sort-sel-s');
+  if(sel) sel.value=s;
+  renderScr();
+}
+
+function renderScr(){
+  const d=getScrData();
+  const c=d.filter(x=>x.v.l==='COMPRAR').length,w=d.filter(x=>x.v.l==='WATCHLIST').length;
+  const avgS=Math.round(d.reduce((s,x)=>s+x.score,0)/Math.max(d.length,1));
+  document.getElementById('scr-stats').innerHTML=`
+    <div class="stat"><div class="sv">${d.length}</div><div class="sl">Empresas</div></div>
+    <div class="stat"><div class="sv" style="color:#27500A">${c}</div><div class="sl">COMPRAR</div></div>
+    <div class="stat"><div class="sv" style="color:#854F0B">${w}</div><div class="sl">WATCHLIST</div></div>
+    <div class="stat"><div class="sv">${avgS}</div><div class="sl">Score prom.</div></div>`;
+
+  document.getElementById('scr-tb').innerHTML=d.map((x,i)=>{
+    const uc=x.up>=40?'#27500A':x.up>=25?'#185FA5':x.up>=15?'#854F0B':'#791F1F';
+    const pc=!x.peg?'#9BA8BB':x.peg<1?'#27500A':x.peg<2?'#854F0B':'#791F1F';
+    return`<tr onclick="showScrDet('${x.t}')">
+      <td style="color:#9BA8BB;font-size:10px">${i+1}</td>
+      <td style="font-weight:500">${x.t}${x.nuevo?'<span class="new-badge">✦</span>':''}</td>
+      <td style="color:#9BA8BB;font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis">${x.n}</td>
+      <td style="font-size:10px;color:#9BA8BB">${x.s}</td>
+      <td><div class="sc-circle" style="background:${scColor(x.score)}">${x.score}</div></td>
+      <td><span class="vbadge ${x.v.cls}">${x.v.l}</span></td>
+      <td style="color:${x.pe<=x.pj?'#27500A':'#854F0B'}">${x.pe.toFixed(1)}x</td>
+      <td style="color:${uc};font-weight:500">+${x.up.toFixed(1)}%</td>
+      <td style="color:${pc}">${x.peg?x.peg.toFixed(2):'—'}</td>
+      <td style="color:${x.b<=1.2?'#27500A':x.b<=1.5?'#854F0B':'#791F1F'}">${x.b.toFixed(2)}</td>
+      <td><span class="type-badge" style="background:${TC_COL[x.tp]||'#6B7280'}">${x.tp}</span></td>
+      <td>${(()=>{if(!x.dcf)return '<span style="color:#9BA8BB;font-size:10px">—</span>';const r=calcDCF(x.dcf,x);const c=r.upside>=20?'#27500A':r.upside>=0?'#185FA5':'#791F1F';return '<span style="font-weight:500;font-size:11px;color:'+c+'">'+(r.upside>=0?'+':'')+r.upside.toFixed(0)+'%</span>';})()}</td>
+    </tr>`;
+  }).join('');
+}
+
+function showScrDet(t){
+  const x=U.find(u=>u.t===t);if(!x)return;
+  const esR=x.s==='Inmob.',esF=x.s==='Financiero',esRetail=['WMT','JD'].includes(x.t);
+  const fund=[
+    {n:'Margen ≥10%',v:x.m.toFixed(1)+'%',ok:x.m>=10?1:x.m>=7?0:-1},
+    {n:'CAGR >5%',v:x.cagr+'%',ok:x.cagr>=5?1:x.cagr>=2?0:-1},
+    {n:'Forward < P/E actual',v:`${x.pf.toFixed(1)}x vs ${x.pe.toFixed(1)}x`,ok:x.pf<x.pe?1:esR?1:0},
+    {n:'P/E vs justo sector',v:`${x.pe.toFixed(1)}x / ref ${x.pj}x`,ok:x.pe<=x.pj?1:x.pe<=x.pj*1.2?0:-1},
+    {n:esF?'D/E <2x':'Deuda/EBITDA <3x',v:x.d.toFixed(2)+'x',ok:esF?(x.d<=2?1:x.d<=3?0:-1):(x.d<=3?1:x.d<=5?0:-1)},
+    {n:'ROE >12%',v:x.roe===999?'N/A':x.roe.toFixed(1)+'%',ok:x.roe>=12||x.roe===999?1:x.roe>=8?0:-1},
+    {n:'FCF positivo',v:x.fcf?'Sí':'No',ok:x.fcf?1:-1},
+    {n:esF?'ROE proxy':'Cobertura',v:esF?x.roe.toFixed(1)+'%':(x.cob||0).toFixed(1)+'x',ok:esF?(x.roe>=15?1:0):(x.cob||0)>=3?1:(x.cob||0)>=1.5?0:-1},
+  ];
+  const passed=fund.filter(f=>f.ok===1).length;
+  const phdiff=x.ph?Math.round((x.pe-x.ph)/x.ph*100):null;
+  const uc=x.up>=30?'#27500A':x.up>=15?'#854F0B':'#791F1F';
+  document.getElementById('scr-det').innerHTML=`<div class="det-panel">
+    <div class="det-h">
+      <div>
+        <div class="det-ticker">${x.t}${x.nuevo?'<span class="new-badge">✦ Nuevo</span>':''}</div>
+        <div style="font-size:11px;color:#9BA8BB;margin-top:2px">${x.n} · ${x.s} · Score ${x.score}/100 · ${passed}/8 criterios OK</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="vbadge ${x.v.cls}" style="font-size:12px;padding:5px 12px">${x.v.l}</span>
+        <div class="sc-circle" style="background:${scColor(x.score)};width:34px;height:34px;font-size:12px">${x.score}</div>
+        <button class="det-close" onclick="document.getElementById('scr-det').innerHTML=''">✕</button>
+      </div>
+    </div>
+    <div class="det-metrics">
+      <div class="dm"><div class="dml">Precio</div><div class="dmv">$${x.p>=100?Math.round(x.p).toLocaleString('en-US'):x.p.toFixed(2)}</div><div class="dms">14/06/2026</div></div>
+      <div class="dm"><div class="dml">P/E actual</div><div class="dmv" style="color:${x.pe<=x.pj?'#27500A':'#854F0B'}">${x.pe.toFixed(1)}x</div><div class="dms">${phdiff!==null?(phdiff<=0?phdiff+'% vs hist.':'+'+phdiff+'% vs hist.'):'—'}</div></div>
+      <div class="dm"><div class="dml">Forward P/E</div><div class="dmv" style="color:#185FA5">${x.pf.toFixed(1)}x</div><div class="dms">ref ${x.pj}x sector</div></div>
+      <div class="dm"><div class="dml">PEG</div><div class="dmv" style="color:${!x.peg?'#9BA8BB':x.peg<1?'#27500A':x.peg<2?'#854F0B':'#791F1F'}">${x.peg?x.peg.toFixed(2):'—'}</div><div class="dms">&lt;1 subvaluado</div></div>
+      <div class="dm"><div class="dml">Upside / Beta</div><div class="dmv" style="color:${uc}">+${x.up.toFixed(1)}%</div><div class="dms">Beta ${x.b.toFixed(2)}</div></div>
+    </div>
+    <div class="det-criteria">
+      <div class="dc-col"><div class="dc-hdr">Rentabilidad y crecimiento</div>${fund.slice(0,4).map(f=>`<div class="dc-row"><span class="dc-label">${f.n}</span><span class="dc-val" style="color:${f.ok===1?'#27500A':f.ok===0?'#854F0B':'#791F1F'}">${f.ok===1?'✓':f.ok===0?'!':'✗'} ${f.v}</span></div>`).join('')}</div>
+      <div class="dc-col"><div class="dc-hdr">Solidez financiera</div>${fund.slice(4).map(f=>`<div class="dc-row"><span class="dc-label">${f.n}</span><span class="dc-val" style="color:${f.ok===1?'#27500A':f.ok===0?'#854F0B':'#791F1F'}">${f.ok===1?'✓':f.ok===0?'!':'✗'} ${f.v}</span></div>`).join('')}</div>
+    </div>
+    <div class="det-tesis"><strong style="font-size:10px;color:#9BA8BB;text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:4px">Moat · ${x.moat}</strong>${x.tesis}</div>
+    <div class="det-fiscal"><strong style="color:#1A1A2E">Fiscal AR:</strong> ${x.fiscal}</div>
+  </div>`;
+  document.getElementById('scr-det').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ═══ CARTERAS MODELO ═══
+const CARTERAS_DATA={
+  // ── Datos actualizados jun-2026 ─────────────────────────────────────────
+  // FCI USD (4% TIR) → AO27 (5% TIR, cupón mensual, exento BP) en todos los perfiles
+  // BPOA7 (3.97%) → BPOB7 (6.77% exento) donde aplica
+  // TTS26 vence ago-26 → eliminado
+  // GFCPO → BYCHO / BPOB7 según perfil
+  conservador:{nombre:'Conservador',col:'#854F0B',bench:'4–5% USD anual',
+    pos:[
+      {t:'SPY',   n:'S&P 500 ETF',               pct:14, col:'#185FA5'},
+      {t:'JNJ',   n:'Johnson & Johnson',           pct:5,  col:'#0F6E56'},
+      {t:'ABBV',  n:'AbbVie',                      pct:4,  col:'#27500A'},
+      {t:'PG',    n:'Procter & Gamble',             pct:3,  col:'#0F6E56'},
+      {t:'FCI RF$',n:'FCI Renta Fija $',            pct:24, col:'#854F0B'},
+      {t:'AO27',  n:'Bonar 2027 — TIR 5% mensual', pct:25, col:'#185FA5'},
+      {t:'BPOB7', n:'BOPREAL 1B — TIR 6.77% exento',pct:10,col:'#3B8FD4'},
+      {t:'BPOB8', n:'BOPREAL 2B — TIR 7.0% exento', pct:10,col:'#0D3D6B'},
+      {t:'Cash',  n:'Liquidez ARS (IOLCAMA)',        pct:5,  col:'#9BA8BB'},
+    ]},
+  mod_conservador:{nombre:'Mod. Conservador',col:'#633806',bench:'5–6% USD anual',
+    pos:[
+      {t:'SPY',   n:'S&P 500 ETF',                 pct:22, col:'#185FA5'},
+      {t:'JNJ',   n:'Johnson & Johnson',             pct:4,  col:'#0F6E56'},
+      {t:'MCD',   n:"McDonald's",                   pct:4,  col:'#0F6E56'},
+      {t:'AXP',   n:'American Express',              pct:4,  col:'#27500A'},
+      {t:'LLY',   n:'Eli Lilly',                    pct:3,  col:'#0F6E56'},
+      {t:'AO27',  n:'Bonar 2027 — TIR 5% mensual',  pct:15, col:'#185FA5'},
+      {t:'FCI RF$',n:'FCI Renta Fija $',             pct:12, col:'#854F0B'},
+      {t:'BPOB7', n:'BOPREAL 1B — TIR 6.77% exento',pct:12, col:'#3B8FD4'},
+      {t:'YMCXO', n:'ON YPF 2031 — TIR 6.1%',       pct:8,  col:'#993C1D'},
+      {t:'BPOB8', n:'BOPREAL 2B — TIR 7.0% exento', pct:8,  col:'#0D3D6B'},
+      {t:'Cash',  n:'Liquidez ARS (IOLCAMA)',         pct:8,  col:'#9BA8BB'},
+    ]},
+  moderado:{nombre:'Moderado',col:'#0C447C',bench:'6–8% USD anual',
+    pos:[
+      {t:'SPY',   n:'S&P 500 ETF',                 pct:25, col:'#185FA5'},
+      {t:'MSFT',  n:'Microsoft — P/E 22.55x',       pct:9,  col:'#27500A'},
+      {t:'GOOGL', n:'Alphabet — P/E 28.1x',         pct:6,  col:'#27500A'},
+      {t:'AXP',   n:'American Express',              pct:5,  col:'#27500A'},
+      {t:'NVO',   n:'Novo Nordisk — P/E 10.3x',     pct:4,  col:'#0F6E56'},
+      {t:'PAMP',  n:'Pampa Energía',                 pct:4,  col:'#3B6D11'},
+      {t:'AO27',  n:'Bonar 2027 — TIR 5% mensual',  pct:10, col:'#185FA5'},
+      {t:'YMCXO', n:'ON YPF 2031 — TIR 6.1%',       pct:8,  col:'#993C1D'},
+      {t:'GD35',  n:'Global 2035 — TIR 8.47%',      pct:7,  col:'#0D3D6B'},
+      {t:'BPOB7', n:'BOPREAL 1B — TIR 6.77% exento',pct:8,  col:'#3B8FD4'},
+      {t:'Cash',  n:'Liquidez ARS (IOLCAMA)',         pct:8,  col:'#9BA8BB'},
+      {t:'BONCAP',n:'BONCAP T30A7 — TNA 25.2%',     pct:6,  col:'#854F0B'},
+    ]},
+  mod_agresivo:{nombre:'Mod. Agresivo',col:'#27500A',bench:'8–9% USD anual',
+    // AVGO (P/E 65x) + MU (P/E 48.6x TTM) → NVO (P/E 10.3x) + VIST (P/E 6.77x)
+    // TTS26 vence ago-26 → eliminado → libera 3% → agrandamos NVO y VIST
+    pos:[
+      {t:'SPY',   n:'S&P 500 ETF',                 pct:30, col:'#185FA5'},
+      {t:'MSFT',  n:'Microsoft — P/E 22.55x',       pct:11, col:'#27500A'},
+      {t:'GOOGL', n:'Alphabet — P/E 28.1x',         pct:8,  col:'#27500A'},
+      {t:'TSM',   n:'TSMC — P/E 35x',               pct:5,  col:'#185FA5'},
+      {t:'META',  n:'Meta — P/E 21.2x',             pct:5,  col:'#27500A'},
+      {t:'AXP',   n:'American Express',              pct:4,  col:'#27500A'},
+      {t:'NVO',   n:'Novo Nordisk — P/E 10.3x ★',   pct:5,  col:'#0F6E56'},
+      {t:'VIST',  n:'Vista Energy — P/E 6.77x ★',   pct:5,  col:'#3B6D11'},
+      {t:'NU',    n:'Nu Holdings — PEG 0.35',        pct:4,  col:'#3B6D11'},
+      {t:'AO27',  n:'Bonar 2027 — TIR 5% mensual',  pct:5,  col:'#185FA5'},
+      {t:'GD35',  n:'Global 2035 — TIR 8.47%',      pct:5,  col:'#0D3D6B'},
+      {t:'YMCXO', n:'ON YPF 2031 — TIR 6.1%',       pct:5,  col:'#993C1D'},
+      {t:'BONCAP',n:'BONCAP T30A7 — TNA 25.2%',     pct:5,  col:'#854F0B'},
+      {t:'Cash',  n:'Liquidez ARS (IOLCAMA)',         pct:3,  col:'#9BA8BB'},
+    ]},
+  agresivo:{nombre:'Agresivo',col:'#1A1A2E',bench:'9–11% USD anual',
+    pos:[
+      {t:'SPY',   n:'S&P 500 ETF',                 pct:25, col:'#185FA5'},
+      {t:'MSFT',  n:'Microsoft — P/E 22.55x',       pct:12, col:'#27500A'},
+      {t:'GOOGL', n:'Alphabet — P/E 28.1x',         pct:10, col:'#27500A'},
+      {t:'NVDA',  n:'NVIDIA — P/E 31.6x',           pct:6,  col:'#27500A'},
+      {t:'META',  n:'Meta — P/E 21.2x',             pct:5,  col:'#27500A'},
+      {t:'NVO',   n:'Novo Nordisk — P/E 10.3x ★',   pct:5,  col:'#0F6E56'},
+      {t:'VIST',  n:'Vista Energy — P/E 6.77x ★',   pct:5,  col:'#3B6D11'},
+      {t:'NU',    n:'Nu Holdings — PEG 0.35',        pct:5,  col:'#3B6D11'},
+      {t:'GGAL',  n:'Galicia',                       pct:4,  col:'#3B6D11'},
+      {t:'AO27',  n:'Bonar 2027 — TIR 5% mensual',  pct:5,  col:'#185FA5'},
+      {t:'GD35',  n:'Global 2035 — TIR 8.47%',      pct:5,  col:'#0D3D6B'},
+      {t:'BONCAP',n:'BONCAP T30A7 — TNA 25.2%',     pct:5,  col:'#854F0B'},
+      {t:'Cash',  n:'Liquidez ARS (IOLCAMA)',         pct:3,  col:'#9BA8BB'},
+    ]},
+};
+
+// ══════════════════════════════════════════════
+// SCREENER RENTA FIJA v3 — datos IOL 16/06/2026
+// ══════════════════════════════════════════════
+const RF_DATA=[
+  // SOBERANOS LEY AR
+  {t:'AO27', n:'Bonar 2027 6% USD',       clase:'Soberano AR',  px:null,  tir:5.00, md:1.2, vto:'2027-10-29', mon:'USD', riesgo:3, perfil:'MC/Mod', tesis:'TIR 5%. Cupón MENSUAL 6% anual. Vto oct-2027 pre-electoral. Soberano ley AR. Exento BP.',fiscal:'Exento Ganancias y BP.'},
+  {t:'AL29', n:'Bonar 2029 Step-up',       clase:'Soberano AR',  px:64.60, tir:6.80, md:1.39,vto:'2029-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 6.80%, MD 1.39. Amort. 10 cuotas. Cupón 1% sem. Próx. pago 9/7/26.',fiscal:'Exento Ganancias y BP.'},
+  {t:'AL30', n:'Bonar 2030 Step-up',       clase:'Soberano AR',  px:64.40, tir:7.35, md:1.81,vto:'2030-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 7.35%, MD 1.81. El más líquido del mercado. Usado para dólar MEP.',fiscal:'Exento Ganancias y BP.'},
+  {t:'AL35', n:'Bonar 2035 Step-up',       clase:'Soberano AR',  px:80.86, tir:9.20, md:5.10,vto:'2035-07-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 9.20%, MD 5.10. Mayor upside ante compresión riesgo país.',fiscal:'Exento Ganancias y BP.'},
+  {t:'AE38', n:'Bonar 2038 Step-up',       clase:'Soberano AR',  px:83.49, tir:9.40, md:4.38,vto:'2038-01-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 9.40% — la más alta del universo soberano.',fiscal:'Exento Ganancias y BP.'},
+  {t:'AL41', n:'Bonar 2041 Step-up',       clase:'Soberano AR',  px:75.80, tir:9.16, md:5.62,vto:'2041-07-09', mon:'USD', riesgo:3, perfil:'Agr',    tesis:'TIR 9.16%, MD 5.62. Duration larga ley AR.',fiscal:'Exento Ganancias y BP.'},
+  // SOBERANOS LEY NY
+  {t:'GD29', n:'Global 2029 Step-up',      clase:'Soberano NY',  px:65.85, tir:5.44, md:1.42,vto:'2029-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 5.44%, MD 1.42. Ley NY. Paridad 93.7%.',fiscal:'Exento Ganancias y BP.'},
+  {t:'GD30', n:'Global 2030 Step-up',      clase:'Soberano NY',  px:65.81, tir:6.16, md:1.84,vto:'2030-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 6.16%, MD 1.84. Ley NY. El más líquido de Globales.',fiscal:'Exento Ganancias y BP.'},
+  {t:'GD35', n:'Global 2035 Step-up',      clase:'Soberano NY',  px:83.92, tir:8.47, md:5.17,vto:'2035-07-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 8.47%, MD 5.17. Ley NY. Paridad 82.4%.',fiscal:'Exento Ganancias y BP.'},
+  {t:'GD38', n:'Global 2038 Step-up',      clase:'Soberano NY',  px:88.14, tir:8.18, md:4.53,vto:'2038-01-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 8.18%, MD 4.53. Ley NY. Cupón 5% sem.',fiscal:'Exento Ganancias y BP.'},
+  {t:'GD41', n:'Global 2041 Step-up',      clase:'Soberano NY',  px:78.15, tir:8.62, md:5.72,vto:'2041-07-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 8.62%, MD 5.72. Ley NY. Paridad 77%.',fiscal:'Exento Ganancias y BP.'},
+  {t:'GD46', n:'Global 2046 Step-up',      clase:'Soberano NY',  px:75.76, tir:8.27, md:6.09,vto:'2046-07-09', mon:'USD', riesgo:3, perfil:'Agr',    tesis:'TIR 8.27%, MD 6.09. Duration máxima.',fiscal:'Exento Ganancias y BP.'},
+  // BOPREALes
+  {t:'BPOA7',n:'BOPREAL Oct.2027 Serie A', clase:'BOPREAL',      px:101.80,tir:3.97, md:1.06,vto:'2027-10-31', mon:'USD', riesgo:2, perfil:'Cons/MC', tesis:'TIR 3.97%. BCRA. Exento total Ganancias y BP. Cupón 5% sem.',fiscal:'Exento Ganancias y BP. Máximo beneficio fiscal.'},
+  {t:'BPOB7',n:'BOPREAL Oct.2027 Serie B', clase:'BOPREAL',      px:98.88, tir:6.77, md:1.03,vto:'2027-10-31', mon:'USD', riesgo:2, perfil:'MC/Mod', tesis:'TIR 6.77% — mejor TIR entre BOPREALes 2027. Paridad 98.2%. Exento total. Pre-electoral.',fiscal:'Exento Ganancias y BP.'},
+  {t:'BPOC7',n:'BOPREAL Oct.2027 Serie C', clase:'BOPREAL',      px:101.80,tir:3.97, md:1.06,vto:'2027-10-31', mon:'USD', riesgo:2, perfil:'Cons/MC', tesis:'TIR 3.97%. Igual a BPOA7. Paridad 101.1%. Exento total.',fiscal:'Exento Ganancias y BP.'},
+  {t:'BPOA8',n:'BOPREAL Oct.2028 Serie A', clase:'BOPREAL',      px:92.25, tir:6.87, md:2.15,vto:'2028-10-31', mon:'USD', riesgo:2, perfil:'MC/Mod', tesis:'TIR 6.87%, MD 2.15. Bullet. Paridad 91.9%. Exento total.',fiscal:'Exento Ganancias y BP.'},
+  {t:'BPOB8',n:'BOPREAL Oct.2028 Serie B', clase:'BOPREAL',      px:92.00, tir:7.00, md:2.15,vto:'2028-10-31', mon:'USD', riesgo:2, perfil:'MC/Mod', tesis:'TIR 7.00% — la más alta de todos los BOPREALes. Bullet. Paridad 91.6%.',fiscal:'Exento Ganancias y BP.'},
+  // ONs LEY LOCAL
+  {t:'BYC2O',n:'ON Banco Galicia jul-26',  clase:'ON Local',     px:103.39,tir:8.40, md:0.08,vto:'2026-07-20', mon:'USD', riesgo:1, perfil:'Cons/MC', tesis:'TIR 8.4%. Vence 20/7/26 — casi en vencimiento. AAA.',fiscal:'Retención 15% intereses.'},
+  {t:'DNC5O',n:'ON Edenor ago-28',         clase:'ON Local',     px:108.00,tir:7.30, md:1.79,vto:'2028-08-05', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 7.3%, MD 1.79. Cupón 9.5% sem. Calificación A.',fiscal:'Retención 15% intereses.'},
+  {t:'EAC3O',n:'ON MSU Energy dic-28',     clase:'ON Local',     px:105.68,tir:8.00, md:2.06,vto:'2028-12-20', mon:'USD', riesgo:2, perfil:'MA/Agr', tesis:'TIR 8.0%, MD 2.06. Cupón 8.5% sem. Generadora. Calificación A.',fiscal:'Retención 15% intereses.'},
+  {t:'MSSGO',n:'ON MSU Agro abr-29',       clase:'ON Local',     px:103.98,tir:7.60, md:2.36,vto:'2029-04-16', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 7.6%, MD 2.36. Cupón 8.5%. Calificación A+.',fiscal:'Retención 15% intereses.'},
+  {t:'RUCDO',n:'ON MSU Energy dic-30',     clase:'ON Extraj.',   px:105.33,tir:8.40, md:3.10,vto:'2030-12-05', mon:'USD', riesgo:2, perfil:'MA/Agr', tesis:'TIR 8.4%, MD 3.10. Ley NY. Amort. 3 cuotas. Cupón 9.8%. A+.',fiscal:'Retención 15% intereses.'},
+  // ONs LEY EXTRANJERA
+  {t:'YMCXO',n:'ON YPF sep-31',            clase:'ON Extraj.',   px:113.01,tir:6.10, md:3.64,vto:'2031-09-11', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 6.1%, MD 3.64. Ley NY. AAA. Cupón 8.8%. Amort. 3 cuotas.',fiscal:'Retención 15% intereses.'},
+  {t:'TSC3O',n:'ON TGS jul-31',            clase:'ON Extraj.',   px:113.99,tir:6.10, md:3.93,vto:'2031-07-24', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 6.1%, MD 3.93. TGS. Ley NY. Bullet. Cupón 8.5%.',fiscal:'Retención 15% intereses.'},
+  {t:'MGCMO',n:'ON Pampa Energía sep-31',  clase:'ON Extraj.',   px:110.98,tir:6.00, md:4.09,vto:'2031-09-10', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 6.0%, MD 4.09. Ley NY. AAA. Bullet. Cupón 8%.',fiscal:'Retención 15% intereses.'},
+  {t:'BYCHO',n:'ON Banco Galicia oct-28',  clase:'ON Extraj.',   px:107.36,tir:5.10, md:2.04,vto:'2028-10-10', mon:'USD', riesgo:1, perfil:'Cons/MC', tesis:'TIR 5.1%, MD 2.04. Banco Galicia. Ley NY. AAA. Bullet.',fiscal:'Retención 15% intereses.'},
+  {t:'MGCOO',n:'ON Pampa dic-34',          clase:'ON Extraj.',   px:108.14,tir:6.70, md:6.04,vto:'2034-12-16', mon:'USD', riesgo:2, perfil:'MA/Agr', tesis:'TIR 6.7%, MD 6.04. Ley NY. AAA. Duration larga. Cupón 7.9%.',fiscal:'Retención 15% intereses.'},
+  {t:'TTCAO',n:'ON Tecpetrol ene-33',      clase:'ON Extraj.',   px:102.01,tir:8.00, md:4.17,vto:'2033-01-22', mon:'USD', riesgo:2, perfil:'MA/Agr', tesis:'TIR 8.0%, MD 4.17. Ley NY. Amort. 3 cuotas. Cupón 7.6%.',fiscal:'Retención 15% intereses.'},
+  // LECAPs / BONCAPs
+  {t:'S30S6', n:'LECAP oct-2026',          clase:'LECAP',        px:null,  tir:22.8, md:0.23,vto:'2026-09-30', mon:'ARS', riesgo:1, perfil:'Cons',    tesis:'TNA 22.8%, TEA 24.7%. Vence 30/9/26.',fiscal:'Exento Ganancias y BP.'},
+  {t:'T30A7', n:'BONCAP abr-2027',         clase:'LECAP',        px:null,  tir:25.2, md:0.69,vto:'2027-04-30', mon:'ARS', riesgo:1, perfil:'Cons',    tesis:'TNA 25.2%, TEA 25.6%. La más usada para liquidez en pesos.',fiscal:'Exento Ganancias y BP.'},
+  {t:'T30J7', n:'BONCAP jun-2027',         clase:'LECAP',        px:null,  tir:25.3, md:0.83,vto:'2027-06-30', mon:'ARS', riesgo:1, perfil:'Cons',    tesis:'TNA 25.3%, TEA 25.2%. Cupón 2.58%.',fiscal:'Exento Ganancias y BP.'},
+  // BONCERs
+  {t:'TZX28', n:'BONCER jun-2028',         clase:'CER',          px:null,  tir:6.90, md:1.91,vto:'2028-06-30', mon:'ARS', riesgo:1, perfil:'Mod',     tesis:'CER + 6.9% TEA, MD 1.91. Paridad 87.3%. Mejor del tramo CER.',fiscal:'Exento Ganancias. BP: cot. 31/12 ARS.'},
+  {t:'TX31',  n:'BONCER nov-2031',         clase:'CER',          px:null,  tir:7.30, md:2.77,vto:'2031-11-30', mon:'ARS', riesgo:2, perfil:'Mod/MA', tesis:'CER + 7.3%, MD 2.77. TEA 7.2%. Paridad 87.1%.',fiscal:'Exento Ganancias. BP: cot. 31/12 ARS.'},
+  {t:'DICP',  n:'BONCER dic-2033',         clase:'CER',          px:null,  tir:7.60, md:2.94,vto:'2033-12-31', mon:'ARS', riesgo:2, perfil:'MA/Agr', tesis:'CER + 7.6%, MD 2.94. TEA 7.5%. Paridad 95%. Current yield 5.97%.',fiscal:'Exento Ganancias. BP: cot. 31/12 ARS.'},
+  // FCI
+  {t:'IOLCAMA',n:'FCI IOL Cama (T+0)',    clase:'FCI',          px:null,  tir:22.0, md:0.00,vto:'T+0',        mon:'ARS', riesgo:0, perfil:'Todos',   tesis:'~22% TNA. T+0 liquidez inmediata. Referencia TNA LECAPs cortas.',fiscal:'Exento Ganancias.'},
+];
+
+const RF_CLASES=['Todas',...new Set(RF_DATA.map(x=>x.clase))];
+const RF_CLASE_COL={'Soberano AR':'#185FA5','Soberano NY':'#0D3D6B','BOPREAL':'#3B8FD4','ON Local':'#993C1D','ON Extraj.':'#854F0B','CER':'#0F6E56','LECAP':'#633806','FCI':'#27500A'};
+const RF_MON_COL={'USD':'#27500A','ARS':'#854F0B'};
+let rfCF='Todas', rfCS='tir';
+
+function renderRFFilters(){
+  document.getElementById('rf-filters').innerHTML=RF_CLASES.map(c=>
+    `<button onclick="setRFC('${c}',this)"
+       style="padding:4px 9px;font-size:10px;font-weight:500;border-radius:99px;border:1px solid var(--gray2);
+              background:${c===rfCF?'var(--ink)':'var(--gray1)'};color:${c===rfCF?'var(--bg)':'var(--gray3)'};cursor:pointer;white-space:nowrap">
+      ${c}${c!=='Todas'?' ('+RF_DATA.filter(x=>x.clase===c).length+')':' ('+RF_DATA.length+')'}
+    </button>`
+  ).join('');
+}
+function setRFC(f,btn){rfCF=f;renderRFFilters();renderRFTable();}
+function setRFSort(s){rfCS=s;renderRFTable();}
+function getRFData(){
+  const q=(document.getElementById('rf-q')||{value:''}).value.toLowerCase();
+  let d=[...RF_DATA];
+  if(rfCF!=='Todas') d=d.filter(x=>x.clase===rfCF);
+  if(q) d=d.filter(x=>x.t.toLowerCase().includes(q)||x.n.toLowerCase().includes(q));
+  const ord={tir:(a,b)=>b.tir-a.tir,vto:(a,b)=>a.vto.localeCompare(b.vto),dur:(a,b)=>a.md-b.md};
+  return d.sort(ord[rfCS]||ord.tir);
+}
+function renderRFTable(){
+  const d=getRFData();
+  document.getElementById('rf-tb').innerHTML=d.map((x,i)=>{
+    const cc=RF_CLASE_COL[x.clase]||'#6B7280';
+    const mc=RF_MON_COL[x.mon]||'#9BA8BB';
+    const tirDisp=x.tir.toFixed(2)+'%'+(x.mon==='ARS'?' TNA':'');
+    const tirCol=x.mon==='ARS'?(x.tir>=25?'#27500A':x.tir>=22?'#185FA5':'#854F0B'):(x.tir>=8?'#27500A':x.tir>=6?'#185FA5':x.tir>=4?'#854F0B':'#9BA8BB');
+    const vtoDisp=x.vto.startsWith('T+')?x.vto:x.vto.slice(0,7);
+    return`<tr onclick="showRFDet('${x.t}')" style="cursor:pointer">
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2);font-size:10px;color:var(--gray3)">${i+1}</td>
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2);font-weight:500">${x.t}</td>
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2);font-size:11px;color:var(--gray3);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.n}</td>
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2)"><span style="font-size:9px;padding:1px 5px;border-radius:3px;font-weight:500;color:#fff;background:${cc}">${x.clase}</span></td>
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2);font-weight:500;color:${tirCol}">${tirDisp}</td>
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2);font-size:11px">${x.px?'$'+x.px.toFixed(2):'—'}</td>
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2);text-align:center;font-size:11px">${x.md===0?'—':x.md.toFixed(2)}</td>
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2);font-size:11px">${vtoDisp}</td>
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2)"><span style="font-size:9px;padding:1px 5px;border-radius:3px;font-weight:500;color:#fff;background:${mc}">${x.mon}</span></td>
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2);font-size:10px;color:${x.fiscal.startsWith('Exento')?'#27500A':'#854F0B'}">${x.fiscal.startsWith('Exento')?'✓ Exento':'15% ret.'}</td>
+      <td style="padding:6px 7px;border-bottom:.5px solid var(--gray2);font-size:10px;color:var(--gray3)">${x.perfil}</td>
+    </tr>`;
+  }).join('');
+}
+function showRFDet(ticker){
+  const x=RF_DATA.find(r=>r.t===ticker); if(!x)return;
+  const cc=RF_CLASE_COL[x.clase]||'#6B7280';
+  const tirDisp=x.tir.toFixed(2)+'%'+(x.mon==='ARS'?' TNA':'');
+  const tirCol=x.mon==='ARS'?(x.tir>=25?'#27500A':x.tir>=22?'#185FA5':'#854F0B'):(x.tir>=8?'#27500A':x.tir>=6?'#185FA5':x.tir>=4?'#854F0B':'#9BA8BB');
+  document.getElementById('rf-det').innerHTML=`
+  <div class="card" style="margin-bottom:.75rem">
+    <div class="card-hdr" style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-family:'Fraunces',serif;font-size:18px;font-weight:600">${x.t} — ${x.n}</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:${tirCol}">${tirDisp}</span>
+        <button onclick="document.getElementById('rf-det').innerHTML=''" style="background:none;border:.5px solid var(--gray2);border-radius:6px;font-size:12px;cursor:pointer;color:var(--gray3);padding:2px 8px">✕</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);border-bottom:.5px solid var(--gray2)">
+      ${[
+        ['Clase',x.clase,''],
+        ['Px Dirty',x.px?'$'+x.px.toFixed(2):'—','USD 16/06/26'],
+        ['Duration',x.md===0?'Inmediata':x.md.toFixed(2)+' años',''],
+        ['Vencimiento',x.vto.startsWith('T+')?x.vto:x.vto.slice(0,7),''],
+        ['Riesgo',['Muy bajo','Bajo','Medio','Alto'][x.riesgo],''],
+      ].map(([l,v,s])=>`<div style="padding:.5rem .8rem;border-right:.5px solid var(--gray2)">
+        <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gray3);margin-bottom:2px">${l}</div>
+        <div style="font-size:13px;font-weight:500">${v}</div>
+        ${s?`<div style="font-size:9px;color:var(--gray3)">${s}</div>`:''}
+      </div>`).join('')}
+    </div>
+    <div style="padding:.65rem 1rem;font-size:12px;line-height:1.7;border-bottom:.5px solid var(--gray2)">${x.tesis}</div>
+    <div style="padding:.5rem 1rem;font-size:11px;color:var(--gray3)"><strong style="color:var(--ink)">Fiscal AR:</strong> ${x.fiscal}</div>
+  </div>`;
+  document.getElementById('rf-det').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function renderRF(){renderRFTable();}
+
+
+// ══════════════════════════════════════════════
+// SINCRONIZACIÓN CON GOOGLE SHEET — NB_Clientes_Master
+// ══════════════════════════════════════════════
+const NB_API_URL = 'https://script.google.com/macros/s/AKfycbwRvNhFvUcrV30tHsdG4yYyCXER632v22E7FGnxHtylkZboVPqVLfsR3yVyE8gYVH3j/exec';
+// const NB_API_KEY = ''; // se agrega cuando activemos la clave de acceso
+
+let clientesSheet = []; // clientes traídos del Sheet (vacío hasta sincronizar)
+
+async function syncClientesFromSheet(){
+  const btn = document.getElementById('sync-btn');
+  const icon = document.getElementById('sync-icon');
+  const status = document.getElementById('sync-status');
+  if(!btn) return;
+
+  icon.textContent = '⏳';
+  btn.disabled = true;
+  status.textContent = 'Conectando...';
+  status.style.color = 'var(--gray3)';
+
+  try {
+    const url = `${NB_API_URL}?accion=clientes`;
+    const resp = await fetch(url);
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    const data = await resp.json();
+
+    if(data.error){
+      throw new Error(data.error);
+    }
+
+    clientesSheet = data;
+    status.textContent = `✓ ${data.length} cliente(s) sincronizado(s) — ${new Date().toLocaleTimeString('es-AR')}`;
+    status.style.color = '#27500A';
+
+    document.getElementById('clientes-sub').textContent =
+      `${data.length} clientes desde el cuestionario web (+ los del Hub local) · Última sync: ${new Date().toLocaleString('es-AR')}`;
+
+    renderClientGridConSheet();
+
+  } catch(err){
+    status.textContent = `⚠ Error: ${err.message}. Verificá la URL del API o tu conexión.`;
+    status.style.color = '#791F1F';
+    console.error('Sync error:', err);
+  } finally {
+    icon.textContent = '↻';
+    btn.disabled = false;
+  }
+}
+
+function renderClientGridConSheet(){
+  // Combina los clientes ya cargados manualmente (CLIENTES array existente)
+  // con los nuevos que llegaron del Sheet (clientesSheet), evitando duplicados por nombre
+  const nombresExistentes = new Set(CLIENTES.map(c => c.nombre));
+  const nuevos = clientesSheet.filter(c => c.nombre && !nombresExistentes.has(c.nombre));
+
+  nuevos.forEach(c => {
+    CLIENTES.push({
+      nombre: c.nombre,
+      perfil: c.perfil_riesgo || 'Sin asignar',
+      capital: Number(c.capital_inicial_usd) || 0,
+      estado: c.estado || 'Nuevo — pendiente IPS',
+      email: c.email,
+      desdeSheet: true, // marca para identificar visualmente que vino del cuestionario
+    });
+  });
+
+  if (typeof renderClientGrid === 'function') {
+    renderClientGrid();
+  }
+}
+
+let cartPerfil='mod_agresivo';
+function renderCartTabs(){
+  document.getElementById('cart-tabs').innerHTML=Object.entries(CARTERAS_DATA).map(([k,c])=>
+    `<button class="ptab${k===cartPerfil?' on':''}" style="${k===cartPerfil?'background:'+c.col+';border-color:'+c.col:''}" onclick="selectCart('${k}',this)">${c.nombre}</button>`
+  ).join('');
+}
+function selectCart(k,btn){
+  cartPerfil=k;
+  document.querySelectorAll('#v-carteras .ptab').forEach(t=>{t.classList.remove('on');t.style.background='';t.style.borderColor='';});
+  btn.classList.add('on');btn.style.background=CARTERAS_DATA[k].col;btn.style.borderColor=CARTERAS_DATA[k].col;
+  renderCart();
+}
+function renderCart(){
+  const c=CARTERAS_DATA[cartPerfil];
+  const cap=parseFloat(document.getElementById('cap-cart').value)||0;
+  document.getElementById('cap-total').textContent='USD '+cap.toLocaleString('en-US');
+  const maxPct=Math.max(...c.pos.map(p=>p.pct));
+  const saaBar=c.pos.map(p=>`<div class="saa-seg" style="width:${p.pct}%;background:${p.col}" title="${p.t} ${p.pct}%">${p.pct>=8?p.t:p.pct>=4?p.pct+'%':''}</div>`).join('');
+  document.getElementById('cart-zone').innerHTML=`
+  <div class="card">
+    <div class="card-hdr"><span>${c.nombre} — ${c.pos.length} posiciones</span><span style="font-size:10px;color:#9BA8BB">Benchmark: ${c.bench}</span></div>
+    <div class="card-body">
+      <div class="saa-bar">${saaBar}</div>
+      ${c.pos.map(p=>{
+        const monto=Math.round(cap*p.pct/100);
+        const isLow=monto<300&&p.pct>0&&!['FCI RF$','FCI USD','Cash'].includes(p.t);
+        return`<div class="pos-row">
+          <div class="pos-ticker" style="color:${p.col}">${p.t}</div>
+          <div style="flex:1">
+            <div style="font-size:11px;color:#9BA8BB;margin-bottom:3px">${p.n}</div>
+            <div class="pos-bar-wrap"><div class="pos-bar" style="width:${p.pct/maxPct*100}%;background:${p.col}"></div></div>
+          </div>
+          <div class="pos-pct" style="color:${p.col}">${p.pct}%</div>
+          <div class="pos-monto" style="color:${isLow?'#854F0B':'#27500A'}">USD ${monto.toLocaleString('en-US')}${isLow?' ⚠':''}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+// ═══ HONORARIOS ═══
+function calcFees(){
+  const cap=parseFloat(document.getElementById('fee-cap').value)||0;
+  const gan=parseFloat(document.getElementById('fee-gan').value)||0;
+  const fam=cap*0.01/12, faa=cap*0.01, fb=Math.max(0,gan*0.20);
+  document.getElementById('fa-m').textContent='USD '+fam.toFixed(2);
+  document.getElementById('fa-anual').innerHTML=`Anual: <strong>USD ${faa.toFixed(2)}</strong>`;
+  document.getElementById('fb-r').textContent='USD '+fb.toFixed(2);
+  document.getElementById('fb-det').innerHTML=gan<=0?'<strong style="color:#791F1F">Sin ganancia → USD 0</strong>':`Equiv. mensual: <strong>USD ${(fb/12).toFixed(2)}</strong>`;
+  const rend=cap>0?((gan/cap)*100):0;
+  const comp=fb>faa
+    ?`<div class="warn-box warn-g">Con rendimiento ${rend.toFixed(1)}%, <strong>Opción B genera más</strong> (USD ${fb.toFixed(2)} vs USD ${faa.toFixed(2)}).</div>`
+    :`<div class="warn-box warn-y">Con rendimiento ${rend.toFixed(1)}%, <strong>Opción A genera más</strong> (USD ${faa.toFixed(2)} vs USD ${fb.toFixed(2)}). Punto de equilibrio: ~5% de rendimiento.</div>`;
+  document.getElementById('fee-comp').innerHTML=comp;
+}
+
+// ═══ CAMINO DE VALOR ═══
+const CV_DATOS_BRUNETTI=[
+  {mes:'Jul-25',adicion:200,retiro:0,real:192.99},
+  {mes:'Ago-25',adicion:200,retiro:0,real:398.50},
+  {mes:'Sep-25',adicion:200,retiro:0,real:615.82},
+  {mes:'Oct-25',adicion:200,retiro:0,real:860.01},
+  {mes:'Nov-25',adicion:200,retiro:0,real:1056.37},
+  {mes:'Dic-25',adicion:200,retiro:0,real:1264.60},
+  {mes:'Ene-26',adicion:200,retiro:0,real:1485.52},
+  {mes:'Feb-26',adicion:200,retiro:0,real:1682.53},
+  {mes:'Mar-26',adicion:200,retiro:0,real:1852.60},
+  {mes:'Abr-26',adicion:450,retiro:0,real:2459.40},
+  {mes:'May-26',adicion:600,retiro:0,real:3196.48},
+  {mes:'Jun-26',adicion:2806.37,retiro:3140.06,real:5941.10},
+  {mes:'Jul-26',adicion:0,retiro:0,real:null},
+  {mes:'Ago-26',adicion:0,retiro:0,real:null},
+  {mes:'Sep-26',adicion:0,retiro:0,real:null},
+  {mes:'Oct-26',adicion:0,retiro:0,real:null},
+  {mes:'Nov-26',adicion:0,retiro:0,real:null},
+  {mes:'Dic-26',adicion:0,retiro:0,real:null},
+];
+let cvChart=null,cvGpChart=null;
+function renderCV(){
+  const bench=parseFloat(document.getElementById('cv-bench').value)||8.5;
+  const benchM=Math.pow(1+bench/100,1/12)-1;
+  const datos=CV_DATOS_BRUNETTI;
+  const camino=[],aportado=[];
+  let cv=0,acc=0;
+  datos.forEach((d,i)=>{
+    acc+=d.adicion-d.retiro; aportado.push(acc);
+    cv=i===0?d.adicion*(1+benchM):(cv+d.adicion-d.retiro)*(1+benchM);
+    camino.push(Math.round(cv*100)/100);
+  });
+  const reales=datos.map(d=>d.real);
+  const gp=datos.map((d,i)=>d.real!==null?Math.round((d.real-camino[i])*100)/100:null);
+  const lastReal=datos.filter(d=>d.real!==null).pop();
+  const lastIdx=datos.findIndex(d=>d===lastReal);
+  const gpAcum=lastReal?Math.round((lastReal.real-camino[lastIdx])*100)/100:0;
+  const totalAp=aportado[lastIdx]||0;
+  const ret=lastReal?((lastReal.real/totalAp-1)*100).toFixed(1):'—';
+  document.getElementById('cv-stats').innerHTML=`
+    <div class="stat"><div class="sv" style="color:#27500A">USD ${lastReal?Math.round(lastReal.real).toLocaleString('en-US'):'—'}</div><div class="sl">Capital real</div></div>
+    <div class="stat"><div class="sv" style="color:#185FA5">USD ${Math.round(camino[lastIdx]).toLocaleString('en-US')}</div><div class="sl">Camino benchmark</div></div>
+    <div class="stat"><div class="sv" style="color:${gpAcum>=0?'#27500A':'#791F1F'}">${gpAcum>=0?'+':''}USD ${Math.abs(gpAcum).toLocaleString('en-US')}</div><div class="sl">G/P acumulado</div></div>
+    <div class="stat"><div class="sv">${ret}%</div><div class="sl">Retorno real</div></div>`;
+  const labels=datos.map(d=>d.mes);
+  if(cvChart) cvChart.destroy();
+  cvChart=new Chart(document.getElementById('cv-chart'),{type:'line',data:{labels,datasets:[
+    {label:'Camino benchmark',data:camino,borderColor:'#185FA5',backgroundColor:'#185FA518',borderWidth:2,borderDash:[5,3],pointRadius:2,fill:true,tension:.4},
+    {label:'Capital real',data:reales,borderColor:'#27500A',backgroundColor:'#27500A22',borderWidth:2.5,pointRadius:4,fill:false,tension:.3,spanGaps:false},
+    {label:'Aportado',data:aportado,borderColor:'#9BA8BB',borderWidth:1.5,borderDash:[2,4],pointRadius:0,fill:false,tension:.4},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.dataset.label}: USD ${c.parsed.y?Math.round(c.parsed.y).toLocaleString('en-US'):'—'}`}}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K',font:{size:10}},beginAtZero:true}}}});
+  if(cvGpChart) cvGpChart.destroy();
+  cvGpChart=new Chart(document.getElementById('cv-gp'),{type:'bar',data:{labels,datasets:[{label:'G/P',data:gp,backgroundColor:gp.map(v=>v===null?'transparent':v>=0?'#27500A88':'#791F1F88'),borderColor:gp.map(v=>v===null?'transparent':v>=0?'#27500A':'#791F1F'),borderWidth:1,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{font:{size:10}}}}}});
+  document.getElementById('cv-tbl').innerHTML=datos.map((d,i)=>`<tr style="${!d.real?'color:#9BA8BB':d.real>camino[i]?'':''}">
+    <td style="font-size:10px;color:#9BA8BB">${i<12?1:2}</td>
+    <td>${d.mes}</td>
+    <td style="text-align:right">USD ${Math.round(aportado[i]).toLocaleString('en-US')}</td>
+    <td style="text-align:right;color:#185FA5">USD ${Math.round(camino[i]).toLocaleString('en-US')}</td>
+    <td style="text-align:right;font-weight:${d.real?'500':'400'};color:${!d.real?'#9BA8BB':d.real>camino[i]?'#27500A':'#791F1F'}">${d.real?'USD '+Math.round(d.real).toLocaleString('en-US'):'—'}</td>
+    <td style="text-align:center">${gp[i]!==null?`<span style="font-size:10px;padding:2px 6px;border-radius:4px;font-weight:500;background:${gp[i]>=0?'#EAF3DE':'#FCEBEB'};color:${gp[i]>=0?'#27500A':'#791F1F'}">${gp[i]>=0?'+':''}${Math.round(gp[i])}</span>`:'<span style="color:#9BA8BB;font-size:10px">proyectado</span>'}</td>
+    <td style="text-align:center;color:${!d.real||i===0?'#9BA8BB':d.real>datos[i-1]?.real||0?'#27500A':'#791F1F'}">${d.real&&i>0?((d.real/(datos[i-1].real||1)-1)*100).toFixed(1)+'%':'—'}</td>
+  </tr>`).join('');
+}
+
+// ═══ CLIENTES ═══
+const CLIENTES_SEED=[
+  {nombre:'Nicolás Brunetti',perfil:'Moderado Agresivo',capital:7346,regimen:'autonomo',fee:'management',fecha:'15/06/2026',ips_vto:'15/06/2027',mods:['cuestionario','ips','cartera_obj','gap','fiscal','alertas']},
+  {nombre:'Daniela Ávila',perfil:'Moderado Conservador',capital:8500,regimen:'dependencia',fee:'pendiente',fecha:'15/06/2026',ips_vto:'15/06/2027',mods:['cuestionario','ips']},
+  {nombre:'Vivas Mariano',perfil:'Moderado',capital:78000,regimen:'dependencia',fee:'management',fecha:'23/02/2026',ips_vto:'23/02/2027',mods:['cuestionario','ips','cartera_obj','gap','fiscal']},
+  {nombre:'Giuli Raviolo',perfil:'Moderado Agresivo',capital:45000,regimen:'autonomo',fee:'pendiente',fecha:'15/02/2025',ips_vto:'15/02/2026',mods:['cuestionario','ips']},
+  {nombre:'Salome Agustina',perfil:'Agresivo',capital:22000,regimen:'monotributo',fee:'pendiente',fecha:'12/01/2025',ips_vto:'12/01/2026',mods:['cuestionario']},
+  {nombre:'Silvia Isaac',perfil:'Moderado Conservador',capital:9330,regimen:'monotributo',fee:'pendiente',fecha:'17/06/2026',ips_vto:'17/06/2027',mods:['cuestionario','ips','cartera_obj','gap','fiscal']},
+];
+const TOT_MODS=7;
+const PCOL={'Conservador':'#854F0B','Moderado Conservador':'#633806','Moderado':'#0C447C','Moderado Agresivo':'#27500A','Agresivo':'#1A1A2E'};
+const PCOL_BG={'Conservador':'#FAEEDA','Moderado Conservador':'#FAEEDA','Moderado':'#E6F1FB','Moderado Agresivo':'#EAF3DE','Agresivo':'#E8ECF2'};
+const FEE_L={management:'Fee A · 1% anual',performance:'Fee B · 20% result.',pendiente:'Fee: pendiente'};
+let clientes=[];
+
+async function loadClients(){
+  try{const r=await window.storage.get('nb_clientes_v3');if(r?.value)clientes=JSON.parse(r.value);}catch(e){clientes=[];}
+  if(!clientes.length){clientes=JSON.parse(JSON.stringify(CLIENTES_SEED));await saveClients();}
+  renderClients();renderDash();renderIPS();
+}
+async function saveClients(){
+  try{await window.storage.set('nb_clientes_v3',JSON.stringify(clientes));}catch(e){}
+}
+function renderClients(){
+  document.getElementById('badge-clientes').textContent=clientes.length;
+  document.getElementById('client-grid').innerHTML=clientes.map((c,i)=>{
+    const pct=Math.round((c.mods||[]).length/TOT_MODS*100);
+    const pcol=pct>=75?'#27500A':pct>=40?'#185FA5':'#854F0B';
+    return`<div class="client-card" onclick="goClientDetail(${i})">
+      <div class="cc-name">${c.nombre}</div>
+      <span style="background:${PCOL_BG[c.perfil]||'#F4F6F9'};color:${PCOL[c.perfil]||'#9BA8BB'};font-size:10px;padding:2px 8px;border-radius:99px;display:inline-block;margin-bottom:6px">${c.perfil}</span>
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:#9BA8BB">Capital</span><span style="font-weight:500">${c.capital?'USD '+parseInt(c.capital).toLocaleString('en-US'):'—'}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:#9BA8BB">Honorarios</span><span style="font-weight:500;color:${c.fee==='pendiente'?'#854F0B':'#27500A'}">${FEE_L[c.fee]||'—'}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:#9BA8BB">Progreso</span><span style="font-weight:500;color:${pcol}">${pct}%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${pcol}"></div></div>
+    </div>`;
+  }).join('');
+}
+let currentClientIdx=0;
+let legCVChart=null,legCVGpChart=null;
+let legTab='resumen';
+
+function goClientDetail(i){
+  currentClientIdx=i;
+  legTab='resumen';
+  const c=clientes[i];
+  document.getElementById('leg-name').textContent=c.nombre;
+  const pcol=PCOL[c.perfil]||'#9BA8BB';
+  const pbg=PCOL_BG[c.perfil]||'#F4F6F9';
+  document.getElementById('leg-meta').innerHTML=`
+    <span style="background:${pbg};color:${pcol};font-size:10px;padding:2px 8px;border-radius:99px;display:inline-block;margin-right:6px">${c.perfil}</span>
+    ${c.capital?'USD '+parseInt(c.capital).toLocaleString('en-US')+' · ':''}
+    ${c.regimen||''}`;
+  const dias=c.ips_vto?diasHasta(c.ips_vto):null;
+  const est=dias!==null?getEstado(dias):null;
+  document.getElementById('leg-ips-badge').innerHTML=est?`<span style="font-size:10px;padding:4px 12px;border-radius:6px;font-weight:500;background:${est.bg};color:${est.col}">IPS ${est.l} ${dias<0?'hace '+Math.abs(dias)+'d':dias+'d restantes'}</span>`:'';
+
+  document.querySelectorAll('.leg-tab').forEach(t=>{t.classList.remove('on');});
+  document.querySelector('.leg-tab').classList.add('on');
+  renderLegTab('resumen');
+  goView('legajo',null);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function setLegTab(tab,btn){
+  legTab=tab;
+  document.querySelectorAll('.leg-tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderLegTab(tab);
+}
+
+function renderLegTab(tab){
+  const c=clientes[currentClientIdx];
+  const el=document.getElementById('leg-content');
+  if(tab==='resumen') renderLegResumen(c,el);
+  else if(tab==='camino') renderLegCamino(c,el);
+  else if(tab==='cartera') renderLegCartera(c,el);
+  else if(tab==='modulos') renderLegModulos(c,el);
+}
+
+function renderLegResumen(c,el){
+  const pct=Math.round((c.mods||[]).length/TOT_MODS*100);
+  const pcol=pct>=75?'#27500A':pct>=40?'#185FA5':'#854F0B';
+  el.innerHTML=`
+  <div class="stats-row">
+    <div class="stat"><div class="sv">USD ${c.capital?parseInt(c.capital).toLocaleString('en-US'):'—'}</div><div class="sl">Capital</div></div>
+    <div class="stat"><div class="sv" style="color:${pct>=75?'#27500A':'#854F0B'}">${pct}%</div><div class="sl">Progreso</div></div>
+    <div class="stat"><div class="sv" style="color:${c.fee==='pendiente'?'#854F0B':'#27500A'}">${c.fee==='pendiente'?'Pendiente':c.fee==='management'?'Fee A':'Fee B'}</div><div class="sl">Honorarios</div></div>
+    <div class="stat"><div class="sv">${c.ips_vto||'—'}</div><div class="sl">Vto. IPS</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hdr">Datos del legajo</div>
+    <div class="card-body">
+      ${[['Perfil',c.perfil],['Régimen',c.regimen||'—'],['Fee',FEE_L[c.fee]||'—'],['Fecha alta',c.fecha||'—'],['IPS vto',c.ips_vto||'—'],['Módulos',((c.mods||[]).length)+'/'+TOT_MODS]].map(([l,v])=>`
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:.5px solid #E8ECF2;font-size:12px">
+        <span style="color:#9BA8BB">${l}</span><span style="font-weight:500">${v}</span>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderLegCamino(c,el){
+  // Bench from profile
+  const benchMap={Conservador:4.5,'Moderado Conservador':5.5,Moderado:7.0,'Moderado Agresivo':8.5,Agresivo:10.0};
+  const bench=benchMap[c.perfil]||7;
+  const benchM=Math.pow(1+bench/100,1/12)-1;
+  const cap=parseInt(c.capital)||0;
+
+  // For Brunetti: use real data. For others: pure projection
+  const esBrunetti=c.nombre.includes('Brunetti');
+  const datos=esBrunetti?CV_DATOS_BRUNETTI:Array.from({length:18},(_,i)=>({
+    mes:['Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar','Abr','May','Jun'][i%12]+'-'+(i<12?'25':'26'),
+    adicion:200,retiro:0,real:null
+  }));
+
+  const camino=[],aportado=[];
+  let cv=0,acc=0;
+  datos.forEach((d,i)=>{
+    acc+=d.adicion-(d.retiro||0);aportado.push(acc);
+    cv=i===0?d.adicion*(1+benchM):(cv+d.adicion-(d.retiro||0))*(1+benchM);
+    camino.push(Math.round(cv*100)/100);
+  });
+  const reales=datos.map(d=>d.real);
+  const gp=datos.map((d,i)=>d.real!==null?Math.round((d.real-camino[i])*100)/100:null);
+  const lastReal=datos.filter(d=>d.real!==null).pop();
+  const lastIdx=lastReal?datos.indexOf(lastReal):datos.length-1;
+  const gpAcum=lastReal?Math.round((lastReal.real-camino[lastIdx])):0;
+
+  el.innerHTML=`
+  <div class="stats-row">
+    <div class="stat"><div class="sv" style="color:#27500A">USD ${lastReal?Math.round(lastReal.real).toLocaleString('en-US'):Math.round(camino[lastIdx]).toLocaleString('en-US')}</div><div class="sl">${lastReal?'Capital real':'Proyectado'}</div></div>
+    <div class="stat"><div class="sv" style="color:#185FA5">USD ${Math.round(camino[lastIdx]).toLocaleString('en-US')}</div><div class="sl">Camino benchmark</div></div>
+    <div class="stat"><div class="sv" style="color:${gpAcum>=0?'#27500A':'#791F1F'}">${gpAcum>=0?'+':''}USD ${Math.abs(gpAcum).toLocaleString('en-US')}</div><div class="sl">G/P acumulado</div></div>
+    <div class="stat"><div class="sv">${bench}%</div><div class="sl">Benchmark anual</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hdr"><span>Camino de Valor vs Capital real</span><span style="font-size:10px;color:#9BA8BB">${esBrunetti?'Datos reales jul-2025 → jun-2026':'Proyección con benchmark del perfil'}</span></div>
+    <div class="card-body"><canvas id="leg-cv-chart" height="240"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-hdr">G/P mensual vs benchmark</div>
+    <div class="card-body"><canvas id="leg-cv-gp" height="150"></canvas></div>
+  </div>`;
+
+  setTimeout(()=>{
+    if(legCVChart)legCVChart.destroy();
+    if(legCVGpChart)legCVGpChart.destroy();
+    const labels=datos.map(d=>d.mes);
+    legCVChart=new Chart(document.getElementById('leg-cv-chart'),{type:'line',data:{labels,datasets:[
+      {label:'Camino benchmark',data:camino,borderColor:'#185FA5',backgroundColor:'#185FA518',borderWidth:2,borderDash:[5,3],pointRadius:2,fill:true,tension:.4},
+      {label:'Capital real',data:reales,borderColor:'#27500A',backgroundColor:'#27500A22',borderWidth:2.5,pointRadius:4,fill:false,tension:.3,spanGaps:false},
+      {label:'Aportado',data:aportado,borderColor:'#9BA8BB',borderWidth:1.5,borderDash:[2,4],pointRadius:0,fill:false,tension:.4},
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K',font:{size:10}},beginAtZero:true}}}});
+    legCVGpChart=new Chart(document.getElementById('leg-cv-gp'),{type:'bar',data:{labels,datasets:[{label:'G/P',data:gp,backgroundColor:gp.map(v=>v===null?'transparent':v>=0?'#27500A88':'#791F1F88'),borderColor:gp.map(v=>v===null?'transparent':v>=0?'#27500A':'#791F1F'),borderWidth:1,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{font:{size:10}}}}}});
+  },100);
+}
+
+function renderLegCartera(c,el){
+  const k=Object.keys(CARTERAS_DATA).find(k=>CARTERAS_DATA[k].nombre===c.perfil)||'mod_agresivo';
+  const cart=CARTERAS_DATA[k];
+  const cap=parseInt(c.capital)||0;
+  const maxPct=Math.max(...cart.pos.map(p=>p.pct));
+  el.innerHTML=`
+  <div class="card">
+    <div class="card-hdr"><span>Cartera objetivo — ${c.perfil}</span><span style="font-size:10px;color:#9BA8BB">Benchmark: ${cart.bench}</span></div>
+    <div class="card-body">
+      <div class="saa-bar">${cart.pos.map(p=>`<div class="saa-seg" style="width:${p.pct}%;background:${p.col}">${p.pct>=8?p.t:p.pct>=4?p.pct+'%':''}</div>`).join('')}</div>
+      ${cart.pos.map(p=>`<div class="pos-row">
+        <div class="pos-ticker" style="color:${p.col}">${p.t}</div>
+        <div style="flex:1"><div style="font-size:11px;color:#9BA8BB;margin-bottom:3px">${p.n}</div>
+        <div class="pos-bar-wrap"><div class="pos-bar" style="width:${p.pct/maxPct*100}%;background:${p.col}"></div></div></div>
+        <div class="pos-pct" style="color:${p.col}">${p.pct}%</div>
+        <div class="pos-monto">USD ${Math.round(cap*p.pct/100).toLocaleString('en-US')}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderLegModulos(c,el){
+  const MODS_DEF=[
+    {id:'cuestionario',icon:'📝',n:'1 · Cuestionario de perfil',d:'5 módulos · Scoring · SAA · Capital'},
+    {id:'ips',icon:'📄',n:'2 · IPS (Word)',d:'Política inversión + honorarios'},
+    {id:'cartera_obj',icon:'🗂️',n:'3 · Cartera objetivo',d:'Modelo + montos calculados'},
+    {id:'gap',icon:'🔄',n:'4 · Gap analysis',d:'Actual vs objetivo · Plan transición'},
+    {id:'fiscal',icon:'⚖️',n:'5 · Chequeo fiscal',d:'TLH · BP · Ganancias'},
+    {id:'alertas',icon:'🔔',n:'6 · Monitor alertas',d:'6 triggers · Cartera cargada'},
+    {id:'reporte',icon:'📈',n:'7 · Reporte trimestral',d:'Interactivo · Word · Drive'},
+  ];
+  el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    ${MODS_DEF.map(m=>{
+      const done=(c.mods||[]).includes(m.id);
+      return`<div style="background:#fff;border:.5px solid ${done?'#C0DD97':'#E8ECF2'};border-radius:10px;padding:.85rem 1rem;cursor:pointer;transition:all .15s" onclick="toggleMod(${currentClientIdx},'${m.id}')">
+        <div style="font-size:18px;margin-bottom:5px">${m.icon}</div>
+        <div style="font-size:12px;font-weight:500;margin-bottom:2px;color:${done?'#27500A':'#1A1A2E'};text-decoration:${done?'none':'none'}">${m.n}</div>
+        <div style="font-size:10px;color:#9BA8BB">${m.d}</div>
+        <div style="font-size:10px;font-weight:500;margin-top:5px;color:${done?'#27500A':'#185FA5'}">${done?'✓ Completado':'→ Pendiente'}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function toggleMod(idx,modId){
+  if(!clientes[idx].mods) clientes[idx].mods=[];
+  const i=clientes[idx].mods.indexOf(modId);
+  if(i>=0) clientes[idx].mods.splice(i,1);
+  else clientes[idx].mods.push(modId);
+  saveClients();
+  renderLegModulos(clientes[idx],document.getElementById('leg-content'));
+  renderClients();
+}
+function openModal(){document.getElementById('modal').style.display='flex';document.getElementById('m-d').value=new Date().toISOString().split('T')[0];}
+function closeModal(){document.getElementById('modal').style.display='none';}
+function saveClient(){
+  const n=document.getElementById('m-n').value.trim();if(!n){alert('Ingresá el nombre');return;}
+  clientes.push({nombre:n,edad:document.getElementById('m-e').value,perfil:document.getElementById('m-p').value,capital:document.getElementById('m-c').value,regimen:'autonomo',fee:document.getElementById('m-f').value,fecha:document.getElementById('m-d').value,ips_vto:'',mods:[]});
+  saveClients();renderClients();closeModal();
+}
+
+// ═══ IPS ═══
+function parseFecha(s){const[d,m,y]=s.split('/').map(Number);return new Date(y,m-1,d);}
+function diasHasta(s){const h=new Date();h.setHours(0,0,0,0);return Math.round((parseFecha(s)-h)/(864e5));}
+function getEstado(d){
+  if(d<0)return{l:'VENCIDO',col:'#791F1F',bg:'#FCEBEB'};
+  if(d<=30)return{l:'URGENTE',col:'#791F1F',bg:'#FCEBEB'};
+  if(d<=60)return{l:'PRÓXIMO',col:'#854F0B',bg:'#FAEEDA'};
+  return{l:'AL DÍA',col:'#27500A',bg:'#EAF3DE'};
+}
+function renderIPS(){
+  const hoy=new Date();
+  document.getElementById('ips-today').textContent='Hoy: '+hoy.toLocaleDateString('es-AR');
+  const datos=clientes.filter(c=>c.ips_vto).map(c=>{const d=diasHasta(c.ips_vto);return{...c,dias:d,est:getEstado(d)};}).sort((a,b)=>a.dias-b.dias);
+  const venc=datos.filter(c=>c.dias<0).length,urg=datos.filter(c=>c.dias>=0&&c.dias<=30).length,prox=datos.filter(c=>c.dias>30&&c.dias<=60).length,ok=datos.filter(c=>c.dias>60).length;
+  document.getElementById('ips-stats').innerHTML=`
+    <div class="stat"><div class="sv" style="color:#791F1F">${venc}</div><div class="sl">Vencidos</div></div>
+    <div class="stat"><div class="sv" style="color:#791F1F">${urg}</div><div class="sl">Urgentes</div></div>
+    <div class="stat"><div class="sv" style="color:#854F0B">${prox}</div><div class="sl">Próximos</div></div>
+    <div class="stat"><div class="sv" style="color:#27500A">${ok}</div><div class="sl">Al día</div></div>`;
+  document.getElementById('badge-ips').textContent=venc+urg;
+  const crit=datos.filter(c=>c.dias<=0);
+  document.getElementById('ips-banner').innerHTML=crit.length?`<div style="background:#FCEBEB;border:.5px solid #F7C1C1;border-radius:8px;padding:.75rem 1rem;font-size:12px;color:#791F1F;margin-bottom:.75rem"><strong>⚠ ${crit.length} IPS vencidos:</strong> ${crit.map(c=>c.nombre).join(' · ')}</div>`:'';
+  document.getElementById('ips-list').innerHTML=datos.map(c=>`
+  <div style="display:flex;align-items:center;gap:12px;padding:9px 1.1rem;border-bottom:.5px solid #E8ECF2;font-size:12px">
+    <div style="width:10px;height:10px;border-radius:50%;background:${c.est.col};flex-shrink:0"></div>
+    <div style="min-width:140px;font-weight:500">${c.nombre}</div>
+    <div style="flex:1;color:#9BA8BB">${c.perfil} · IPS vto ${c.ips_vto}</div>
+    <span style="font-weight:500;color:${c.est.col}">${c.dias<0?'Vencido hace '+Math.abs(c.dias)+' días':c.dias+' días restantes'}</span>
+    <span style="font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;background:${c.est.bg};color:${c.est.col}">${c.est.l}</span>
+    <button onclick="showIPSChecklist('${c.nombre}')" style="padding:4px 10px;font-family:'DM Mono',monospace;font-size:10px;border-radius:6px;border:.5px solid #E8ECF2;background:#F4F6F9;color:#9BA8BB;cursor:pointer">Renovar →</button>
+  </div>`).join('');
+}
+const CHECKLIST_ITEMS=['Actualizar datos del cliente (capital, régimen, situación)','Revisar perfil de riesgo — ¿cambiaron objetivos o horizonte?','Confirmar o cambiar esquema de honorarios (única oportunidad anual)','Revisar SAA vs cartera actual — desvíos acumulados','Actualizar benchmarks si cambió la metodología NB','Chequeo fiscal del ejercicio — TLH, dividendos, ONs','Revisar tesis de cada posición vs screener actualizado','Generar IPS nuevo v[X+1] y firmarlo','Archivar IPS anterior en Drive / Historial'];
+let ipsChecks={};
+function showIPSChecklist(nombre){
+  ipsChecks={};
+  document.getElementById('ips-cl-card').style.display='block';
+  document.getElementById('ips-cl-title').textContent='Checklist renovación — '+nombre;
+  renderIPSCL(nombre);
+  document.getElementById('ips-cl-card').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function renderIPSCL(nombre){
+  const done=Object.values(ipsChecks).filter(Boolean).length;
+  document.getElementById('ips-cl-prog').textContent=done+'/'+CHECKLIST_ITEMS.length;
+  document.getElementById('ips-cl-body').innerHTML=CHECKLIST_ITEMS.map((item,i)=>{
+    const d=ipsChecks[i]||false;
+    return`<div style="display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:.5px solid #E8ECF2;font-size:12px">
+      <div onclick="ipsChecks[${i}]=!ipsChecks[${i}];renderIPSCL('${nombre}')" style="width:18px;height:18px;border-radius:4px;border:1.5px solid ${d?'#27500A':'#E8ECF2'};background:${d?'#27500A':'#fff'};flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;margin-top:1px">${d?'✓':''}</div>
+      <span style="color:${d?'#27500A':'#1A1A2E'};text-decoration:${d?'line-through':'none'}">${item}</span>
+      ${i===2?'<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:#FAEEDA;color:#854F0B;margin-left:auto;white-space:nowrap;flex-shrink:0">Solo hoy</span>':''}
+    </div>`;
+  }).join('');
+}
+
+// ═══ DASHBOARD ═══
+function renderDash(){
+  document.getElementById('dash-clientes').innerHTML=clientes.map(c=>{
+    const pct=Math.round((c.mods||[]).length/TOT_MODS*100);
+    const pc=pct>=75?'#27500A':pct>=40?'#185FA5':'#854F0B';
+    return`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:.5px solid #E8ECF2;font-size:12px">
+      <span style="font-weight:500;min-width:130px">${c.nombre}</span>
+      <div style="flex:1;height:4px;background:#F4F6F9;border-radius:2px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${pc};border-radius:2px"></div></div>
+      <span style="font-size:11px;color:${pc};min-width:30px;text-align:right">${pct}%</span>
+    </div>`;
+  }).join('');
+  const top5=U.sort((a,b)=>b.score-a.score).slice(0,5);
+  document.getElementById('dash-top5').innerHTML=top5.map((x,i)=>`
+  <div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:.5px solid #E8ECF2;font-size:12px">
+    <span style="font-size:10px;color:#9BA8BB;min-width:16px">${i+1}</span>
+    <span style="font-weight:500;min-width:54px">${x.t}</span>
+    <span style="color:#9BA8BB;flex:1">${x.n}</span>
+    <div class="sc-circle" style="background:${scColor(x.score)};width:22px;height:22px;font-size:9px">${x.score}</div>
+    <span class="vbadge ${x.v.cls}">${x.v.l}</span>
+  </div>`).join('');
+}
+
+// ═══ INIT ═══
+loadClients();
+renderScr();
+renderCartTabs();
+renderCart();
+calcFees();
+renderCV();
+
+// ══════════════════════════════════════════════════════
+// INTEGRACIÓN APPS SCRIPT — carga datos de Drive
+// ══════════════════════════════════════════════════════
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzK2ig8SSubBHvaF-S04_IQEXi2T4x-cFnUak8bojLb6bAF9UI9D1hJqH-IkdjvNEYZzg/exec';
+
+// Estado de carga
+let driveDataLoaded = false;
+let driveClientes = [];
+
+// Carga clientes desde Drive/Apps Script
+async function cargarClientesDrive() {
+  const el = document.getElementById('drive-status');
+  if (el) el.textContent = '⟳ Cargando desde Drive...';
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL + '?accion=get_clientes', {
+      method: 'GET',
+      mode: 'cors',
+    });
+    const data = await res.json();
+
+    if (data.ok && data.clientes && data.clientes.length > 0) {
+      driveClientes = data.clientes;
+      driveDataLoaded = true;
+      if (el) el.textContent = '✓ ' + data.clientes.length + ' clientes desde Drive · ' + new Date().toLocaleTimeString('es-AR');
+      if (el) el.style.color = '#27500A';
+      // Re-renderizar la lista de clientes con datos de Drive
+      if (typeof renderClientes === 'function') renderClientes();
+    } else {
+      if (el) el.textContent = 'ℹ️ Usando datos locales (Drive no configurado)';
+      if (el) el.style.color = '#9BA8BB';
+    }
+  } catch(err) {
+    if (el) el.textContent = 'ℹ️ Usando datos locales · ' + err.message.slice(0,40);
+    if (el) el.style.color = '#9BA8BB';
+  }
+}
+
+// Función para guardar un cliente en Drive
+async function guardarEnDrive(clienteData) {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ accion: 'nuevo_cliente', datos: clienteData })
+    });
+    const data = await res.json();
+    return data.ok;
+  } catch(err) {
+    console.error('Error guardando en Drive:', err);
+    return false;
+  }
+}
+
+// Auto-cargar al iniciar si estamos en sección clientes
+document.addEventListener('DOMContentLoaded', () => {
+  // Cargar en background sin bloquear la UI
+  setTimeout(() => cargarClientesDrive(), 1500);
+});
+
+</script>
+</body>
+</html>
