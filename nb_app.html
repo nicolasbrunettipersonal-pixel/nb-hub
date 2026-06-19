@@ -339,7 +339,7 @@ body{font-family:'DM Mono',monospace;background:var(--gray1);color:var(--ink);fo
 <!-- ═══════════════ SCREENER ═══════════════ -->
 <div class="view" id="v-screener">
   <div class="page-title">Screener NB v3.1</div>
-  <div class="page-sub">60 empresas · CEDEARs + Merval · Datos al 14/06/2026 · Clic en fila para detalle</div>
+  <div class="page-sub">60 empresas · CEDEARs + Merval · Precios verificados Yahoo Finance/Macrotrends · Clic en fila para detalle</div>
 
   <div class="filter-bar">
     <div class="chip on" onclick="setChip('all',this)">Todas</div>
@@ -1182,8 +1182,8 @@ function renderRF(){renderRFTable();}
 // ══════════════════════════════════════════════
 // SINCRONIZACIÓN CON GOOGLE SHEET — NB_Clientes_Master
 // ══════════════════════════════════════════════
-const NB_API_URL = 'https://script.google.com/macros/s/AKfycbwRvNhFvUcrV30tHsdG4yYyCXER632v22E7FGnxHtylkZboVPqVLfsR3yVyE8gYVH3j/exec';
-// const NB_API_KEY = ''; // se agrega cuando activemos la clave de acceso
+const NB_API_URL = 'https://script.google.com/macros/s/AKfycbxiDLblJmtt243rvoj0qzwneiUmsjIC4tjBkDyKOaxYcg0_l6B7uc2syGRv3xYMjz4/exec';
+const NB_API_KEY = 'hqB_brpZxMDlFcuiyvI6FQDZWZdJkb_G';
 
 let clientesSheet = []; // clientes traídos del Sheet (vacío hasta sincronizar)
 
@@ -1199,7 +1199,7 @@ async function syncClientesFromSheet(){
   status.style.color = 'var(--gray3)';
 
   try {
-    const url = `${NB_API_URL}?accion=clientes`;
+    const url = `${NB_API_URL}?accion=clientes&key=${NB_API_KEY}`;
     const resp = await fetch(url);
     if(!resp.ok) throw new Error('HTTP '+resp.status);
     const data = await resp.json();
@@ -1215,7 +1215,7 @@ async function syncClientesFromSheet(){
     document.getElementById('clientes-sub').textContent =
       `${data.length} clientes desde el cuestionario web (+ los del Hub local) · Última sync: ${new Date().toLocaleString('es-AR')}`;
 
-    renderClientGridConSheet();
+    await renderClientGridConSheet();
 
   } catch(err){
     status.textContent = `⚠ Error: ${err.message}. Verificá la URL del API o tu conexión.`;
@@ -1227,25 +1227,33 @@ async function syncClientesFromSheet(){
   }
 }
 
-function renderClientGridConSheet(){
-  // Combina los clientes ya cargados manualmente (CLIENTES array existente)
+async function renderClientGridConSheet(){
+  // Combina los clientes ya cargados (variable global `clientes`)
   // con los nuevos que llegaron del Sheet (clientesSheet), evitando duplicados por nombre
-  const nombresExistentes = new Set(CLIENTES.map(c => c.nombre));
+  const nombresExistentes = new Set(clientes.map(c => c.nombre));
   const nuevos = clientesSheet.filter(c => c.nombre && !nombresExistentes.has(c.nombre));
 
   nuevos.forEach(c => {
-    CLIENTES.push({
+    clientes.push({
       nombre: c.nombre,
       perfil: c.perfil_riesgo || 'Sin asignar',
       capital: Number(c.capital_inicial_usd) || 0,
-      estado: c.estado || 'Nuevo — pendiente IPS',
-      email: c.email,
+      fee: 'pendiente',
+      mods: [],
       desdeSheet: true, // marca para identificar visualmente que vino del cuestionario
+      email: c.email,
     });
   });
 
-  if (typeof renderClientGrid === 'function') {
-    renderClientGrid();
+  if (nuevos.length > 0) {
+    await saveClients();
+  }
+
+  if (typeof renderClients === 'function') {
+    renderClients();
+  }
+  if (typeof renderDash === 'function') {
+    renderDash();
   }
 }
 
