@@ -776,7 +776,7 @@ const U=[
 {t:'NFLX',n:'Netflix',s:'Tech',tp:'CEDEAR',p:82,pe:29,pf:21.8,ph:62,pj:28,m:23,cagr:13,roe:38,d:.3,fcf:1,cob:25,b:1.05,up:40,peg:1.43,tesis:'−35% desde máximos. Target $114.82. Margen 31.5%.',moat:'300M suscriptores.',fiscal:'Exento Ganancias PH.',dcf:{fcf_share:22,g1:18,g2:10,wacc:10,gTerminal:3,shares:428,debt:14500,cash:7200},nuevo:false},
 {t:'CRM',n:'Salesforce',s:'Tech',tp:'CEDEAR',p:155.02,pe:15.82,pf:13.5,ph:48.5,pj:30,m:15.8,cagr:9,roe:11,d:.4,fcf:1,cob:20,b:1.35,up:24.5,peg:2.25,tesis:'Agentforce IA. P/E 33.8x vs historial 48.5x.',moat:'150K+ clientes.',fiscal:'Exento Ganancias PH.',nuevo:false},
 {t:'MELI',n:'MercadoLibre',s:'Tech',tp:'CEDEAR',p:1607,pe:42,pf:40.2,ph:61.1,pj:35,m:4.8,cagr:37,roe:14,d:2,fcf:1,cob:4.2,b:1.25,up:19,peg:1.48,tesis:'Amazon+PayPal Latam. 120M usuarios.',moat:'Red logística+fintech.',fiscal:'Exento Ganancias PH.',nuevo:false},
-{t:'MU',n:'Micron Technology',s:'Tech',tp:'CEDEAR',p:1043.19,pe:48.6,pf:8.8,ph:65,pj:18,m:38.5,cagr:85,roe:22,d:-2,fcf:1,cob:20,b:1.55,up:20,peg:0.35,tesis:'HBM IA vendida hasta fin 2026. PEG 0.35.',moat:'HBM3E único a escala.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'MU',n:'Micron Technology ★ Q3 post-earnings',s:'Tech',tp:'CEDEAR',p:1133.99,pe:48.6,pf:18.0,ph:65,pj:18,m:38.5,cagr:85,roe:22,d:-2,fcf:1,cob:20,b:1.55,up:20,peg:0.35,tesis:'HBM IA vendida hasta fin 2026. PEG 0.35.',moat:'HBM3E único a escala.',fiscal:'Exento Ganancias PH.',nuevo:true},
 {t:'ASML',n:'ASML Holding',s:'Tech',tp:'CEDEAR',p:1705,pe:58.6,pf:40.5,ph:36.3,pj:38,m:51.6,cagr:18,roe:55,d:.8,fcf:1,cob:30,b:1.20,up:24,peg:1.85,tesis:'Monopolio EUV. Sin competencia en 10 años.',moat:'Litografía EUV irreemplazable.',fiscal:'Exento Ganancias PH.',nuevo:true},
 {t:'TSM',n:'TSMC',s:'Tech',tp:'CEDEAR',p:425.83,pe:35.0,pf:27.0,ph:25,pj:24,m:40.5,cagr:22,roe:28,d:1.2,fcf:1,cob:20,b:1.20,up:27.5,peg:0.85,tesis:'Único fab 3nm/2nm. Produce NVDA/AAPL/AMD.',moat:'Monopolio chips avanzados.',fiscal:'Exento Ganancias PH.',dcf:{fcf_share:11.5,g1:22,g2:12,wacc:10,gTerminal:3,shares:25900,debt:24000,cash:50000},nuevo:true},
 {t:'AMD',n:'Advanced Micro Dev.',s:'Tech',tp:'CEDEAR',p:507.29,pe:164.7,pf:45.3,ph:42,pj:35,m:22,cagr:26,roe:8,d:.5,fcf:1,cob:15,b:1.65,up:26,peg:1.75,tesis:'MI300X ganando IA mkt share. +25% YoY.',moat:'x86 duopolio+GPU IA.',fiscal:'Exento Ganancias PH.',nuevo:true},
@@ -1386,6 +1386,31 @@ const CLIENTES_SEED=[
   {nombre:'Giuli Raviolo',perfil:'Moderado Agresivo',capital:45000,regimen:'autonomo',fee:'pendiente',fecha:'15/02/2025',ips_vto:'15/02/2026',mods:['cuestionario','ips']},
   {nombre:'Salome Agustina',perfil:'Agresivo',capital:22000,regimen:'monotributo',fee:'pendiente',fecha:'12/01/2025',ips_vto:'12/01/2026',mods:['cuestionario']},
   {nombre:'Silvia Isaac',perfil:'Moderado Conservador',capital:9330,regimen:'monotributo',fee:'pendiente',fecha:'17/06/2026',ips_vto:'17/06/2027',mods:['cuestionario','ips','cartera_obj','gap','fiscal']},
+  {nombre:'Ileana Milocco',perfil:'Moderado',capital:1580,regimen:'',fee:'management',fecha:'19/06/2026',ips_vto:'',
+   cartera_actual:{
+     items:[
+       {t:'SPY',  n:'CEDEAR S&P 500',      val_ars:337680,  rend:36.3},
+       {t:'DICP', n:'Bono CER Discount 2033',val_ars:471247, rend:51.3},
+       {t:'IOLPORA',n:'FCI IOL Portafolio', val_ars:432123,  rend:46.2},
+       {t:'AMZN', n:'CEDEAR Amazon',        val_ars:107625,  rend:9.3},
+       {t:'VIST',  n:'CEDEAR Vista Energy', val_ars:102660,  rend:95.2},
+       {t:'EWZ',  n:'CEDEAR iShares Brasil',val_ars:103120,  rend:8.7},
+       {t:'CONIOLA',n:'FCI Adcap Acciones', val_ars:74258,   rend:12.5},
+       {t:'BRKB', n:'CEDEAR Berkshire',     val_ars:67120,   rend:-4.2},
+       {t:'MELI', n:'CEDEAR MercadoLibre',  val_ars:83520,   rend:-28.0},
+       {t:'META', n:'CEDEAR Meta',          val_ars:74760,   rend:-9.0},
+       {t:'ADBARFA',n:'FCI Adcap Balanceado',val_ars:232541, rend:16.3},
+       {t:'V',    n:'CEDEAR Visa',          val_ars:55240,   rend:-0.6},
+       {t:'JNJ',  n:'CEDEAR J&J',           val_ars:46880,   rend:16.0},
+       {t:'IOLCAMA',n:'FCI IOL Cama',       val_ars:42571,   rend:14.0},
+       {t:'MSFT', n:'CEDEAR Microsoft',     val_ars:19670,   rend:8.1},
+     ],
+     total_ars:2267124,
+     rend_total:20.64,
+     efectivo_ars:10458,
+     efectivo_usd:3.89,
+   },
+   mods:['cartera_actual']},
 ];
 const TOT_MODS=7;
 const PCOL={'Conservador':'#854F0B','Moderado Conservador':'#633806','Moderado':'#0C447C','Moderado Agresivo':'#27500A','Agresivo':'#1A1A2E'};
@@ -1395,7 +1420,14 @@ let clientes=[];
 
 async function loadClients(){
   try{const r=await window.storage.get('nb_clientes_v3');if(r?.value)clientes=JSON.parse(r.value);}catch(e){clientes=[];}
-  if(!clientes.length){clientes=JSON.parse(JSON.stringify(CLIENTES_SEED));await saveClients();}
+  if(!clientes.length){
+    clientes=JSON.parse(JSON.stringify(CLIENTES_SEED));await saveClients();
+  } else if(clientes.length < CLIENTES_SEED.length){
+    // Hay clientes nuevos en el seed que no están en storage — fusionar
+    const nombresExistentes=new Set(clientes.map(c=>c.nombre));
+    CLIENTES_SEED.forEach(s=>{if(!nombresExistentes.has(s.nombre))clientes.push(JSON.parse(JSON.stringify(s)));});
+    await saveClients();
+  }
   renderClients();renderDash();renderIPS();
 }
 async function saveClients(){
