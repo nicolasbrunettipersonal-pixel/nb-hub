@@ -1419,11 +1419,19 @@ const FEE_L={management:'Fee A · 1% anual',performance:'Fee B · 20% result.',p
 let clientes=[];
 
 async function loadClients(){
-  try{const r=await window.storage.get('nb_clientes_v3');if(r?.value)clientes=JSON.parse(r.value);}catch(e){clientes=[];}
+  // Storage helper — usa window.storage si está disponible (Claude), sino localStorage
+  try{
+    if(window.storage){
+      const r=await window.storage.get('nb_clientes_v3');
+      if(r?.value) clientes=JSON.parse(r.value);
+    } else {
+      const r=localStorage.getItem('nb_clientes_v3');
+      if(r) clientes=JSON.parse(r);
+    }
+  }catch(e){clientes=[];}
   if(!clientes.length){
     clientes=JSON.parse(JSON.stringify(CLIENTES_SEED));await saveClients();
   } else if(clientes.length < CLIENTES_SEED.length){
-    // Hay clientes nuevos en el seed que no están en storage — fusionar
     const nombresExistentes=new Set(clientes.map(c=>c.nombre));
     CLIENTES_SEED.forEach(s=>{if(!nombresExistentes.has(s.nombre))clientes.push(JSON.parse(JSON.stringify(s)));});
     await saveClients();
@@ -1431,7 +1439,10 @@ async function loadClients(){
   renderClients();renderDash();renderIPS();
 }
 async function saveClients(){
-  try{await window.storage.set('nb_clientes_v3',JSON.stringify(clientes));}catch(e){}
+  try{
+    if(window.storage) await window.storage.set('nb_clientes_v3',JSON.stringify(clientes));
+    else localStorage.setItem('nb_clientes_v3',JSON.stringify(clientes));
+  }catch(e){}
 }
 function renderClients(){
   document.getElementById('badge-clientes').textContent=clientes.length;
