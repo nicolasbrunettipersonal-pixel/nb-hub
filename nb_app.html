@@ -461,50 +461,87 @@ body{font-family:'DM Mono',monospace;background:var(--gray1);color:var(--ink);fo
 <!-- ═══════════════ CAMINO DE VALOR ═══════════════ -->
 <div class="view" id="v-camino">
   <div class="page-title">Camino de Valor</div>
-  <div class="page-sub">Seguimiento mensual real vs benchmark · Datos reales desde jul-2025</div>
+  <div class="page-sub">Proyección patrimonial interactiva · Benchmark vs capital real · Editable por cliente</div>
 
-  <div class="cv-config">
-    <div class="cv-grid">
-      <div class="cv-item">
-        <label>Capital inicial (USD)</label>
-        <input type="number" id="cv-cap" value="200" oninput="renderCV()">
+  <!-- Selector de cliente -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.85rem" id="cv-clientes-btns"></div>
+
+  <!-- Controles -->
+  <div class="card" style="margin-bottom:.85rem">
+    <div class="card-hdr">Parámetros</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:.75rem 1rem">
+      <div>
+        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Capital inicial IPS (USD)</label>
+        <input type="number" id="cv-cap0" min="100" step="100" value="9330" oninput="renderCV()">
       </div>
-      <div class="cv-item">
-        <label>Benchmark anual (%)</label>
-        <input type="number" id="cv-bench" value="8.5" step="0.5" oninput="renderCV()">
+      <div>
+        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Capital actual (USD)</label>
+        <input type="number" id="cv-cap-act" min="0" step="100" value="9330" oninput="renderCV()">
       </div>
-      <div class="cv-item">
-        <label>Cliente</label>
-        <select id="cv-cliente" onchange="renderCV()">
-          <option value="brunetti">Nicolás Brunetti (datos reales)</option>
-          <option value="custom">Personalizado</option>
+      <div>
+        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Perfil / Benchmark</label>
+        <select id="cv-perfil" onchange="cvPerfilChange()" style="width:100%;font-size:12px;padding:6px 8px;background:var(--gray1);border:.5px solid var(--gray2);border-radius:7px;color:var(--ink)">
+          <option value="4.5">Conservador (4–5%)</option>
+          <option value="5.5" selected>Mod. Conservador (5–6%)</option>
+          <option value="7.0">Moderado (6–8%)</option>
+          <option value="8.5">Mod. Agresivo (8–9%)</option>
+          <option value="10.0">Agresivo (9–11%)</option>
         </select>
       </div>
+      <div>
+        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Tasa benchmark anual (%)</label>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input type="range" id="cv-tasa" min="3" max="15" step="0.5" value="5.5" oninput="document.getElementById('cv-tasa-v').textContent=parseFloat(this.value).toFixed(1)+'%';renderCV()" style="flex:1">
+          <span id="cv-tasa-v" style="font-size:12px;font-weight:500;min-width:40px;color:var(--ink)">5.5%</span>
+        </div>
+      </div>
+      <div>
+        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Meses desde el IPS</label>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input type="range" id="cv-meses" min="1" max="120" step="1" value="1" oninput="document.getElementById('cv-meses-v').textContent=this.value;renderCV()" style="flex:1">
+          <span id="cv-meses-v" style="font-size:12px;font-weight:500;min-width:24px;color:var(--ink)">1</span>
+        </div>
+      </div>
+      <div>
+        <label style="font-size:10px;color:var(--gray3);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Horizonte (años)</label>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input type="range" id="cv-hor" min="1" max="10" step="1" value="3" oninput="document.getElementById('cv-hor-v').textContent=this.value+' a';renderCV()" style="flex:1">
+          <span id="cv-hor-v" style="font-size:12px;font-weight:500;min-width:28px;color:var(--ink)">3 a</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="stats-row" id="cv-stats"></div>
+  <!-- KPIs -->
+  <div class="stats-row" id="cv-kpis" style="margin-bottom:.85rem"></div>
 
-  <div class="card">
-    <div class="card-hdr"><span>Camino de Valor vs Capital real</span><span style="font-size:10px">Datos jul-2025 → jun-2026 + proyección</span></div>
-    <div class="card-body">
-      <canvas id="cv-chart" height="260"></canvas>
+  <!-- Chart -->
+  <div class="card" style="margin-bottom:.85rem">
+    <div class="card-hdr">
+      <span>Camino de Valor — benchmark vs capital real</span>
+      <span style="font-size:10px;color:var(--gray3)">
+        <span style="display:inline-block;width:20px;height:2px;background:#185FA5;vertical-align:middle;margin-right:4px"></span>Benchmark
+        <span style="display:inline-block;width:20px;height:2px;background:#27500A;vertical-align:middle;margin:0 4px 0 10px"></span>Capital real
+      </span>
+    </div>
+    <div style="position:relative;height:240px;padding:.5rem 1rem 1rem">
+      <canvas id="cv-chart2" role="img" aria-label="Gráfico Camino de Valor vs capital real"></canvas>
     </div>
   </div>
 
+  <!-- Tabla -->
   <div class="card">
-    <div class="card-hdr">G/P mensual vs benchmark</div>
-    <div class="card-body">
-      <canvas id="cv-gp" height="160"></canvas>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-hdr">Tabla mensual completa</div>
+    <div class="card-hdr">Tabla de seguimiento mensual / anual</div>
     <div style="overflow-x:auto">
       <table class="tbl">
-        <thead><tr><th>Año</th><th>Mes</th><th>Cap. aportado</th><th>Camino Valor</th><th>Cap. real</th><th>G/P</th><th>Retorno %</th></tr></thead>
-        <tbody id="cv-tbl"></tbody>
+        <thead><tr>
+          <th>Período</th>
+          <th style="text-align:right">Benchmark (USD)</th>
+          <th style="text-align:right">Capital real (USD)</th>
+          <th style="text-align:right">Diferencia</th>
+          <th style="text-align:right">Rend. acum.</th>
+        </tr></thead>
+        <tbody id="cv-tbl2"></tbody>
       </table>
     </div>
   </div>
@@ -759,6 +796,8 @@ function goView(id, btn){
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'));
   document.getElementById('v-'+id).classList.add('on');
   if(btn) btn.classList.add('on');
+  if(id==='camino') setTimeout(()=>initCV(),80);
+  if(id==='screener_rf'){renderRFFilters();renderRFTable();}
 }
 
 // ══════════════════════════════════════════
@@ -1047,6 +1086,185 @@ const CARTERAS_DATA={
       {t:'Cash',  n:'Liquidez ARS (IOLCAMA)',         pct:3,  col:'#9BA8BB'},
     ]},
 };
+
+
+// ══════════════════════════════════════════════
+// CAMINO DE VALOR — Motor interactivo
+// Conectado a datos reales de CLIENTES_SEED
+// ══════════════════════════════════════════════
+const CV_PERFIL_TASA = {
+  'Conservador':          4.5,
+  'Moderado Conservador': 5.5,
+  'Moderado':             7.0,
+  'Moderado Agresivo':    8.5,
+  'Agresivo':             10.0,
+};
+const CV_PERFIL_SEL = {
+  'Conservador':          '4.5',
+  'Moderado Conservador': '5.5',
+  'Moderado':             '7.0',
+  'Moderado Agresivo':    '8.5',
+  'Agresivo':             '10.0',
+};
+
+let cvChart2 = null;
+
+function initCV(){
+  // Botones de clientes
+  const btns = document.getElementById('cv-clientes-btns');
+  if(!btns) return;
+  const activos = clientes.filter(c=>c.capital>0);
+  btns.innerHTML = activos.map((c,i)=>
+    `<button onclick="cvSelectCliente(${i},this)"
+       style="padding:5px 14px;font-size:11px;font-weight:500;border-radius:99px;
+              border:1px solid var(--gray2);background:${i===0?'var(--ink)':'var(--gray1)'};
+              color:${i===0?'var(--bg)':'var(--gray3)'};cursor:pointer"
+     >${c.nombre}</button>`
+  ).join('') + `<button onclick="cvSelectCliente(-1,this)"
+    style="padding:5px 14px;font-size:11px;font-weight:500;border-radius:99px;
+           border:1px solid var(--gray2);background:var(--gray1);color:var(--gray3);cursor:pointer">
+    + Personalizado</button>`;
+  // Cargar primer cliente
+  if(activos.length>0) cvLoadCliente(activos[0]);
+  else renderCV();
+}
+
+function cvSelectCliente(idx, btn){
+  document.querySelectorAll('#cv-clientes-btns button').forEach(b=>{
+    b.style.background='var(--gray1)';b.style.color='var(--gray3)';b.style.border='1px solid var(--gray2)';
+  });
+  btn.style.background='var(--ink)';btn.style.color='var(--bg)';btn.style.border='1px solid var(--ink)';
+  if(idx>=0){
+    const activos = clientes.filter(c=>c.capital>0);
+    cvLoadCliente(activos[idx]);
+  } else {
+    renderCV();
+  }
+}
+
+function cvLoadCliente(c){
+  document.getElementById('cv-cap0').value    = c.capital||10000;
+  document.getElementById('cv-cap-act').value = c.capital||c.capital;
+  // Tasa según perfil
+  const tasa = CV_PERFIL_TASA[c.perfil]||7.0;
+  document.getElementById('cv-tasa').value    = tasa;
+  document.getElementById('cv-tasa-v').textContent = tasa.toFixed(1)+'%';
+  // Seleccionar perfil en el dropdown
+  const selVal = CV_PERFIL_SEL[c.perfil]||'7.0';
+  document.getElementById('cv-perfil').value = selVal;
+  // Meses: calcular desde fecha IPS si existe
+  let meses = 1;
+  if(c.fecha){
+    const partes = c.fecha.split('/');
+    if(partes.length===3){
+      const ipsDate = new Date(partes[2], partes[1]-1, partes[0]);
+      const hoy = new Date();
+      meses = Math.max(1, Math.round((hoy-ipsDate)/(1000*60*60*24*30)));
+    }
+  }
+  document.getElementById('cv-meses').value = Math.min(meses,120);
+  document.getElementById('cv-meses-v').textContent = Math.min(meses,120);
+  renderCV();
+}
+
+function cvPerfilChange(){
+  const val = parseFloat(document.getElementById('cv-perfil').value)||7.0;
+  document.getElementById('cv-tasa').value = val;
+  document.getElementById('cv-tasa-v').textContent = val.toFixed(1)+'%';
+  renderCV();
+}
+
+function renderCV(){
+  const cap0   = parseFloat(document.getElementById('cv-cap0')?.value)||10000;
+  const capAct = parseFloat(document.getElementById('cv-cap-act')?.value)||cap0;
+  const tasa   = parseFloat(document.getElementById('cv-tasa')?.value)/100||0.07;
+  const mAct   = parseInt(document.getElementById('cv-meses')?.value)||1;
+  const hor    = (parseInt(document.getElementById('cv-hor')?.value)||3)*12;
+  const perfilLabel = document.getElementById('cv-perfil')?.options[document.getElementById('cv-perfil')?.selectedIndex]?.text||'';
+
+  const r = Math.pow(1+tasa,1/12)-1;
+  const capBenchHoy = cap0*Math.pow(1+r,mAct);
+  const diff = capAct - capBenchHoy;
+  const ahead = diff >= 0;
+  const rendAcum = ((capAct-cap0)/cap0*100);
+
+  // KPIs
+  const kpis = document.getElementById('cv-kpis');
+  if(kpis){
+    const fmtUSD = n=>'USD '+Math.round(n).toLocaleString('es-AR');
+    kpis.innerHTML=`
+      <div class="stat"><div class="sv">${fmtUSD(cap0)}</div><div class="sl">Capital IPS</div></div>
+      <div class="stat"><div class="sv" style="color:${ahead?'var(--green)':'var(--red)'}">${fmtUSD(capAct)}</div><div class="sl">Capital actual</div></div>
+      <div class="stat"><div class="sv" style="color:${ahead?'var(--green)':'var(--amber)'}">${fmtUSD(capBenchHoy)}</div><div class="sl">Benchmark mes ${mAct}</div></div>
+      <div class="stat"><div class="sv" style="color:${ahead?'var(--green)':'var(--red)'}">${ahead?'+':'-'}${fmtUSD(Math.abs(diff))}</div><div class="sl">${ahead?'Adelante ▲':'Atrás ▼'}</div></div>
+      <div class="stat"><div class="sv" style="color:${rendAcum>=0?'var(--green)':'var(--red)'}">${rendAcum>=0?'+':''}${rendAcum.toFixed(1)}%</div><div class="sl">Rend. acumulado</div></div>`;
+  }
+
+  // Tabla
+  const tbl = document.getElementById('cv-tbl2');
+  if(tbl){
+    let rows='';
+    // Mensual año 1
+    for(let m=1;m<=Math.min(12,hor);m++){
+      const b=cap0*Math.pow(1+r,m);
+      const esHoy=m===mAct;
+      const dif=esHoy?capAct-b:null;
+      const ra=esHoy?((capAct-cap0)/cap0*100).toFixed(1):null;
+      rows+=`<tr style="${esHoy?'background:var(--greenL);font-weight:500':m%2?'':'background:var(--gray1)'}">
+        <td style="font-size:11px">Mes ${m}${esHoy?' ← hoy':''}</td>
+        <td style="text-align:right;font-size:11px">USD ${Math.round(b).toLocaleString('es-AR')}</td>
+        <td style="text-align:right;font-size:11px;color:${esHoy?(ahead?'var(--green)':'var(--red)'):'var(--gray3)'}">${esHoy?'USD '+Math.round(capAct).toLocaleString('es-AR'):'—'}</td>
+        <td style="text-align:right;font-size:11px;color:${dif!=null?(dif>=0?'var(--green)':'var(--red)'):'var(--gray3)'}">${dif!=null?(dif>=0?'+':'-')+' USD '+Math.round(Math.abs(dif)).toLocaleString('es-AR'):'—'}</td>
+        <td style="text-align:right;font-size:11px;color:${ra!=null?(ra>=0?'var(--green)':'var(--red)'):'var(--gray3)'}">${ra!=null?(ra>=0?'+':'')+ra+'%':'—'}</td>
+      </tr>`;
+    }
+    // Anual años 2-10
+    const maxA = Math.ceil(hor/12)+5;
+    for(let a=2;a<=maxA;a++){
+      const b=cap0*Math.pow(1+tasa,a);
+      const ra=((b-cap0)/cap0*100).toFixed(1);
+      rows+=`<tr style="background:var(--gray1);color:var(--gray3)">
+        <td style="font-size:11px">Año ${a}</td>
+        <td style="text-align:right;font-size:11px;color:var(--blue)">USD ${Math.round(b).toLocaleString('es-AR')}</td>
+        <td style="text-align:right;font-size:11px">—</td>
+        <td style="text-align:right;font-size:11px">—</td>
+        <td style="text-align:right;font-size:11px;color:var(--green)">+${ra}%</td>
+      </tr>`;
+    }
+    tbl.innerHTML=rows;
+  }
+
+  // Chart
+  const labAll=[],bAll=[],rAll=[];
+  for(let m=1;m<=hor;m++){
+    labAll.push(m%6===0?`M${m}`:(m===1?'M1':''));
+    bAll.push(Math.round(cap0*Math.pow(1+r,m)));
+    rAll.push(m<=mAct?Math.round(cap0+(capAct-cap0)*(m/mAct)):null);
+  }
+  const ctx=document.getElementById('cv-chart2');
+  if(!ctx) return;
+  if(typeof Chart==='undefined') return;
+  if(cvChart2){cvChart2.destroy();cvChart2=null;}
+  cvChart2=new Chart(ctx.getContext('2d'),{
+    type:'line',
+    data:{labels:labAll,datasets:[
+      {label:'Benchmark',data:bAll,borderColor:'#185FA5',borderWidth:2,
+       borderDash:[6,3],pointRadius:0,tension:.3,fill:false},
+      {label:'Capital real',data:rAll,borderColor:'#27500A',borderWidth:2.5,
+       pointRadius:(c,i)=>i.dataIndex===mAct-1?5:0,
+       pointBackgroundColor:'#27500A',tension:.3,fill:false},
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:(i)=>i.dataset.label+': USD '+Math.round(i.raw).toLocaleString('es-AR')}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10},color:'#9BA8BB',maxRotation:0}},
+        y:{ticks:{font:{size:10},color:'#9BA8BB',callback:(v)=>'USD '+Math.round(v/1000)+'k'},grid:{color:'rgba(0,0,0,0.04)'}},
+      }
+    }
+  });
+}
+
 
 // ══════════════════════════════════════════════
 // SCREENER RENTA FIJA v3 — datos IOL 16/06/2026
@@ -1422,10 +1640,10 @@ async function loadClients(){
   // Storage helper — usa window.storage si está disponible (Claude), sino localStorage
   try{
     if(window.storage){
-      const r=await window.storage.get('nb_clientes_v3');
+      const r=await window.storage.get('nb_clientes_v4');
       if(r?.value) clientes=JSON.parse(r.value);
     } else {
-      const r=localStorage.getItem('nb_clientes_v3');
+      const r=localStorage.getItem('nb_clientes_v4');
       if(r) clientes=JSON.parse(r);
     }
   }catch(e){clientes=[];}
@@ -1440,8 +1658,8 @@ async function loadClients(){
 }
 async function saveClients(){
   try{
-    if(window.storage) await window.storage.set('nb_clientes_v3',JSON.stringify(clientes));
-    else localStorage.setItem('nb_clientes_v3',JSON.stringify(clientes));
+    if(window.storage) await window.storage.set('nb_clientes_v4',JSON.stringify(clientes));
+    else localStorage.setItem('nb_clientes_v4',JSON.stringify(clientes));
   }catch(e){}
 }
 function renderClients(){
