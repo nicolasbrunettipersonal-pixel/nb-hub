@@ -1207,31 +1207,23 @@ function renderCV(){
   const tbl = document.getElementById('cv-tbl2');
   if(tbl){
     let rows='';
-    // Mensual año 1
-    for(let m=1;m<=Math.min(12,hor);m++){
+    // Mes a mes durante todo el horizonte
+    const mesesNombres=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const hoy = new Date();
+    for(let m=1;m<=hor;m++){
       const b=cap0*Math.pow(1+r,m);
       const esHoy=m===mAct;
       const dif=esHoy?capAct-b:null;
       const ra=esHoy?((capAct-cap0)/cap0*100).toFixed(1):null;
+      const anio=Math.ceil(m/12);
+      const mesIdx=(m-1)%12;
+      const label=`${mesesNombres[mesIdx]} Año ${anio} (M${m})`;
       rows+=`<tr style="${esHoy?'background:var(--greenL);font-weight:500':m%2?'':'background:var(--gray1)'}">
-        <td style="font-size:11px">Mes ${m}${esHoy?' ← hoy':''}</td>
+        <td style="font-size:11px">${label}${esHoy?' ← hoy':''}</td>
         <td style="text-align:right;font-size:11px">USD ${Math.round(b).toLocaleString('es-AR')}</td>
         <td style="text-align:right;font-size:11px;color:${esHoy?(ahead?'var(--green)':'var(--red)'):'var(--gray3)'}">${esHoy?'USD '+Math.round(capAct).toLocaleString('es-AR'):'—'}</td>
         <td style="text-align:right;font-size:11px;color:${dif!=null?(dif>=0?'var(--green)':'var(--red)'):'var(--gray3)'}">${dif!=null?(dif>=0?'+':'-')+' USD '+Math.round(Math.abs(dif)).toLocaleString('es-AR'):'—'}</td>
         <td style="text-align:right;font-size:11px;color:${ra!=null?(ra>=0?'var(--green)':'var(--red)'):'var(--gray3)'}">${ra!=null?(ra>=0?'+':'')+ra+'%':'—'}</td>
-      </tr>`;
-    }
-    // Anual años 2-10
-    const maxA = Math.ceil(hor/12)+5;
-    for(let a=2;a<=maxA;a++){
-      const b=cap0*Math.pow(1+tasa,a);
-      const ra=((b-cap0)/cap0*100).toFixed(1);
-      rows+=`<tr style="background:var(--gray1);color:var(--gray3)">
-        <td style="font-size:11px">Año ${a}</td>
-        <td style="text-align:right;font-size:11px;color:var(--blue)">USD ${Math.round(b).toLocaleString('es-AR')}</td>
-        <td style="text-align:right;font-size:11px">—</td>
-        <td style="text-align:right;font-size:11px">—</td>
-        <td style="text-align:right;font-size:11px;color:var(--green)">+${ra}%</td>
       </tr>`;
     }
     tbl.innerHTML=rows;
