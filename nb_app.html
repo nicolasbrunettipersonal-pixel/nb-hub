@@ -1535,71 +1535,7 @@ function calcFees(){
 }
 
 // ═══ CAMINO DE VALOR ═══
-const CV_DATOS_BRUNETTI=[
-  {mes:'Jul-25',adicion:200,retiro:0,real:192.99},
-  {mes:'Ago-25',adicion:200,retiro:0,real:398.50},
-  {mes:'Sep-25',adicion:200,retiro:0,real:615.82},
-  {mes:'Oct-25',adicion:200,retiro:0,real:860.01},
-  {mes:'Nov-25',adicion:200,retiro:0,real:1056.37},
-  {mes:'Dic-25',adicion:200,retiro:0,real:1264.60},
-  {mes:'Ene-26',adicion:200,retiro:0,real:1485.52},
-  {mes:'Feb-26',adicion:200,retiro:0,real:1682.53},
-  {mes:'Mar-26',adicion:200,retiro:0,real:1852.60},
-  {mes:'Abr-26',adicion:450,retiro:0,real:2459.40},
-  {mes:'May-26',adicion:600,retiro:0,real:3196.48},
-  {mes:'Jun-26',adicion:2806.37,retiro:3140.06,real:5941.10},
-  {mes:'Jul-26',adicion:0,retiro:0,real:null},
-  {mes:'Ago-26',adicion:0,retiro:0,real:null},
-  {mes:'Sep-26',adicion:0,retiro:0,real:null},
-  {mes:'Oct-26',adicion:0,retiro:0,real:null},
-  {mes:'Nov-26',adicion:0,retiro:0,real:null},
-  {mes:'Dic-26',adicion:0,retiro:0,real:null},
-];
-let cvChart=null,cvGpChart=null;
-function renderCV(){
-  const bench=parseFloat(document.getElementById('cv-bench').value)||8.5;
-  const benchM=Math.pow(1+bench/100,1/12)-1;
-  const datos=CV_DATOS_BRUNETTI;
-  const camino=[],aportado=[];
-  let cv=0,acc=0;
-  datos.forEach((d,i)=>{
-    acc+=d.adicion-d.retiro; aportado.push(acc);
-    cv=i===0?d.adicion*(1+benchM):(cv+d.adicion-d.retiro)*(1+benchM);
-    camino.push(Math.round(cv*100)/100);
-  });
-  const reales=datos.map(d=>d.real);
-  const gp=datos.map((d,i)=>d.real!==null?Math.round((d.real-camino[i])*100)/100:null);
-  const lastReal=datos.filter(d=>d.real!==null).pop();
-  const lastIdx=datos.findIndex(d=>d===lastReal);
-  const gpAcum=lastReal?Math.round((lastReal.real-camino[lastIdx])*100)/100:0;
-  const totalAp=aportado[lastIdx]||0;
-  const ret=lastReal?((lastReal.real/totalAp-1)*100).toFixed(1):'—';
-  document.getElementById('cv-stats').innerHTML=`
-    <div class="stat"><div class="sv" style="color:#27500A">USD ${lastReal?Math.round(lastReal.real).toLocaleString('en-US'):'—'}</div><div class="sl">Capital real</div></div>
-    <div class="stat"><div class="sv" style="color:#185FA5">USD ${Math.round(camino[lastIdx]).toLocaleString('en-US')}</div><div class="sl">Camino benchmark</div></div>
-    <div class="stat"><div class="sv" style="color:${gpAcum>=0?'#27500A':'#791F1F'}">${gpAcum>=0?'+':''}USD ${Math.abs(gpAcum).toLocaleString('en-US')}</div><div class="sl">G/P acumulado</div></div>
-    <div class="stat"><div class="sv">${ret}%</div><div class="sl">Retorno real</div></div>`;
-  const labels=datos.map(d=>d.mes);
-  if(cvChart) cvChart.destroy();
-  cvChart=new Chart(document.getElementById('cv-chart'),{type:'line',data:{labels,datasets:[
-    {label:'Camino benchmark',data:camino,borderColor:'#185FA5',backgroundColor:'#185FA518',borderWidth:2,borderDash:[5,3],pointRadius:2,fill:true,tension:.4},
-    {label:'Capital real',data:reales,borderColor:'#27500A',backgroundColor:'#27500A22',borderWidth:2.5,pointRadius:4,fill:false,tension:.3,spanGaps:false},
-    {label:'Aportado',data:aportado,borderColor:'#9BA8BB',borderWidth:1.5,borderDash:[2,4],pointRadius:0,fill:false,tension:.4},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.dataset.label}: USD ${c.parsed.y?Math.round(c.parsed.y).toLocaleString('en-US'):'—'}`}}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K',font:{size:10}},beginAtZero:true}}}});
-  if(cvGpChart) cvGpChart.destroy();
-  cvGpChart=new Chart(document.getElementById('cv-gp'),{type:'bar',data:{labels,datasets:[{label:'G/P',data:gp,backgroundColor:gp.map(v=>v===null?'transparent':v>=0?'#27500A88':'#791F1F88'),borderColor:gp.map(v=>v===null?'transparent':v>=0?'#27500A':'#791F1F'),borderWidth:1,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{font:{size:10}}}}}});
-  document.getElementById('cv-tbl').innerHTML=datos.map((d,i)=>`<tr style="${!d.real?'color:#9BA8BB':d.real>camino[i]?'':''}">
-    <td style="font-size:10px;color:#9BA8BB">${i<12?1:2}</td>
-    <td>${d.mes}</td>
-    <td style="text-align:right">USD ${Math.round(aportado[i]).toLocaleString('en-US')}</td>
-    <td style="text-align:right;color:#185FA5">USD ${Math.round(camino[i]).toLocaleString('en-US')}</td>
-    <td style="text-align:right;font-weight:${d.real?'500':'400'};color:${!d.real?'#9BA8BB':d.real>camino[i]?'#27500A':'#791F1F'}">${d.real?'USD '+Math.round(d.real).toLocaleString('en-US'):'—'}</td>
-    <td style="text-align:center">${gp[i]!==null?`<span style="font-size:10px;padding:2px 6px;border-radius:4px;font-weight:500;background:${gp[i]>=0?'#EAF3DE':'#FCEBEB'};color:${gp[i]>=0?'#27500A':'#791F1F'}">${gp[i]>=0?'+':''}${Math.round(gp[i])}</span>`:'<span style="color:#9BA8BB;font-size:10px">proyectado</span>'}</td>
-    <td style="text-align:center;color:${!d.real||i===0?'#9BA8BB':d.real>datos[i-1]?.real||0?'#27500A':'#791F1F'}">${d.real&&i>0?((d.real/(datos[i-1].real||1)-1)*100).toFixed(1)+'%':'—'}</td>
-  </tr>`).join('');
-}
 
-// ═══ CLIENTES ═══
 const CLIENTES_SEED=[
   {nombre:'Nicolás Brunetti',perfil:'Moderado Agresivo',capital:7346,regimen:'autonomo',fee:'management',fecha:'15/06/2026',ips_vto:'15/06/2027',mods:['cuestionario','ips','cartera_obj','gap','fiscal','alertas']},
   {nombre:'Daniela Ávila',perfil:'Moderado Conservador',capital:8500,regimen:'dependencia',fee:'pendiente',fecha:'15/06/2026',ips_vto:'15/06/2027',mods:['cuestionario','ips']},
