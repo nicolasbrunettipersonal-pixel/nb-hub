@@ -796,7 +796,7 @@ function goView(id, btn){
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'));
   document.getElementById('v-'+id).classList.add('on');
   if(btn) btn.classList.add('on');
-  if(id==='camino') setTimeout(()=>initCV(),80);
+  if(id==='camino') requestAnimationFrame(()=>requestAnimationFrame(()=>initCV()));
   if(id==='screener_rf'){renderRFFilters();renderRFTable();}
 }
 
@@ -1175,12 +1175,15 @@ function cvPerfilChange(){
 }
 
 function renderCV(){
-  const cap0   = parseFloat(document.getElementById('cv-cap0')?.value)||10000;
-  const capAct = parseFloat(document.getElementById('cv-cap-act')?.value)||cap0;
-  const tasa   = parseFloat(document.getElementById('cv-tasa')?.value)/100||0.07;
-  const mAct   = parseInt(document.getElementById('cv-meses')?.value)||1;
-  const hor    = (parseInt(document.getElementById('cv-hor')?.value)||3)*12;
-  const perfilLabel = document.getElementById('cv-perfil')?.options[document.getElementById('cv-perfil')?.selectedIndex]?.text||'';
+  const el = id => document.getElementById(id);
+  if(!el('cv-cap0')||!el('cv-cap-act')||!el('cv-tasa')||!el('cv-meses')||!el('cv-hor')||!el('cv-perfil')) return;
+
+  const cap0   = parseFloat(el('cv-cap0').value)||10000;
+  const capAct = parseFloat(el('cv-cap-act').value)||cap0;
+  const tasa   = parseFloat(el('cv-tasa').value)/100||0.07;
+  const mAct   = parseInt(el('cv-meses').value)||1;
+  const hor    = (parseInt(el('cv-hor').value)||3)*12;
+  const perfilLabel = el('cv-perfil').options[el('cv-perfil').selectedIndex]?.text||'';
 
   const r = Math.pow(1+tasa,1/12)-1;
   const capBenchHoy = cap0*Math.pow(1+r,mAct);
