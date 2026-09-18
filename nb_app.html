@@ -242,13 +242,13 @@ body{font-family:'DM Mono',monospace;background:var(--gray1);color:var(--ink);fo
 <!-- ═══════════════ DASHBOARD ═══════════════ -->
 <div class="view on" id="v-dashboard">
   <div class="page-title">Dashboard</div>
-  <div class="page-sub">NB Asesoría Financiera · Jun-2026</div>
+  <div class="page-sub">NB Asesoría Financiera · Septiembre 2026 · Actualizado 09/09/2026</div>
 
   <div class="stats-row">
-    <div class="stat"><div class="sv">6</div><div class="sl">Clientes activos</div></div>
-    <div class="stat"><div class="sv" style="color:var(--green)">60</div><div class="sl">Empresas universo</div></div>
+    <div class="stat"><div class="sv">7</div><div class="sl">Clientes activos</div></div>
+    <div class="stat"><div class="sv" style="color:var(--green)">63</div><div class="sl">Empresas screener</div></div>
     <div class="stat"><div class="sv" style="color:var(--amber)">2</div><div class="sl">IPS vencidos</div></div>
-    <div class="stat"><div class="sv" style="color:var(--blue)">MU</div><div class="sl">Próximo earnings</div></div>
+    <div class="stat"><div class="sv" style="color:var(--blue)">Q3 2026</div><div class="sl">Reporte trimestral</div></div>
   </div>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85rem">
@@ -257,10 +257,15 @@ body{font-family:'DM Mono',monospace;background:var(--gray1);color:var(--ink);fo
       <div class="card-hdr">Alertas activas</div>
       <div class="card-body">
         ${[
-          {c:'var(--red)',t:'IPS vencido — Giuli Raviolo','d':'Vencido hace 4 meses · Renovar urgente'},
-          {c:'var(--red)',t:'IPS vencido — Salome Agustina','d':'Vencido hace 5 meses · Renovar urgente'},
-          {c:'var(--amber)',t:'MU reporta ~24/06/2026','d':'Actualizar score post-earnings'},
-          {c:'var(--blue)',t:'DNC9O vence 07/08/2026','d':'Preparar rotación a YMCXO+acciones'},
+          {c:'var(--red)',t:'IPS vencido — Giuli Raviolo','d':'Vencido feb-2026 · Otro negocio · Baja prioridad'},
+          {c:'var(--red)',t:'IPS vencido — Salome Agustina','d':'Vencido ene-2026 · Otro negocio · Baja prioridad'},
+          {c:'var(--amber)',t:'Fee pendiente — Daniela Ávila','d':'Pendiente elegir al firmar IPS'},
+          {c:'var(--amber)',t:'Fee pendiente — Silvia Isaac','d':'Pendiente elegir al firmar IPS'},
+          {c:'var(--amber)',t:'Fee pendiente — Ileana Milocco','d':'Pendiente elegir al firmar IPS'},
+          {c:'var(--blue)',t:'Reporte trimestral Q3 2026','d':'Vence 30/09/2026 · Preparar para Brunetti'},
+          {c:'var(--blue)',t:'Vivas Mariano — revisión IPS','d':'IPS vence feb-2027 · Revisión preventiva'},
+          {c:'var(--green)',t:'NVDA post-earnings actualizado','d':'Q2 FY27: Rev $91.9B +85% YoY · $225.73'},
+          {c:'var(--green)',t:'MU en zona ATH','d':'$1,010 · BofA EPS $230+ FY2030 · JPMorgan mayor posición'},
         ].map(a=>`<div style="display:flex;gap:10px;padding:6px 0;border-bottom:.5px solid var(--gray2);font-size:12px">
           <div style="width:8px;height:8px;border-radius:50%;background:${a.c};margin-top:4px;flex-shrink:0"></div>
           <div><div style="font-weight:500">${a.t}</div><div style="color:var(--gray3);font-size:11px">${a.d}</div></div>
@@ -274,20 +279,24 @@ body{font-family:'DM Mono',monospace;background:var(--gray1);color:var(--ink);fo
     </div>
 
     <div class="card">
-      <div class="card-hdr">Top 5 — Screener v3.1</div>
+      <div class="card-hdr">Top 5 — Screener 09/09/2026</div>
       <div class="card-body" id="dash-top5"></div>
     </div>
 
     <div class="card">
-      <div class="card-hdr">Próximos earnings Q3 2026</div>
+      <div class="card-hdr">Próximos earnings Q4 2026</div>
       <div class="card-body">
         ${[
-          {t:'MU',  n:'Micron',       f:'~24/06/2026', s:'soon'},
-          {t:'JPM', n:'JPMorgan',     f:'~14/07/2026', s:'soon'},
-          {t:'GOOGL',n:'Alphabet',    f:'~23/07/2026', s:'upcoming'},
-          {t:'MSFT',n:'Microsoft',    f:'~29/07/2026', s:'upcoming'},
-          {t:'META',n:'Meta',         f:'~29/07/2026', s:'upcoming'},
-          {t:'NVDA',n:'NVIDIA',       f:'~27/08/2026', s:'upcoming'},
+          {t:'ORCL', n:'Oracle',         f:'10/09/2026',  s:'soon'},
+          {t:'ASML', n:'ASML Holding',   f:'14/10/2026',  s:'upcoming'},
+          {t:'TSM',  n:'TSMC',           f:'15/10/2026',  s:'upcoming'},
+          {t:'GOOGL',n:'Alphabet',       f:'27/10/2026',  s:'upcoming'},
+          {t:'NOW',  n:'ServiceNow',     f:'28/10/2026',  s:'upcoming'},
+          {t:'MSFT', n:'Microsoft',      f:'29/10/2026',  s:'upcoming'},
+          {t:'META', n:'Meta',           f:'29/10/2026',  s:'upcoming'},
+          {t:'AAPL', n:'Apple',          f:'30/10/2026',  s:'upcoming'},
+          {t:'AMZN', n:'Amazon',         f:'22/10/2026',  s:'upcoming'},
+          {t:'MU',   n:'Micron',         f:'24/09/2026',  s:'soon'},
         ].map(e=>`<div class="earn-row">
           <div class="earn-tick">${e.t}</div>
           <div style="flex:1;color:var(--gray3)">${e.n}</div>
@@ -295,6 +304,7 @@ body{font-family:'DM Mono',monospace;background:var(--gray1);color:var(--ink);fo
         </div>`).join('')}
       </div>
     </div>
+
   </div>
 </div>
 
@@ -339,7 +349,7 @@ body{font-family:'DM Mono',monospace;background:var(--gray1);color:var(--ink);fo
 <!-- ═══════════════ SCREENER ═══════════════ -->
 <div class="view" id="v-screener">
   <div class="page-title">Screener NB v3.1</div>
-  <div class="page-sub">60 empresas · CEDEARs + Merval · Precios verificados Yahoo Finance/Macrotrends/Investing.com · 23/06/2026</div>
+  <div class="page-sub">60 empresas · CEDEARs + Merval · Precios verificados Investing.com/Yahoo Finance/Macrotrends · 27/08/2026</div>
 
   <div class="filter-bar">
     <div class="chip on" onclick="setChip('all',this)">Todas</div>
@@ -693,7 +703,7 @@ body{font-family:'DM Mono',monospace;background:var(--gray1);color:var(--ink);fo
   </table>
   </div>
   <div style="font-size:10px;color:var(--gray3);margin-top:.75rem;opacity:.7;line-height:1.6">
-    Datos exactos IOL Inversiones Informe Diario 16/06/2026. TIR exacta calculada por IOL. Precio dirty USD.
+    Datos IOL / Banco Provincia / BBVA Inversores 18/08/2026. TIR exacta calculada por IOL. Precio dirty USD.
     LECAPs/BONCAPs en TNA. Verificar precios actuales en IOL antes de operar. NB Asesoría Financiera · Nicolás Brunetti CP.
   </div>
 </div>
@@ -804,65 +814,66 @@ function goView(id, btn){
 // DATOS UNIVERSE
 // ══════════════════════════════════════════
 const U=[
-{t:'MSFT',n:'Microsoft',s:'Tech',tp:'CEDEAR',p:367.34,pe:24.11,pf:21.5,ph:30.9,pj:28,m:39.3,cagr:15,roe:34,d:.28,fcf:1,cob:25,b:1.10,up:28.5,peg:1.38,tesis:'Azure +39% YoY. P/E 24.2x vs historial 30.9x. EPS +15.6% YoY. Copilot penetrando.',moat:'M365+Azure+Teams. Switching costs altísimos.',fiscal:'Exento Ganancias PH. BP: TC 31/12.',nuevo:false},
-{t:'GOOGL',n:'Alphabet',s:'Tech',tp:'CEDEAR',p:369.35,pe:29.35,pf:24.5,ph:24,pj:26,m:57,cagr:14,roe:31,d:-1,fcf:1,cob:40,b:1.05,up:44.2,peg:1.05,tesis:'Q1\'26 +22% YoY. Cloud +63%. P/E 16.8x vs historial 24x. Inició dividendo.',moat:'Búsqueda 90%+YouTube+Cloud.',fiscal:'Exento Ganancias PH.',nuevo:false},
-{t:'AMZN',n:'Amazon',s:'Tech',tp:'CEDEAR',p:244.39,pe:33.25,pf:28.0,ph:78,pj:32,m:9.5,cagr:11,roe:23,d:.7,fcf:1,cob:12,b:1.25,up:27,peg:1.38,tesis:'AWS motor de margen. P/E 32.5x vs historial 78x.',moat:'AWS+Prime+Marketplace.',fiscal:'Exento Ganancias PH.',nuevo:false},
-{t:'AVGO',n:'Broadcom',s:'Tech',tp:'CEDEAR',p:392.13,pe:63.25,pf:50.1,ph:42,pj:32,m:48,cagr:44,roe:37,d:.74,fcf:1,cob:18,b:1.43,up:18.2,peg:0.53,tesis:'Chips AI custom+VMware. Forward P/E 24.5x. PEG 0.53.',moat:'AI custom silicon+VMware cautivo.',fiscal:'Exento Ganancias PH.',nuevo:false},
-{t:'NVDA',n:'NVIDIA',s:'Tech',tp:'CEDEAR',p:200.04,pe:37.16,pf:31.8,ph:58,pj:35,m:55.5,cagr:65,roe:122,d:-2,fcf:1,cob:50,b:1.75,up:22.5,peg:0.42,tesis:'Mktcap $4.96T. Monopolio IA 85%. PEG 0.42.',moat:'CUDA ecosystem. 3+ años de ventaja.',fiscal:'Exento Ganancias PH.',nuevo:false},
-{t:'META',n:'Meta Platforms',s:'Tech',tp:'CEDEAR',p:563.85,pe:18.88,pf:18.2,ph:28,pj:26,m:38.5,cagr:18,roe:38,d:-1.4,fcf:1,cob:35,b:1.23,up:32,peg:1.02,tesis:'P/E 20.6x — más bajo FAANG. EPS $27.52. 3.4B usuarios.',moat:'FB+Instagram+WhatsApp.',fiscal:'Exento Ganancias PH.',nuevo:false},
-{t:'AAPL',n:'Apple',s:'Tech',tp:'CEDEAR',p:298.01,pe:35.91,pf:30.1,ph:29,pj:28,m:25.8,cagr:6,roe:147,d:.4,fcf:1,cob:30,b:1.15,up:14,peg:2.80,tesis:'2.2B dispositivos. Apple Intelligence upgrade cycle.',moat:'Ecosistema iOS+Servicios.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'MSFT',n:'Microsoft',s:'Tech',tp:'CEDEAR',p:490.30,pe:23.5,pf:20.1,ph:30.9,pj:28,m:39.3,cagr:15,roe:34,d:.28,fcf:1,cob:25,b:1.10,up:28.5,peg:1.38,tesis:'Azure +39% YoY. P/E 24.2x vs historial 30.9x. EPS +15.6% YoY. Copilot penetrando.',moat:'M365+Azure+Teams. Switching costs altísimos.',fiscal:'Exento Ganancias PH. BP: TC 31/12.',nuevo:false},
+{t:'GOOGL',n:'Alphabet',s:'Tech',tp:'CEDEAR',p:342.87,pe:18.76,pf:22.5,ph:24,pj:26,m:57,cagr:14,roe:31,d:-1,fcf:1,cob:40,b:1.05,up:44.2,peg:1.05,tesis:'Q1\'26 +22% YoY. Cloud +63%. P/E 16.8x vs historial 24x. Inició dividendo.',moat:'Búsqueda 90%+YouTube+Cloud.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'AMZN',n:'Amazon',s:'Tech',tp:'CEDEAR',p:258.00,pe:38.69,pf:26.5,ph:78,pj:32,m:9.5,cagr:11,roe:23,d:.7,fcf:1,cob:12,b:1.25,up:27,peg:1.38,tesis:'AWS motor de margen. P/E 32.5x vs historial 78x.',moat:'AWS+Prime+Marketplace.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'AVGO',n:'Broadcom',s:'Tech',tp:'CEDEAR',p:347.00,pe:64.80,pf:32.9,ph:42,pj:32,m:48,cagr:44,roe:37,d:.74,fcf:1,cob:18,b:1.43,up:18.2,peg:0.53,tesis:'Chips AI custom+VMware. Forward P/E 24.5x. PEG 0.53.',moat:'AI custom silicon+VMware cautivo.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'NVDA',n:'NVIDIA',s:'Tech',tp:'CEDEAR',p:217.50,pe:31.76,pf:27.5,ph:58,pj:35,m:55.5,cagr:65,roe:122,d:-2,fcf:1,cob:50,b:1.75,up:22.5,peg:0.42,tesis:'Mktcap $4.96T. Monopolio IA 85%. PEG 0.42.',moat:'CUDA ecosystem. 3+ años de ventaja.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'META',n:'Meta Platforms',s:'Tech',tp:'CEDEAR',p:670.24,pe:24.16,pf:18.5,ph:28,pj:26,m:38.5,cagr:18,roe:38,d:-1.4,fcf:1,cob:35,b:1.23,up:32,peg:1.02,tesis:'P/E 20.6x — más bajo FAANG. EPS $27.52. 3.4B usuarios.',moat:'FB+Instagram+WhatsApp.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'AAPL',n:'Apple',s:'Tech',tp:'CEDEAR',p:332.07,pe:36.1,pf:31.1,ph:29,pj:28,m:25.8,cagr:6,roe:147,d:.4,fcf:1,cob:30,b:1.15,up:14,peg:2.80,tesis:'2.2B dispositivos. Apple Intelligence upgrade cycle.',moat:'Ecosistema iOS+Servicios.',fiscal:'Exento Ganancias PH.',nuevo:false},
 {t:'ADBE',n:'Adobe',s:'Tech',tp:'CEDEAR',p:358,pe:22.5,pf:18.2,ph:38.2,pj:28,m:29.5,cagr:10,roe:35,d:.3,fcf:1,cob:22,b:1.30,up:33,peg:1.62,tesis:'Firefly AI. P/E 22.5x vs historial 38.2x.',moat:'Creative Cloud sin sustituto.',fiscal:'Exento Ganancias PH.',dcf:{fcf_share:17.5,g1:12,g2:8,wacc:9.5,gTerminal:3,shares:440,debt:4100,cash:7500},nuevo:false},
-{t:'NFLX',n:'Netflix',s:'Tech',tp:'CEDEAR',p:77.38,pe:40.76,pf:35.1,ph:62,pj:28,m:23,cagr:13,roe:38,d:.3,fcf:1,cob:25,b:1.05,up:40,peg:1.43,tesis:'−35% desde máximos. Target $114.82. Margen 31.5%.',moat:'300M suscriptores.',fiscal:'Exento Ganancias PH.',dcf:{fcf_share:22,g1:18,g2:10,wacc:10,gTerminal:3,shares:428,debt:14500,cash:7200},nuevo:false},
-{t:'CRM',n:'Salesforce',s:'Tech',tp:'CEDEAR',p:150.12,pe:16.97,pf:18.2,ph:48.5,pj:30,m:15.8,cagr:9,roe:11,d:.4,fcf:1,cob:20,b:1.35,up:24.5,peg:2.25,tesis:'Agentforce IA. P/E 33.8x vs historial 48.5x.',moat:'150K+ clientes.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'NFLX',n:'Netflix',s:'Tech',tp:'CEDEAR',p:81.46,pe:23.41,pf:22.0,ph:62,pj:28,m:23,cagr:13,roe:38,d:.3,fcf:1,cob:25,b:1.05,up:40,peg:1.43,tesis:'−35% desde máximos. Target $114.82. Margen 31.5%.',moat:'300M suscriptores.',fiscal:'Exento Ganancias PH.',dcf:{fcf_share:22,g1:18,g2:10,wacc:10,gTerminal:3,shares:428,debt:14500,cash:7200},nuevo:false},
+{t:'CRM',n:'Salesforce',s:'Tech',tp:'CEDEAR',p:250.54,pe:22.33,pf:19.7,ph:105.0,pj:30,m:17.9,cagr:9,roe:11,d:.4,fcf:1,cob:20,b:1.35,up:9.9,peg:0.51,tesis:'PEG 0.51x histórico. P/E 22.33x vs mediana 5y 105x (-79%). Agentforce demanda mejor esperado. Forward 19.7x. Target consenso $241 (+25%). Raymond James $290 Strong Buy. Riesgo: salida CTO Tallapragada y crecimiento orgánico 6% YoY. COMPRAR escalonado.',moat:'150K+ clientes enterprise. #1 CRM mundial. Agentforce AI.',fiscal:'Exento Ganancias PH.',nuevo:false},
 {t:'MELI',n:'MercadoLibre',s:'Tech',tp:'CEDEAR',p:1607,pe:42,pf:40.2,ph:61.1,pj:35,m:4.8,cagr:37,roe:14,d:2,fcf:1,cob:4.2,b:1.25,up:19,peg:1.48,tesis:'Amazon+PayPal Latam. 120M usuarios.',moat:'Red logística+fintech.',fiscal:'Exento Ganancias PH.',nuevo:false},
-{t:'MU',n:'Micron Technology ★ Q3 post-earnings',s:'Tech',tp:'CEDEAR',p:1211.38,pe:19.76,pf:11.18,ph:65,pj:18,m:38.5,cagr:85,roe:22,d:-2,fcf:1,cob:20,b:1.55,up:20,peg:0.35,tesis:'HBM IA vendida hasta fin 2026. PEG 0.35.',moat:'HBM3E único a escala.',fiscal:'Exento Ganancias PH.',nuevo:true},
-{t:'ASML',n:'ASML Holding',s:'Tech',tp:'CEDEAR',p:1705,pe:58.6,pf:40.5,ph:36.3,pj:38,m:51.6,cagr:18,roe:55,d:.8,fcf:1,cob:30,b:1.20,up:24,peg:1.85,tesis:'Monopolio EUV. Sin competencia en 10 años.',moat:'Litografía EUV irreemplazable.',fiscal:'Exento Ganancias PH.',nuevo:true},
-{t:'TSM',n:'TSMC',s:'Tech',tp:'CEDEAR',p:467.67,pe:40.68,pf:35.2,ph:25,pj:24,m:40.5,cagr:22,roe:28,d:1.2,fcf:1,cob:20,b:1.20,up:27.5,peg:0.85,tesis:'Único fab 3nm/2nm. Produce NVDA/AAPL/AMD.',moat:'Monopolio chips avanzados.',fiscal:'Exento Ganancias PH.',dcf:{fcf_share:11.5,g1:22,g2:12,wacc:10,gTerminal:3,shares:25900,debt:24000,cash:50000},nuevo:true},
-{t:'AMD',n:'Advanced Micro Dev.',s:'Tech',tp:'CEDEAR',p:507.29,pe:164.7,pf:45.3,ph:42,pj:35,m:22,cagr:26,roe:8,d:.5,fcf:1,cob:15,b:1.65,up:26,peg:1.75,tesis:'MI300X ganando IA mkt share. +25% YoY.',moat:'x86 duopolio+GPU IA.',fiscal:'Exento Ganancias PH.',nuevo:true},
-{t:'ORCL',n:'Oracle',s:'Tech',tp:'CEDEAR',p:165.16,pe:31.63,pf:28.9,ph:38,pj:30,m:22.5,cagr:20,roe:999,d:.8,fcf:1,cob:10,b:1.10,up:21.5,peg:1.52,tesis:'OCI contratos OpenAI+MSFT. Revenue +20% YoY.',moat:'150K+ empresas base instalada.',fiscal:'Exento Ganancias PH.',nuevo:true},
-{t:'PLTR',n:'Palantir',s:'Tech',tp:'CEDEAR',p:156.40,pe:150.12,pf:120.5,ph:361,pj:60,m:28.5,cagr:85,roe:15,d:.5,fcf:1,cob:20,b:2.00,up:28,peg:2.05,tesis:'Revenue +85% YoY. Rule of 40 = 145%.',moat:'Software misión crítica.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'MU',n:'Micron Technology ★ FQ3 BLOWOUT EPS $25.11 +24% beat',s:'Tech',tp:'CEDEAR',p:1010.42,pe:23.73,pf:9.5,ph:65,pj:18,m:38.5,cagr:85,roe:22,d:-2,fcf:1,cob:20,b:1.55,up:20,peg:0.35,tesis:'HBM IA vendida hasta fin 2026. PEG 0.35.',moat:'HBM3E único a escala.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'ASML',n:'ASML Holding',s:'Tech',tp:'CEDEAR',p:1563.00,pe:50.69,pf:40.5,ph:36.3,pj:38,m:51.6,cagr:18,roe:55,d:.8,fcf:1,cob:30,b:1.20,up:24,peg:1.85,tesis:'Monopolio EUV. Sin competencia en 10 años.',moat:'Litografía EUV irreemplazable.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'TSM',n:'TSMC',s:'Tech',tp:'CEDEAR',p:434.58,pe:29.11,pf:32.0,ph:25,pj:24,m:40.5,cagr:22,roe:28,d:1.2,fcf:1,cob:20,b:1.20,up:27.5,peg:0.85,tesis:'Único fab 3nm/2nm. Produce NVDA/AAPL/AMD.',moat:'Monopolio chips avanzados.',fiscal:'Exento Ganancias PH.',dcf:{fcf_share:11.5,g1:22,g2:12,wacc:10,gTerminal:3,shares:25900,debt:24000,cash:50000},nuevo:true},
+{t:'AMD',n:'Advanced Micro Dev.',s:'Tech',tp:'CEDEAR',p:543.47,pe:135.0,pf:45.5,ph:42,pj:35,m:22,cagr:26,roe:8,d:.5,fcf:1,cob:15,b:1.65,up:26,peg:1.75,tesis:'MI300X ganando IA mkt share. +25% YoY.',moat:'x86 duopolio+GPU IA.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'ORCL',n:'Oracle',s:'Tech',tp:'CEDEAR',p:130.90,pe:31.63,pf:28.5,ph:38,pj:30,m:22.5,cagr:20,roe:999,d:.8,fcf:1,cob:10,b:1.10,up:21.5,peg:1.52,tesis:'OCI contratos OpenAI+MSFT. Revenue +20% YoY.',moat:'150K+ empresas base instalada.',fiscal:'Exento Ganancias PH.',nuevo:true},
+{t:'PLTR',n:'Palantir',s:'Tech',tp:'CEDEAR',p:172.56,pe:150.12,pf:90.5,ph:361,pj:60,m:28.5,cagr:85,roe:15,d:.5,fcf:1,cob:20,b:2.00,up:28,peg:2.05,tesis:'Revenue +85% YoY. Rule of 40 = 145%.',moat:'Software misión crítica.',fiscal:'Exento Ganancias PH.',nuevo:true},
 {t:'PANW',n:'Palo Alto Networks',s:'Tech',tp:'CEDEAR',p:263,pe:244,pf:72,ph:220,pj:80,m:8,cagr:31,roe:4.8,d:.08,fcf:1,cob:10,b:0.94,up:17.5,peg:4.73,tesis:'Revenue +31% YoY. NGS ARR $8.1B.',moat:'Ciberseguridad plataforma integrada.',fiscal:'Exento Ganancias PH.',nuevo:true},
-{t:'PEP',n:'PepsiCo',s:'Consumo',tp:'CEDEAR',p:149.51,pe:26.2,pf:22.0,ph:25.4,pj:22,m:9.2,cagr:5,roe:43.9,d:2.45,fcf:1,cob:5.5,b:0.41,up:17,peg:2.48,tesis:'Dividend King 54 años. Beta 0.41.',moat:'Pepsi+Lay\'s+Gatorade.',fiscal:'Dividendos gravados.',nuevo:false},
-{t:'KO',n:'Coca-Cola',s:'Consumo',tp:'CEDEAR',p:83.59,pe:26.2,pf:22.5,ph:26.2,pj:24,m:22.5,cagr:4,roe:38.5,d:2.1,fcf:1,cob:6.5,b:0.55,up:12.5,peg:3.42,tesis:'62 años dividendo creciente. Beta 0.55.',moat:'Marca global.',fiscal:'Dividendos gravados.',dcf:{fcf_share:2.5,g1:5,g2:4,wacc:8.5,gTerminal:3,shares:4300,debt:35000,cash:12000},nuevo:false},
-{t:'MCD',n:"McDonald's",s:'Consumo',tp:'CEDEAR',p:283.82,pe:23.4,pf:20.5,ph:28.4,pj:25,m:32.8,cagr:6,roe:999,d:3.8,fcf:1,cob:5.2,b:0.72,up:19,peg:2.65,tesis:'Modelo royalty. Margen 33%. Yield 3.5%.',moat:'Marca+franquicias+real estate.',fiscal:'Dividendos gravados.',dcf:{fcf_share:11,g1:8,g2:6,wacc:9,gTerminal:3,shares:730,debt:37000,cash:3500},nuevo:false},
-{t:'PG',n:'Procter & Gamble',s:'Consumo',tp:'CEDEAR',p:142.96,pe:20.45,pf:22.9,ph:27,pj:24,m:19.5,cagr:4,roe:31,d:1.4,fcf:1,cob:12,b:0.55,up:14,peg:3.10,tesis:'68 años dividendo creciente.',moat:'65 marcas líderes.',fiscal:'Dividendos gravados.',nuevo:false},
-{t:'WMT',n:'Walmart',s:'Consumo',tp:'CEDEAR',p:121.04,pe:42.5,pf:33.5,ph:28,pj:30,m:2.6,cagr:7,roe:21.8,d:1.2,fcf:1,cob:8,b:0.60,up:8,peg:3.88,tesis:'E-commerce +22% YoY.',moat:'Escala insuperable.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'PEP',n:'PepsiCo',s:'Consumo',tp:'CEDEAR',p:140.83,pe:26.2,pf:22.0,ph:25.4,pj:22,m:9.2,cagr:5,roe:43.9,d:2.45,fcf:1,cob:5.5,b:0.41,up:17,peg:2.48,tesis:'Dividend King 54 años. Beta 0.41.',moat:'Pepsi+Lay\'s+Gatorade.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'KO',n:'Coca-Cola',s:'Consumo',tp:'CEDEAR',p:82.89,pe:26.2,pf:22.5,ph:26.2,pj:24,m:22.5,cagr:4,roe:38.5,d:2.1,fcf:1,cob:6.5,b:0.55,up:12.5,peg:3.42,tesis:'62 años dividendo creciente. Beta 0.55.',moat:'Marca global.',fiscal:'Dividendos gravados.',dcf:{fcf_share:2.5,g1:5,g2:4,wacc:8.5,gTerminal:3,shares:4300,debt:35000,cash:12000},nuevo:false},
+{t:'MCD',n:"McDonald's",s:'Consumo',tp:'CEDEAR',p:270.14,pe:22.54,pf:20.5,ph:28.4,pj:25,m:32.8,cagr:6,roe:999,d:3.8,fcf:1,cob:5.2,b:0.72,up:19,peg:2.65,tesis:'Modelo royalty. Margen 33%. Yield 3.5%.',moat:'Marca+franquicias+real estate.',fiscal:'Dividendos gravados.',dcf:{fcf_share:11,g1:8,g2:6,wacc:9,gTerminal:3,shares:730,debt:37000,cash:3500},nuevo:false},
+{t:'PG',n:'Procter & Gamble',s:'Consumo',tp:'CEDEAR',p:152.43,pe:22.16,pf:22.9,ph:27,pj:24,m:19.5,cagr:4,roe:31,d:1.4,fcf:1,cob:12,b:0.55,up:14,peg:3.10,tesis:'68 años dividendo creciente.',moat:'65 marcas líderes.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'WMT',n:'Walmart',s:'Consumo',tp:'CEDEAR',p:107.76,pe:42.5,pf:33.5,ph:28,pj:30,m:2.6,cagr:7,roe:21.8,d:1.2,fcf:1,cob:8,b:0.60,up:8,peg:3.88,tesis:'E-commerce +22% YoY.',moat:'Escala insuperable.',fiscal:'Dividendos gravados.',nuevo:false},
 {t:'CRESY',n:'Cresud',s:'Consumo',tp:'Local AR',p:12.5,pe:3.42,pf:4.0,ph:14,pj:10,m:12.5,cagr:8,roe:15,d:1.5,fcf:1,cob:5,b:1.35,up:38,peg:0.88,tesis:'1.5M ha en 4 países + 33% IRSA.',moat:'Hectáreas+control IRSA.',fiscal:'Exento Ganancias AR.',nuevo:false},
 {t:'LVMH',n:'LVMH Moët Hennessy',s:'Consumo',tp:'CEDEAR',p:108.78,pe:21.4,pf:22.3,ph:30,pj:25,m:16.1,cagr:8,roe:20,d:2,fcf:1,cob:10,b:0.90,up:28,peg:2.05,tesis:'Lujo #1. Revenue €80.8B.',moat:'LV+Dior+Moët.',fiscal:'Dividendos gravados.',nuevo:true},
-{t:'AXP',n:'American Express',s:'Financiero',tp:'CEDEAR',p:300,pe:18.5,pf:16.7,ph:18.5,pj:20,m:15.7,cagr:10,roe:34,d:1.91,fcf:1,cob:4,b:1.13,up:24,peg:1.58,tesis:'Card fees +18%. ROE 34%. Buffett.',moat:'Closed-loop+clientes premium.',fiscal:'Dividendos gravados.',dcf:{fcf_share:18,g1:12,g2:8,wacc:10,gTerminal:3,shares:700,debt:48000,cash:40000},nuevo:false},
-{t:'V',n:'Visa',s:'Financiero',tp:'CEDEAR',p:324,pe:25.6,pf:23.0,ph:33.2,pj:30,m:52.8,cagr:11,roe:48,d:.8,fcf:1,cob:18,b:0.95,up:18,peg:2.18,tesis:'Duopolio pagos. Margen 53%.',moat:'Red 4B tarjetas.',fiscal:'Dividendos gravados.',nuevo:false},
-{t:'JPM',n:'JPMorgan Chase',s:'Financiero',tp:'CEDEAR',p:333.46,pe:15.24,pf:13.5,ph:13,pj:15,m:26.5,cagr:8,roe:17,d:1.5,fcf:1,cob:null,b:1.10,up:21,peg:1.50,tesis:'Banco más capitalizado del mundo.',moat:'Franquicia bancaria universal.',fiscal:'Dividendos gravados.',nuevo:false},
-{t:'NU',n:'Nu Holdings',s:'Financiero',tp:'CEDEAR',p:11.93,pe:18.1,pf:14.5,ph:66.8,pj:20,m:18.2,cagr:37,roe:30,d:3.83,fcf:1,cob:4,b:1.50,up:53,peg:0.35,tesis:'135M+ clientes. PEG 0.35. Recompra $1B.',moat:'Banco digital <25% efficiency.',fiscal:'Dividendos gravados.',dcf:{fcf_share:0.65,g1:35,g2:18,wacc:12,gTerminal:4,shares:4760,debt:12000,cash:8000},nuevo:false},
-{t:'GGAL',n:'Grupo Galicia',s:'Financiero',tp:'Local AR',p:75.2,pe:7.8,pf:6.2,ph:11.5,pj:10,m:28,cagr:18,roe:25,d:1.2,fcf:1,cob:null,b:1.55,up:45,peg:0.38,tesis:'Banco privado #1 AR. ROE 25%.',moat:'Naranja X+franquicia líder.',fiscal:'Exento Ganancias AR.',nuevo:false},
-{t:'BMA',n:'Banco Macro',s:'Financiero',tp:'Local AR',p:79.84,pe:21.8,pf:16.5,ph:10.5,pj:9,m:30.5,cagr:16,roe:28,d:1.1,fcf:1,cob:null,b:1.48,up:42,peg:0.35,tesis:'Banco líder interior AR. PEG 0.35.',moat:'Liderazgo provincias.',fiscal:'Exento Ganancias AR.',nuevo:false},
-{t:'GS',n:'Goldman Sachs',s:'Financiero',tp:'CEDEAR',p:1089,pe:18.85,pf:17.5,ph:13.5,pj:14,m:28,cagr:10,roe:13,d:1.4,fcf:1,cob:null,b:1.35,up:18.5,peg:1.10,tesis:'M&A recover. IB líder. P/E 12.2x.',moat:'Franquicia IB global.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'AXP',n:'American Express',s:'Financiero',tp:'CEDEAR',p:353.40,pe:22.55,pf:17.5,ph:18.5,pj:20,m:15.7,cagr:10,roe:34,d:1.91,fcf:1,cob:4,b:1.13,up:24,peg:1.58,tesis:'Card fees +18%. ROE 34%. Buffett.',moat:'Closed-loop+clientes premium.',fiscal:'Dividendos gravados.',dcf:{fcf_share:18,g1:12,g2:8,wacc:10,gTerminal:3,shares:700,debt:48000,cash:40000},nuevo:false},
+{t:'V',n:'Visa',s:'Financiero',tp:'CEDEAR',p:370.89,pe:31.64,pf:23.0,ph:33.2,pj:30,m:52.8,cagr:11,roe:48,d:.8,fcf:1,cob:18,b:0.95,up:18,peg:2.18,tesis:'Duopolio pagos. Margen 53%.',moat:'Red 4B tarjetas.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'JPM',n:'JPMorgan Chase',s:'Financiero',tp:'CEDEAR',p:362.15,pe:15.24,pf:13.5,ph:13,pj:15,m:26.5,cagr:8,roe:17,d:1.5,fcf:1,cob:null,b:1.10,up:21,peg:1.50,tesis:'Banco más capitalizado del mundo.',moat:'Franquicia bancaria universal.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'NU',n:'Nu Holdings',s:'Financiero',tp:'CEDEAR',p:14.89,pe:18.1,pf:14.5,ph:66.8,pj:20,m:18.2,cagr:37,roe:30,d:3.83,fcf:1,cob:4,b:1.50,up:53,peg:0.35,tesis:'135M+ clientes. PEG 0.35. Recompra $1B.',moat:'Banco digital <25% efficiency.',fiscal:'Dividendos gravados.',dcf:{fcf_share:0.65,g1:35,g2:18,wacc:12,gTerminal:4,shares:4760,debt:12000,cash:8000},nuevo:false},
+{t:'GGAL',n:'Grupo Galicia',s:'Financiero',tp:'Local AR',p:48.15,pe:7.8,pf:6.2,ph:11.5,pj:10,m:28,cagr:18,roe:25,d:1.2,fcf:1,cob:null,b:1.55,up:45,peg:0.38,tesis:'Banco privado #1 AR. ROE 25%.',moat:'Naranja X+franquicia líder.',fiscal:'Exento Ganancias AR.',nuevo:false},
+{t:'BMA',n:'Banco Macro',s:'Financiero',tp:'Local AR',p:106.24,pe:21.8,pf:16.5,ph:10.5,pj:9,m:30.5,cagr:16,roe:28,d:1.1,fcf:1,cob:null,b:1.48,up:42,peg:0.35,tesis:'Banco líder interior AR. PEG 0.35.',moat:'Liderazgo provincias.',fiscal:'Exento Ganancias AR.',nuevo:false},
+{t:'GS',n:'Goldman Sachs',s:'Financiero',tp:'CEDEAR',p:1047.15,pe:16.91,pf:17.5,ph:13.5,pj:14,m:28,cagr:10,roe:13,d:1.4,fcf:1,cob:null,b:1.35,up:18.5,peg:1.10,tesis:'M&A recover. IB líder. P/E 12.2x.',moat:'Franquicia IB global.',fiscal:'Dividendos gravados.',nuevo:true},
 {t:'BAC',n:'Bank of America',s:'Financiero',tp:'CEDEAR',p:48,pe:11.5,pf:10.2,ph:12.8,pj:13,m:25,cagr:8,roe:11,d:1.5,fcf:1,cob:null,b:1.40,up:20,peg:1.35,tesis:'2do banco EE.UU. Buffett holder.',moat:'Retail+Merrill Lynch.',fiscal:'Dividendos gravados.',nuevo:true},
 {t:'BRK.B',n:'Berkshire Hathaway',s:'Financiero',tp:'CEDEAR',p:487,pe:22,pf:19.5,ph:24,pj:22,m:15,cagr:8,roe:12,d:.8,fcf:1,cob:null,b:0.85,up:15,peg:1.98,tesis:'$350B+ cash. Sin deuda.',moat:'Seguros+railroads+Buffett.',fiscal:'No paga dividendo.',nuevo:true},
-{t:'JNJ',n:'Johnson & Johnson',s:'Salud',tp:'CEDEAR',p:226.71,pe:23.5,pf:16.4,ph:18.4,pj:20,m:20.5,cagr:5,roe:22,d:.9,fcf:1,cob:15,b:0.60,up:22.5,peg:2.02,tesis:'62 años dividendo. Oncología+medtech.',moat:'Patentes pharma+medtech.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'JNJ',n:'Johnson & Johnson',s:'Salud',tp:'CEDEAR',p:259.45,pe:23.5,pf:16.4,ph:18.4,pj:20,m:20.5,cagr:5,roe:22,d:.9,fcf:1,cob:15,b:0.60,up:22.5,peg:2.02,tesis:'62 años dividendo. Oncología+medtech.',moat:'Patentes pharma+medtech.',fiscal:'Dividendos gravados.',nuevo:false},
 {t:'UNH',n:'UnitedHealth',s:'Salud',tp:'CEDEAR',p:285,pe:14.5,pf:12.7,ph:22,pj:18,m:5.1,cagr:10,roe:22,d:.7,fcf:1,cob:9,b:0.80,up:38,peg:1.05,tesis:'−50% máximos. P/E 14.5x vs 22x.',moat:'Integración vertical. Optum.',fiscal:'Dividendos gravados.',nuevo:false},
-{t:'LLY',n:'Eli Lilly',s:'Salud',tp:'CEDEAR',p:1122.50,pe:38.81,pf:32.5,ph:48,pj:35,m:28.5,cagr:30,roe:75,d:1,fcf:1,cob:20,b:0.55,up:32,peg:1.40,tesis:'GLP-1 Mounjaro/Zepbound. Mercado $150B.',moat:'GLP-1 liderazgo.',fiscal:'Dividendos gravados.',nuevo:true},
-{t:'ABBV',n:'AbbVie',s:'Salud',tp:'CEDEAR',p:221.23,pe:23.5,pf:19.8,ph:22,pj:20,m:35,cagr:12,roe:999,d:3.5,fcf:1,cob:8,b:0.70,up:22,peg:0.40,tesis:'PEG 0.40. Yield 3.5%. Pipeline 90 comp.',moat:'Humira+pipeline oncología.',fiscal:'Dividendos gravados.',dcf:{fcf_share:12,g1:12,g2:8,wacc:9,gTerminal:3,shares:1770,debt:60000,cash:10000},nuevo:true},
-{t:'NVO',n:'Novo Nordisk',s:'Salud',tp:'CEDEAR',p:43.88,pe:10.28,pf:12.77,ph:42,pj:30,m:35,cagr:22,roe:85,d:2.5,fcf:1,cob:25,b:0.55,up:48,peg:0.62,tesis:'−65% aranceles. PEG 0.62. Contrarian.',moat:'Ozempic+Wegovy GLP-1.',fiscal:'Dividendos gravados.',dcf:{fcf_share:3.8,g1:22,g2:12,wacc:9,gTerminal:3,shares:4450,debt:9000,cash:8000},nuevo:true},
-{t:'XOM',n:'Exxon Mobil',s:'Energía',tp:'CEDEAR',p:149.81,pe:25.2,pf:11.7,ph:18.5,pj:15,m:7.8,cagr:8,roe:12.5,d:.5,fcf:1,cob:12,b:0.85,up:16.5,peg:1.55,tesis:'Dividend Aristocrat. Hedge inflación.',moat:'Reservas masivas.',fiscal:'Dividendos gravados.',nuevo:false},
-{t:'VIST',n:'Vista Energy',s:'Energía',tp:'CEDEAR AR',p:73.96,pe:7.2,pf:5.8,ph:15,pj:10,m:35,cagr:28,roe:35,d:1.2,fcf:1,cob:8,b:1.65,up:55.5,peg:0.22,tesis:'BofA target $115. PEG 0.22.',moat:'Pura-play Vaca Muerta.',fiscal:'Exento Ganancias PH.',nuevo:false},
-{t:'FSLR',n:'First Solar',s:'Energía',tp:'CEDEAR',p:267,pe:14.2,pf:10.8,ph:28,pj:16,m:24.5,cagr:22,roe:18,d:.1,fcf:1,cob:18,b:1.55,up:36,peg:0.38,tesis:'Solar US único. Backlog 20GW.',moat:'CdTe patentada.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'LLY',n:'Eli Lilly',s:'Salud',tp:'CEDEAR',p:1228.96,pe:42.09,pf:32.0,ph:48,pj:35,m:28.5,cagr:30,roe:75,d:1,fcf:1,cob:20,b:0.55,up:32,peg:1.40,tesis:'GLP-1 Mounjaro/Zepbound. Mercado $150B.',moat:'GLP-1 liderazgo.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'ABBV',n:'AbbVie',s:'Salud',tp:'CEDEAR',p:247.23,pe:23.5,pf:19.8,ph:22,pj:20,m:35,cagr:12,roe:999,d:3.5,fcf:1,cob:8,b:0.70,up:22,peg:0.40,tesis:'PEG 0.40. Yield 3.5%. Pipeline 90 comp.',moat:'Humira+pipeline oncología.',fiscal:'Dividendos gravados.',dcf:{fcf_share:12,g1:12,g2:8,wacc:9,gTerminal:3,shares:1770,debt:60000,cash:10000},nuevo:true},
+{t:'NVO',n:'Novo Nordisk',s:'Salud',tp:'CEDEAR',p:46.18,pe:10.28,pf:12.77,ph:42,pj:30,m:35,cagr:22,roe:85,d:2.5,fcf:1,cob:25,b:0.55,up:48,peg:0.62,tesis:'−65% aranceles. PEG 0.62. Contrarian.',moat:'Ozempic+Wegovy GLP-1.',fiscal:'Dividendos gravados.',dcf:{fcf_share:3.8,g1:22,g2:12,wacc:9,gTerminal:3,shares:4450,debt:9000,cash:8000},nuevo:true},
+{t:'XOM',n:'Exxon Mobil',s:'Energía',tp:'CEDEAR',p:160.87,pe:24.39,pf:11.7,ph:18.5,pj:15,m:7.8,cagr:8,roe:12.5,d:.5,fcf:1,cob:12,b:0.85,up:16.5,peg:1.55,tesis:'Dividend Aristocrat. Hedge inflación.',moat:'Reservas masivas.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'VIST',n:'Vista Energy',s:'Energía',tp:'CEDEAR AR',p:72.14,pe:7.99,pf:8.4,ph:15,pj:10,m:35,cagr:28,roe:35,d:1.2,fcf:1,cob:8,b:1.65,up:55.5,peg:0.22,tesis:'BofA target $115. PEG 0.22.',moat:'Pura-play Vaca Muerta.',fiscal:'Exento Ganancias PH.',nuevo:false},
+{t:'FSLR',n:'First Solar',s:'Energía',tp:'CEDEAR',p:218.67,pe:13.69,pf:10.8,ph:28,pj:16,m:24.5,cagr:22,roe:18,d:.1,fcf:1,cob:18,b:1.55,up:36,peg:0.38,tesis:'Solar US único. Backlog 20GW.',moat:'CdTe patentada.',fiscal:'Dividendos gravados.',nuevo:false},
 {t:'PBR',n:'Petrobras',s:'Energía',tp:'CEDEAR',p:14.8,pe:5.8,pf:5.2,ph:9.5,pj:8,m:21.5,cagr:6,roe:22,d:1.1,fcf:1,cob:8,b:1.40,up:38,peg:0.65,tesis:'P/E 5.8x. Yield 9-11%.',moat:'Pre-sal offshore.',fiscal:'Dividendos gravados.',nuevo:false},
 {t:'YPF',n:'YPF',s:'Energía',tp:'Local AR',p:45.0,pe:8.5,pf:7.0,ph:15,pj:12,m:8.5,cagr:22,roe:14,d:1.8,fcf:1,cob:5.5,b:1.65,up:52,peg:0.38,tesis:'Vaca Muerta +30% YoY.',moat:'2do mayor shale.',fiscal:'Exento Ganancias AR.',nuevo:false},
-{t:'PAMP',n:'Pampa Energía',s:'Energía',tp:'Local AR',p:82.4,pe:9.2,pf:7.5,ph:14,pj:11,m:25,cagr:15,roe:18,d:.9,fcf:1,cob:7,b:1.50,up:38.5,peg:0.52,tesis:'Energética integrada AR.',moat:'Generación+gas+O&G.',fiscal:'Exento Ganancias AR.',dcf:{fcf_share:12,g1:15,g2:8,wacc:11,gTerminal:3,shares:110,debt:1500,cash:400},nuevo:false},
+{t:'PAMP',n:'Pampa Energía',s:'Energía',tp:'Local AR',p:82.79,pe:9.2,pf:7.5,ph:14,pj:11,m:25,cagr:15,roe:18,d:.9,fcf:1,cob:7,b:1.50,up:38.5,peg:0.52,tesis:'Energética integrada AR.',moat:'Generación+gas+O&G.',fiscal:'Exento Ganancias AR.',dcf:{fcf_share:12,g1:15,g2:8,wacc:11,gTerminal:3,shares:110,debt:1500,cash:400},nuevo:false},
 {t:'TGS',n:'Transp. Gas Sur',s:'Energía',tp:'Local AR',p:28.5,pe:15.73,pf:12.0,ph:12,pj:11,m:42,cagr:18,roe:28,d:.6,fcf:1,cob:12,b:1.45,up:48,peg:0.32,tesis:'Margen 42%. GNL+desregulación.',moat:'Concesión gasoductos 30 años.',fiscal:'Exento Ganancias AR.',nuevo:false},
-{t:'PM',n:'Philip Morris',s:'Energía',tp:'CEDEAR',p:184.06,pe:24.42,pf:18.5,ph:22,pj:22,m:38,cagr:8,roe:999,d:5,fcf:1,cob:8,b:0.75,up:12,peg:2.10,tesis:'+40% revenue smoke-free. Yield 5%.',moat:'IQOS irreversible.',fiscal:'Dividendos gravados.',nuevo:true},
-{t:'CAT',n:'Caterpillar',s:'Industrial',tp:'CEDEAR',p:945,pe:42.5,pf:34.8,ph:18.2,pj:18,m:15.2,cagr:9,roe:52,d:1.8,fcf:1,cob:14,b:1.20,up:19,peg:1.58,tesis:'Superciclo infraestructura. ROE 52%.',moat:'Marca #1 maquinaria.',fiscal:'Dividendos gravados.',nuevo:false},
-{t:'TM',n:'Toyota Motor',s:'Industrial',tp:'CEDEAR',p:180,pe:9.96,pf:10.57,ph:10.5,pj:11,m:8.2,cagr:6,roe:14,d:.8,fcf:1,cob:15,b:0.68,up:26,peg:1.20,tesis:'Mayor automotriz. Híbridos vs EV.',moat:'TPS+Lexus.',fiscal:'Dividendos gravados.',nuevo:false},
-{t:'UBER',n:'Uber',s:'Industrial',tp:'CEDEAR',p:73.77,pe:17.95,pf:19.1,ph:null,pj:40,m:2,cagr:16,roe:12,d:1.2,fcf:1,cob:4.5,b:1.30,up:49,peg:1.85,tesis:'EPS +44% YoY. Target $104.',moat:'Red 2 lados 70 países.',fiscal:'Dividendos gravados.',nuevo:false},
-{t:'UNP',n:'Union Pacific',s:'Industrial',tp:'CEDEAR',p:256.88,pe:21.85,pf:21.07,ph:23,pj:22,m:41.5,cagr:6,roe:45,d:2.2,fcf:1,cob:10,b:0.85,up:21,peg:2.25,tesis:'Ferrocarril #1 EE.UU. Reshoring.',moat:'Infraestructura duopolio.',fiscal:'Dividendos gravados.',nuevo:true},
-{t:'HMY',n:'Harmony Gold',s:'Industrial',tp:'CEDEAR',p:15.70,pe:9.40,pf:8.0,ph:18,pj:12,m:18.5,cagr:12,roe:18,d:.4,fcf:1,cob:8,b:1.80,up:44,peg:0.58,tesis:'Hedge geopolítico. Producción +12%.',moat:'Reservas oro vida larga.',fiscal:'Dividendos gravados.',nuevo:false},
-{t:'DE',n:'Deere & Company',s:'Industrial',tp:'CEDEAR',p:589,pe:33.14,pf:30.78,ph:24,pj:26,m:18.5,cagr:8,roe:42,d:1.8,fcf:1,cob:12,b:0.95,up:21,peg:1.60,tesis:'IA en maquinaria agrícola. ROE 42%.',moat:'John Deere #1 ag.',fiscal:'Dividendos gravados.',nuevo:true},
-{t:'O',n:'Realty Income',s:'Inmob.',tp:'CEDEAR',p:62.72,pe:50.37,pf:45.0,ph:45,pj:40,m:21.5,cagr:3,roe:3.2,d:5.8,fcf:1,cob:3.1,b:0.85,up:20,peg:8.48,tesis:'Dividendo mensual 6% yield.',moat:'15K+ propiedades triple net.',fiscal:'REIT.',nuevo:false},
+{t:'PM',n:'Philip Morris',s:'Energía',tp:'CEDEAR',p:190.14,pe:24.42,pf:18.5,ph:22,pj:22,m:38,cagr:8,roe:999,d:5,fcf:1,cob:8,b:0.75,up:12,peg:2.10,tesis:'+40% revenue smoke-free. Yield 5%.',moat:'IQOS irreversible.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'CAT',n:'Caterpillar',s:'Industrial',tp:'CEDEAR',p:956.14,pe:42.5,pf:34.8,ph:18.2,pj:18,m:15.2,cagr:9,roe:52,d:1.8,fcf:1,cob:14,b:1.20,up:19,peg:1.58,tesis:'Superciclo infraestructura. ROE 52%.',moat:'Marca #1 maquinaria.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'TM',n:'Toyota Motor',s:'Industrial',tp:'CEDEAR',p:176.45,pe:9.96,pf:10.57,ph:10.5,pj:11,m:8.2,cagr:6,roe:14,d:.8,fcf:1,cob:15,b:0.68,up:26,peg:1.20,tesis:'Mayor automotriz. Híbridos vs EV.',moat:'TPS+Lexus.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'UBER',n:'Uber',s:'Industrial',tp:'CEDEAR',p:68.94,pe:17.95,pf:19.1,ph:null,pj:40,m:2,cagr:16,roe:12,d:1.2,fcf:1,cob:4.5,b:1.30,up:49,peg:1.85,tesis:'EPS +44% YoY. Target $104.',moat:'Red 2 lados 70 países.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'UNP',n:'Union Pacific',s:'Industrial',tp:'CEDEAR',p:297.89,pe:21.85,pf:21.07,ph:23,pj:22,m:41.5,cagr:6,roe:45,d:2.2,fcf:1,cob:10,b:0.85,up:21,peg:2.25,tesis:'Ferrocarril #1 EE.UU. Reshoring.',moat:'Infraestructura duopolio.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'HMY',n:'Harmony Gold',s:'Industrial',tp:'CEDEAR',p:15.11,pe:9.40,pf:8.0,ph:18,pj:12,m:18.5,cagr:12,roe:18,d:.4,fcf:1,cob:8,b:1.80,up:44,peg:0.58,tesis:'Hedge geopolítico. Producción +12%.',moat:'Reservas oro vida larga.',fiscal:'Dividendos gravados.',nuevo:false},
+{t:'DE',n:'Deere & Company',s:'Industrial',tp:'CEDEAR',p:607.23,pe:33.14,pf:30.78,ph:24,pj:26,m:18.5,cagr:8,roe:42,d:1.8,fcf:1,cob:12,b:0.95,up:21,peg:1.60,tesis:'IA en maquinaria agrícola. ROE 42%.',moat:'John Deere #1 ag.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'O',n:'Realty Income',s:'Inmob.',tp:'CEDEAR',p:64.18,pe:50.37,pf:45.0,ph:45,pj:40,m:21.5,cagr:3,roe:3.2,d:5.8,fcf:1,cob:3.1,b:0.85,up:20,peg:8.48,tesis:'Dividendo mensual 6% yield.',moat:'15K+ propiedades triple net.',fiscal:'REIT.',nuevo:false},
 {t:'IRS',n:'IRSA',s:'Inmob.',tp:'Local AR',p:15.21,pe:6.42,pf:5.5,ph:12.5,pj:10,m:18,cagr:10,roe:12,d:2.8,fcf:1,cob:4,b:1.42,up:42.5,peg:0.68,tesis:'Shoppings premium AR.',moat:'Shoppings AMBA únicos.',fiscal:'Exento Ganancias AR.',nuevo:false},
-{t:'SPGI',n:'S&P Global',s:'Inmob.',tp:'CEDEAR',p:403.15,pe:26.5,pf:21.4,ph:35,pj:32,m:35,cagr:10,roe:55,d:.9,fcf:1,cob:15,b:1.05,up:19.5,peg:2.15,tesis:'Duopolio ratings. ROE 55%.',moat:'Mandato regulatorio.',fiscal:'Dividendos gravados.',nuevo:true},
+{t:'SPGI',n:'S&P Global',s:'Inmob.',tp:'CEDEAR',p:432.10,pe:28.94,pf:21.4,ph:35,pj:32,m:35,cagr:10,roe:55,d:.9,fcf:1,cob:15,b:1.05,up:19.5,peg:2.15,tesis:'Duopolio ratings. ROE 55%.',moat:'Mandato regulatorio.',fiscal:'Dividendos gravados.',nuevo:true},
 {t:'BIDU',n:'Baidu',s:'Emergente',tp:'CEDEAR',p:121.66,pe:73.7,pf:12.5,ph:22,pj:16,m:15.2,cagr:5,roe:10,d:-.8,fcf:1,cob:15,b:1.50,up:41,peg:1.22,tesis:'Ernie Bot IA. P/E 11.8x vs 22x.',moat:'70% búsqueda China.',fiscal:'Riesgo ADR.',nuevo:false},
-{t:'BABA',n:'Alibaba',s:'Emergente',tp:'CEDEAR',p:110.97,pe:16.0,pf:9.5,ph:35,pj:18,m:4.8,cagr:5,roe:9,d:-.5,fcf:0,cob:8,b:1.45,up:35.5,peg:1.82,tesis:'Cloud AI +38% YoY. Forward P/E 10x.',moat:'Alibaba+Taobao+Alipay.',fiscal:'Riesgo geopolítico.',nuevo:false},
-{t:'JD',n:'JD.com',s:'Emergente',tp:'CEDEAR',p:27.91,pe:14.82,pf:8.61,ph:28,pj:14,m:3.2,cagr:8,roe:8,d:.2,fcf:1,cob:12,b:1.35,up:29,peg:1.32,tesis:'E-commerce #2 China.',moat:'Logística propia China.',fiscal:'Riesgo ADR.',nuevo:false},
+{t:'BABA',n:'Alibaba',s:'Emergente',tp:'CEDEAR',p:108.38,pe:38.69,pf:9.5,ph:35,pj:18,m:4.8,cagr:5,roe:9,d:-.5,fcf:0,cob:8,b:1.45,up:35.5,peg:1.82,tesis:'Cloud AI +38% YoY. Forward P/E 10x.',moat:'Alibaba+Taobao+Alipay.',fiscal:'Riesgo geopolítico.',nuevo:false},
+{t:'JD',n:'JD.com',s:'Emergente',tp:'CEDEAR',p:24.89,pe:21.45,pf:12.0,ph:28,pj:14,m:9.3,cagr:8,roe:6,d:3.89,fcf:1,cob:7,b:0.37,up:50.9,peg:1.32,tesis:'RSI 28.78 — sobreventa severa. Cerca mínimo 52s $24.51. EV/EBITDA 6.96x. P/B 1.08x (cotiza casi a libro). Dividendo 3.89%. Reporta earnings hoy 13/08/2026. Cash > deuda, buybacks agresivos management. Riesgo: food delivery (Meituan), regulación China, crecimiento orgánico 5% 2026. Target Bernstein $38 (+51%). WATCHLIST — earnings hoy son el catalizador.',moat:'Logística propia 1.4B paquetes/año. #2 e-commerce China.',fiscal:'Riesgo ADR China. Retención dividendo 10%.',nuevo:false},
+{t:'NOW',n:'ServiceNow',s:'Tech',tp:'CEDEAR',p:138.43,pe:63.64,pf:45.2,ph:75.0,pj:55,m:12.59,cagr:21,roe:14,d:0,fcf:1,cob:6.87,b:1.05,up:2.75,peg:4.34,tesis:'Plataforma enterprise AI unificada. AI ACV superó $1B (tracking $1.5B). Partnership Claudeforce con Anthropic 27/08/2026. Q2: Rev $3.99B +23% YoY, FCF margin 35%, Op margin 31.5%. Guía anual $15.77B (+21% CC). $500M eficiencias internas Now on Now. Cayó -29% desde ATH $194.73. P/E 63x premium — margen ajustado. WATCHLIST: entrada ideal $120-125.',moat:'Un solo data model para workflows enterprise. Pricing power AI bundling +20-30%. 29K empleados headcount flat vs revenue creciente.',fiscal:'Exento Ganancias PH. CEDEAR disponible en IOL.',nuevo:true},
 ];
 const TC_COL={'CEDEAR':'#185FA5','Local AR':'#27500A','CEDEAR AR':'#854F0B'};
 
@@ -1266,18 +1277,18 @@ function renderCV(){
 // ══════════════════════════════════════════════
 const RF_DATA=[
   // SOBERANOS LEY AR
-  {t:'AO27', n:'Bonar 2027 6% USD',       clase:'Soberano AR',  px:null,  tir:5.00, md:1.2, vto:'2027-10-29', mon:'USD', riesgo:3, perfil:'MC/Mod', tesis:'TIR 5%. Cupón MENSUAL 6% anual. Vto oct-2027 pre-electoral. Soberano ley AR. Exento BP.',fiscal:'Exento Ganancias y BP.'},
-  {t:'AL29', n:'Bonar 2029 Step-up',       clase:'Soberano AR',  px:64.60, tir:6.80, md:1.39,vto:'2029-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 6.80%, MD 1.39. Amort. 10 cuotas. Cupón 1% sem. Próx. pago 9/7/26.',fiscal:'Exento Ganancias y BP.'},
-  {t:'AL30', n:'Bonar 2030 Step-up',       clase:'Soberano AR',  px:64.40, tir:7.35, md:1.81,vto:'2030-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 7.35%, MD 1.81. El más líquido del mercado. Usado para dólar MEP.',fiscal:'Exento Ganancias y BP.'},
-  {t:'AL35', n:'Bonar 2035 Step-up',       clase:'Soberano AR',  px:80.86, tir:9.20, md:5.10,vto:'2035-07-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 9.20%, MD 5.10. Mayor upside ante compresión riesgo país.',fiscal:'Exento Ganancias y BP.'},
-  {t:'AE38', n:'Bonar 2038 Step-up',       clase:'Soberano AR',  px:83.49, tir:9.40, md:4.38,vto:'2038-01-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 9.40% — la más alta del universo soberano.',fiscal:'Exento Ganancias y BP.'},
+  {t:'AO27', n:'Bonar 2027 6% USD',       clase:'Soberano AR',  px:null,  tir:5.00, md:1.0, vto:'2027-10-29', mon:'USD', riesgo:3, perfil:'MC/Mod', tesis:'TIR 5%. Cupón MENSUAL 6% anual. Vto oct-2027 pre-electoral. Soberano ley AR. Exento BP.',fiscal:'Exento Ganancias y BP.'},
+  {t:'AL29', n:'Bonar 2029 Step-up',       clase:'Soberano AR',  px:64.60, tir:6.80, md:1.25,vto:'2029-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 6.80%, MD 1.39. Amort. 10 cuotas. Cupón 1% sem. Próx. pago 9/7/26.',fiscal:'Exento Ganancias y BP.'},
+  {t:'AL30', n:'Bonar 2030 Step-up',       clase:'Soberano AR',  px:64.40, tir:9.10, md:1.70,vto:'2030-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 7.35%, MD 1.81. El más líquido del mercado. Usado para dólar MEP.',fiscal:'Exento Ganancias y BP.'},
+  {t:'AL35', n:'Bonar 2035 Step-up',       clase:'Soberano AR',  px:80.86, tir:8.90, md:5.17,vto:'2035-07-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 9.20%, MD 5.10. Mayor upside ante compresión riesgo país.',fiscal:'Exento Ganancias y BP.'},
+  {t:'AE38', n:'Bonar 2038 Step-up',       clase:'Soberano AR',  px:83.49, tir:9.20, md:4.38,vto:'2038-01-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 9.40% — la más alta del universo soberano.',fiscal:'Exento Ganancias y BP.'},
   {t:'AL41', n:'Bonar 2041 Step-up',       clase:'Soberano AR',  px:75.80, tir:9.16, md:5.62,vto:'2041-07-09', mon:'USD', riesgo:3, perfil:'Agr',    tesis:'TIR 9.16%, MD 5.62. Duration larga ley AR.',fiscal:'Exento Ganancias y BP.'},
   // SOBERANOS LEY NY
-  {t:'GD29', n:'Global 2029 Step-up',      clase:'Soberano NY',  px:65.85, tir:5.44, md:1.42,vto:'2029-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 5.44%, MD 1.42. Ley NY. Paridad 93.7%.',fiscal:'Exento Ganancias y BP.'},
-  {t:'GD30', n:'Global 2030 Step-up',      clase:'Soberano NY',  px:65.81, tir:6.16, md:1.84,vto:'2030-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 6.16%, MD 1.84. Ley NY. El más líquido de Globales.',fiscal:'Exento Ganancias y BP.'},
-  {t:'GD35', n:'Global 2035 Step-up',      clase:'Soberano NY',  px:83.92, tir:8.47, md:5.17,vto:'2035-07-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 8.47%, MD 5.17. Ley NY. Paridad 82.4%.',fiscal:'Exento Ganancias y BP.'},
-  {t:'GD38', n:'Global 2038 Step-up',      clase:'Soberano NY',  px:88.14, tir:8.18, md:4.53,vto:'2038-01-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 8.18%, MD 4.53. Ley NY. Cupón 5% sem.',fiscal:'Exento Ganancias y BP.'},
-  {t:'GD41', n:'Global 2041 Step-up',      clase:'Soberano NY',  px:78.15, tir:8.62, md:5.72,vto:'2041-07-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 8.62%, MD 5.72. Ley NY. Paridad 77%.',fiscal:'Exento Ganancias y BP.'},
+  {t:'GD29', n:'Global 2029 Step-up',      clase:'Soberano NY',  px:65.85, tir:5.30, md:1.30,vto:'2029-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 5.44%, MD 1.42. Ley NY. Paridad 93.7%.',fiscal:'Exento Ganancias y BP.'},
+  {t:'GD30', n:'Global 2030 Step-up',      clase:'Soberano NY',  px:65.81, tir:6.20, md:1.84,vto:'2030-07-09', mon:'USD', riesgo:3, perfil:'Mod/MA', tesis:'TIR 6.16%, MD 1.84. Ley NY. El más líquido de Globales.',fiscal:'Exento Ganancias y BP.'},
+  {t:'GD35', n:'Global 2035 Step-up',      clase:'Soberano NY',  px:83.92, tir:8.90, md:5.17,vto:'2035-07-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 8.47%, MD 5.17. Ley NY. Paridad 82.4%.',fiscal:'Exento Ganancias y BP.'},
+  {t:'GD38', n:'Global 2038 Step-up',      clase:'Soberano NY',  px:88.14, tir:8.20, md:4.53,vto:'2038-01-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 8.18%, MD 4.53. Ley NY. Cupón 5% sem.',fiscal:'Exento Ganancias y BP.'},
+  {t:'GD41', n:'Global 2041 Step-up',      clase:'Soberano NY',  px:78.15, tir:8.80, md:5.72,vto:'2041-07-09', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 8.62%, MD 5.72. Ley NY. Paridad 77%.',fiscal:'Exento Ganancias y BP.'},
   {t:'GD46', n:'Global 2046 Step-up',      clase:'Soberano NY',  px:75.76, tir:8.27, md:6.09,vto:'2046-07-09', mon:'USD', riesgo:3, perfil:'Agr',    tesis:'TIR 8.27%, MD 6.09. Duration máxima.',fiscal:'Exento Ganancias y BP.'},
   // BOPREALes
   {t:'BPOA7',n:'BOPREAL Oct.2027 Serie A', clase:'BOPREAL',      px:101.80,tir:3.97, md:1.06,vto:'2027-10-31', mon:'USD', riesgo:2, perfil:'Cons/MC', tesis:'TIR 3.97%. BCRA. Exento total Ganancias y BP. Cupón 5% sem.',fiscal:'Exento Ganancias y BP. Máximo beneficio fiscal.'},
@@ -1292,22 +1303,29 @@ const RF_DATA=[
   {t:'MSSGO',n:'ON MSU Agro abr-29',       clase:'ON Local',     px:103.98,tir:7.60, md:2.36,vto:'2029-04-16', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 7.6%, MD 2.36. Cupón 8.5%. Calificación A+.',fiscal:'Retención 15% intereses.'},
   {t:'RUCDO',n:'ON MSU Energy dic-30',     clase:'ON Extraj.',   px:105.33,tir:8.40, md:3.10,vto:'2030-12-05', mon:'USD', riesgo:2, perfil:'MA/Agr', tesis:'TIR 8.4%, MD 3.10. Ley NY. Amort. 3 cuotas. Cupón 9.8%. A+.',fiscal:'Retención 15% intereses.'},
   // ONs LEY EXTRANJERA
-  {t:'YMCXO',n:'ON YPF sep-31',            clase:'ON Extraj.',   px:113.01,tir:6.10, md:3.64,vto:'2031-09-11', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 6.1%, MD 3.64. Ley NY. AAA. Cupón 8.8%. Amort. 3 cuotas.',fiscal:'Retención 15% intereses.'},
+  {t:'YMCXO',n:'ON YPF sep-31',            clase:'ON Extraj.',   px:113.01,tir:6.00, md:3.30,vto:'2031-09-11', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 6.1%, MD 3.64. Ley NY. AAA. Cupón 8.8%. Amort. 3 cuotas.',fiscal:'Retención 15% intereses.'},
   {t:'TSC3O',n:'ON TGS jul-31',            clase:'ON Extraj.',   px:113.99,tir:6.10, md:3.93,vto:'2031-07-24', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 6.1%, MD 3.93. TGS. Ley NY. Bullet. Cupón 8.5%.',fiscal:'Retención 15% intereses.'},
-  {t:'MGCMO',n:'ON Pampa Energía sep-31',  clase:'ON Extraj.',   px:110.98,tir:6.00, md:4.09,vto:'2031-09-10', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 6.0%, MD 4.09. Ley NY. AAA. Bullet. Cupón 8%.',fiscal:'Retención 15% intereses.'},
-  {t:'BYCHO',n:'ON Banco Galicia oct-28',  clase:'ON Extraj.',   px:107.36,tir:5.10, md:2.04,vto:'2028-10-10', mon:'USD', riesgo:1, perfil:'Cons/MC', tesis:'TIR 5.1%, MD 2.04. Banco Galicia. Ley NY. AAA. Bullet.',fiscal:'Retención 15% intereses.'},
-  {t:'MGCOO',n:'ON Pampa dic-34',          clase:'ON Extraj.',   px:108.14,tir:6.70, md:6.04,vto:'2034-12-16', mon:'USD', riesgo:2, perfil:'MA/Agr', tesis:'TIR 6.7%, MD 6.04. Ley NY. AAA. Duration larga. Cupón 7.9%.',fiscal:'Retención 15% intereses.'},
+  {t:'MGCMO',n:'ON Pampa Energía sep-31',  clase:'ON Extraj.',   px:110.98,tir:6.80, md:6.20,vto:'2031-09-10', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 6.0%, MD 4.09. Ley NY. AAA. Bullet. Cupón 8%.',fiscal:'Retención 15% intereses.'},
+  {t:'BYCHO',n:'ON Banco Galicia oct-28',  clase:'ON Extraj.',   px:107.36,tir:4.90, md:2.00,vto:'2028-10-10', mon:'USD', riesgo:1, perfil:'Cons/MC', tesis:'TIR 5.1%, MD 2.04. Banco Galicia. Ley NY. AAA. Bullet.',fiscal:'Retención 15% intereses.'},
+  {t:'MGCOO',n:'ON Pampa dic-34',          clase:'ON Extraj.',   px:108.14,tir:6.80, md:6.20,vto:'2034-12-16', mon:'USD', riesgo:2, perfil:'MA/Agr', tesis:'TIR 6.7%, MD 6.04. Ley NY. AAA. Duration larga. Cupón 7.9%.',fiscal:'Retención 15% intereses.'},
   {t:'TTCAO',n:'ON Tecpetrol ene-33',      clase:'ON Extraj.',   px:102.01,tir:8.00, md:4.17,vto:'2033-01-22', mon:'USD', riesgo:2, perfil:'MA/Agr', tesis:'TIR 8.0%, MD 4.17. Ley NY. Amort. 3 cuotas. Cupón 7.6%.',fiscal:'Retención 15% intereses.'},
   // LECAPs / BONCAPs
-  {t:'S30S6', n:'LECAP oct-2026',          clase:'LECAP',        px:null,  tir:22.8, md:0.23,vto:'2026-09-30', mon:'ARS', riesgo:1, perfil:'Cons',    tesis:'TNA 22.8%, TEA 24.7%. Vence 30/9/26.',fiscal:'Exento Ganancias y BP.'},
-  {t:'T30A7', n:'BONCAP abr-2027',         clase:'LECAP',        px:null,  tir:25.2, md:0.69,vto:'2027-04-30', mon:'ARS', riesgo:1, perfil:'Cons',    tesis:'TNA 25.2%, TEA 25.6%. La más usada para liquidez en pesos.',fiscal:'Exento Ganancias y BP.'},
-  {t:'T30J7', n:'BONCAP jun-2027',         clase:'LECAP',        px:null,  tir:25.3, md:0.83,vto:'2027-06-30', mon:'ARS', riesgo:1, perfil:'Cons',    tesis:'TNA 25.3%, TEA 25.2%. Cupón 2.58%.',fiscal:'Exento Ganancias y BP.'},
+  {t:'S30S6', n:'LECAP oct-2026',          clase:'LECAP',        px:null,  tir:24.6, md:0.23,vto:'2026-09-30', mon:'ARS', riesgo:1, perfil:'Cons',    tesis:'TNA 22.8%, TEA 24.7%. Vence 30/9/26.',fiscal:'Exento Ganancias y BP.'},
+  {t:'T30A7', n:'BONCAP abr-2027',         clase:'LECAP',        px:null,  tir:24.6, md:0.69,vto:'2027-04-30', mon:'ARS', riesgo:1, perfil:'Cons',    tesis:'TNA 25.2%, TEA 25.6%. La más usada para liquidez en pesos.',fiscal:'Exento Ganancias y BP.'},
+  {t:'T30J7', n:'BONCAP jun-2027',         clase:'LECAP',        px:null,  tir:24.6, md:0.83,vto:'2027-06-30', mon:'ARS', riesgo:1, perfil:'Cons',    tesis:'TNA 25.3%, TEA 25.2%. Cupón 2.58%.',fiscal:'Exento Ganancias y BP.'},
   // BONCERs
-  {t:'TZX28', n:'BONCER jun-2028',         clase:'CER',          px:null,  tir:6.90, md:1.91,vto:'2028-06-30', mon:'ARS', riesgo:1, perfil:'Mod',     tesis:'CER + 6.9% TEA, MD 1.91. Paridad 87.3%. Mejor del tramo CER.',fiscal:'Exento Ganancias. BP: cot. 31/12 ARS.'},
-  {t:'TX31',  n:'BONCER nov-2031',         clase:'CER',          px:null,  tir:7.30, md:2.77,vto:'2031-11-30', mon:'ARS', riesgo:2, perfil:'Mod/MA', tesis:'CER + 7.3%, MD 2.77. TEA 7.2%. Paridad 87.1%.',fiscal:'Exento Ganancias. BP: cot. 31/12 ARS.'},
-  {t:'DICP',  n:'BONCER dic-2033',         clase:'CER',          px:null,  tir:7.60, md:2.94,vto:'2033-12-31', mon:'ARS', riesgo:2, perfil:'MA/Agr', tesis:'CER + 7.6%, MD 2.94. TEA 7.5%. Paridad 95%. Current yield 5.97%.',fiscal:'Exento Ganancias. BP: cot. 31/12 ARS.'},
+  {t:'TZX28', n:'BONCER jun-2028',         clase:'CER',          px:null,  tir:3.55, md:1.91,vto:'2028-06-30', mon:'ARS', riesgo:1, perfil:'Mod',     tesis:'CER + 6.9% TEA, MD 1.91. Paridad 87.3%. Mejor del tramo CER.',fiscal:'Exento Ganancias. BP: cot. 31/12 ARS.'},
+  {t:'TX31',  n:'BONCER nov-2031',         clase:'CER',          px:null,  tir:5.50, md:2.77,vto:'2031-11-30', mon:'ARS', riesgo:2, perfil:'Mod/MA', tesis:'CER + 7.3%, MD 2.77. TEA 7.2%. Paridad 87.1%.',fiscal:'Exento Ganancias. BP: cot. 31/12 ARS.'},
+  {t:'DICP',  n:'BONCER dic-2033',         clase:'CER',          px:null,  tir:5.80, md:2.94,vto:'2033-12-31', mon:'ARS', riesgo:2, perfil:'MA/Agr', tesis:'CER + 7.6%, MD 2.94. TEA 7.5%. Paridad 95%. Current yield 5.97%.',fiscal:'Exento Ganancias. BP: cot. 31/12 ARS.'},
   // FCI
-  {t:'IOLCAMA',n:'FCI IOL Cama (T+0)',    clase:'FCI',          px:null,  tir:22.0, md:0.00,vto:'T+0',        mon:'ARS', riesgo:0, perfil:'Todos',   tesis:'~22% TNA. T+0 liquidez inmediata. Referencia TNA LECAPs cortas.',fiscal:'Exento Ganancias.'},
+  {t:'IOLCAMA',n:'FCI IOL Cama (T+0)',    clase:'FCI',          px:null,  tir:24.0, md:0.00,vto:'T+0',        mon:'ARS', riesgo:0, perfil:'Todos',   tesis:'~22% TNA. T+0 liquidez inmediata. Referencia TNA LECAPs cortas.',fiscal:'Exento Ganancias.'},
+  // ── NUEVOS INSTRUMENTOS AGOSTO 2026 ──────────────────────────────
+  {t:'YFCJO',n:'ON YPF Luz 2032 — AAA',        clase:'ON Extraj.',   px:108.0, tir:7.80, md:4.20,vto:'2032-06-30', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR 7.8%. YPF Luz ley NY. AAA. Contratos take-or-pay. Vaca Muerta generación eléctrica.',fiscal:'Retención 15% intereses.'},
+  {t:'YFCOO',n:'ON YPF Luz 2028 — AAA',        clase:'ON Extraj.',   px:106.5, tir:7.50, md:2.10,vto:'2028-03-15', mon:'USD', riesgo:1, perfil:'MC/Mod', tesis:'TIR 7.5%. YPF Luz corto. AAA ley NY. Buen carry perfil moderado conservador.',fiscal:'Retención 15% intereses.'},
+  {t:'TLCMO',n:'ON Telecom Argentina 2031 — AAA',clase:'ON Extraj.',  px:102.5, tir:7.20, md:3.80,vto:'2031-06-30', mon:'USD', riesgo:2, perfil:'Mod/MA', tesis:'TIR ~7.2%. Colocada en NY ago-2026 por $600M. Telecom Argentina. AAA ley NY. Demanda record institucional.',fiscal:'Retención 15% intereses.'},
+  {t:'DNC7O',n:'ON Edenor 2030 — A+',          clase:'ON Local',     px:98.0,  tir:9.00, md:2.50,vto:'2030-06-30', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 9.0%+. Prima riesgo regulatorio post-RTQ. Rinde más que soberanos. Solo perfiles agresivos.',fiscal:'Retención 15% intereses.'},
+  {t:'AO29',n:'Bonar 2029 — TNA 8.39%',        clase:'Soberano AR',  px:93.79, tir:8.72, md:2.30,vto:'2029-06-30', mon:'USD', riesgo:3, perfil:'MA/Agr', tesis:'TIR 8.72% TIREA, TNA 8.39%. Nuevo: licitado 14/08/2026, VN $50M. Soberano ley AR.',fiscal:'Exento Ganancias y BP.'},
+  {t:'BVASO',n:'ON BBVA Argentina 2029 — AAA', clase:'ON Local',     px:100.0, tir:7.00, md:2.80,vto:'2029-08-21', mon:'USD', riesgo:1, perfil:'MC/Mod', tesis:'TIR estimada ~7%. Emisión 21/08/2026. 48 meses bullet semestral USD MEP. AAA. Integración en dólares.',fiscal:'Retención 15% intereses.'},
 ];
 
 const RF_CLASES=['Todas',...new Set(RF_DATA.map(x=>x.clase))];
